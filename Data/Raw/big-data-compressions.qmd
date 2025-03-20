@@ -1,0 +1,48 @@
+---
+title: "data-conversion"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| code-summary: "Setup"
+library(arrow)
+library(tidyverse)
+library(here)
+setwd(here("Data/Raw"))
+
+```
+
+We had some big CSV files that could not be shared on GitHub. We are converting to Parquet  so they are much smaller and more performant. 
+
+
+Raw files were downlaoded an stored in /Raw and we will convert the parquet to here for downstream scripts to use. 
+
+
+## License
+
+From here  https://opendataphilly.org/datasets/licenses-and-inspections-business-licenses/
+.
+
+
+```{r}
+
+## Import
+df_license = read_csv("business_licenses.csv")
+
+
+Active <- data %>% filter(licensestatus == "Active")
+
+table(Active$licensetype)
+
+table(Active$rentalcategory)
+
+table(Active$council_district, useNA = "always")
+
+
+df_license %>% 
+  select(licensestatus, licensetype, rentalcategory,council_district) %>% 
+  arrow::write_parquet('business_licenses.parquet')
+```
