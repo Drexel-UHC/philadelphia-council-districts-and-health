@@ -15,23 +15,18 @@ setwd(here("Data/Raw"))
 
 ```
 
-We had some big CSV files that could not be shared on GitHub. We are converting to Parquet  so they are much smaller and more performant. 
+We had some big CSV files that could not be shared on GitHub. We are converting to Parquet so they are much smaller and more performant.
 
-
-Raw files were downlaoded an stored in /Raw and we will convert the parquet to here for downstream scripts to use. 
-
+Raw files were downlaoded an stored in /Raw and we will convert the parquet to here for downstream scripts to use.
 
 ## License
 
-From here  https://opendataphilly.org/datasets/licenses-and-inspections-business-licenses/
-.
-
+From here https://opendataphilly.org/datasets/licenses-and-inspections-business-licenses/ .
 
 ```{r}
 
-## Import
+## Import business licenses dataset
 df_license = read_csv("business_licenses.csv")
-
 
 Active <- data %>% filter(licensestatus == "Active")
 
@@ -45,15 +40,20 @@ table(Active$council_district, useNA = "always")
 df_license %>% 
   select(licensestatus, licensetype, rentalcategory,council_district) %>% 
   arrow::write_parquet('business_licenses.parquet')
+
+#import violations dataset and convert to parquet
+df_violations = read_csv("VIOLATIONS.csv")
+df_violations %>% 
+  select(council_district,violationstatus) %>% 
+  arrow::write_parquet('violations.parquet')
+
 ```
 
-
-
-To use 
-
+To use
 
 ```{r}
 
 df_license = arrow::read_parquet("business_licenses.parquet")
+df_violations = arrow::read_parquet("violations.parquet")
 
 ```
