@@ -46,3 +46,14 @@ df_license %>%
   select(licensestatus, licensetype, rentalcategory,council_district) %>% 
   arrow::write_parquet('business_licenses.parquet')
 ```
+
+
+
+To use 
+
+
+```{r}
+
+df_license = arrow::read_parquet("business_licenses.parquet")
+
+```
