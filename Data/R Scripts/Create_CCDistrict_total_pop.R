@@ -25,6 +25,10 @@ Blocks2020_CouncilDistrict2024 <- read_excel("Raw/Blocks2020_CouncilDistrict2024
 joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
                       by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
 
+#save the block level dataset:
+save(joined_blocks, file="clean datasets/population_census_blocks")
+
+#aggregate to get district level population
 CCDistrict_pop<-joined_blocks %>% 
   group_by(DISTRICT) %>% 
   summarize(CCDistrict_population = sum(value)) %>% 

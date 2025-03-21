@@ -1,7 +1,3 @@
-#Demographic Data
-
-#Will pull from ACS
-
 library(tidycensus)
 library(tigris)
 library(sf)
@@ -13,33 +9,17 @@ library(ggplot2)
 library(readr)
 library(patchwork)
 library(RColorBrewer)
+library(here)
 
 
+setwd(here("Data"))
 
-#Insert Crosswalk
 
-#Population per Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
-#check geometry
-#mapview(total_population_blocks)
+#Load Crosswalk
+load("clean datasets/population_census_blocks")
 
-#Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
-
-#Find demographic data
-vars <- load_variables(2022, "acs5")
-
+#Load ACS education data
+#vars <- load_variables(2022, "acs5")
 
 Education <- get_acs(
   geography = "block group",
@@ -86,7 +66,7 @@ Education <- get_acs(
 Education_Categories <- Education %>%
   group_by(GEOID) %>%
   summarize(
-    total_pop = sum(estimate[variable == "B15003_001"]),
+    total_pop_over25 = sum(estimate[variable == "B15003_001"]),
     
     # Less than High School (No Schooling to 12th Grade, No Diploma)
     less_than_hs = sum(estimate[variable %in% c("B15003_002", "B15003_003", "B15003_004",
@@ -105,56 +85,66 @@ Education_Categories <- Education %>%
     college_grad = sum(estimate[variable %in% c("B15003_022", "B15003_023", "B15003_024", "B15003_025")])
   ) %>%
   mutate(
-    less_than_hs_pct = less_than_hs / total_pop * 100,
-    hs_grad_pct = hs_grad / total_pop * 100,
-    some_college_pct = some_college / total_pop * 100,
-    college_grad_pct = college_grad / total_pop * 100
+    less_than_hs_pct = less_than_hs / total_pop_over25 * 100,
+    hs_grad_pct = hs_grad / total_pop_over25 * 100,
+    some_college_pct = some_college / total_pop_over25 * 100,
+    college_grad_pct = college_grad / total_pop_over25 * 100
   ) %>%
   ungroup()
 
 #Need to recreate GEOID minus 3 for the block group to join. 
 
 total_population_blocks <- joined_blocks %>%
-  mutate(GEOIDTRACT = str_sub(GEOID, 1, 12))
+  mutate(GEOID_blockgroup = str_sub(GEOID, 1, 12))
 
 #I need to do a join where the values repeat?
 
 total_join <- total_population_blocks %>%
-  left_join (Education_Categories, by = c("GEOIDTRACT"="GEOID"))
+  left_join (Education_Categories, by = c("GEOID_blockgroup"="GEOID"))
 
 data <- total_join %>%
-  group_by(GEOIDTRACT) %>%
+  group_by(GEOID_blockgroup) %>%
   mutate(Weight = value/sum(value), 
-         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block#
+         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block, this is to remove the NANs that resulted from dividing 0 by a zero population blockgroup
   ungroup()
 
-data2 <- data %>%
+education_CCdistricts <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    total_pop = sum(total_pop * Weight, na.rm = TRUE),  # Define total_pop first
-    less_than_hs = sum(less_than_hs * Weight, na.rm = TRUE),
-    hs_grad = sum(hs_grad * Weight, na.rm = TRUE),
-    some_college = sum(some_college * Weight, na.rm = TRUE),
-    college_grad = sum(college_grad * Weight, na.rm = TRUE)
+    total_pop_over25 = sum((total_pop_over25 * Weight), na.rm = TRUE),  # Define total_pop first
+    less_than_hs = sum((less_than_hs * Weight), na.rm = TRUE),
+    hs_grad = sum((hs_grad * Weight), na.rm = TRUE),
+    some_college = sum((some_college * Weight), na.rm = TRUE),
+    college_grad = sum((college_grad * Weight), na.rm = TRUE)
   ) %>%
   ungroup() %>% 
 mutate(
-  less_than_hs_pct = (less_than_hs / total_pop) * 100,
-  hs_grad_pct = (hs_grad / total_pop) * 100,
-  some_college_pct = (some_college / total_pop) * 100,
-  college_grad_pct = (college_grad / total_pop) * 100
+  less_than_hs_pct = (less_than_hs / total_pop_over25) * 100,
+  hs_grad_pct = (hs_grad / total_pop_over25) * 100,
+  some_college_pct = (some_college / total_pop_over25) * 100,
+  college_grad_pct = (college_grad / total_pop_over25) * 100
 )
 
+###################################################### 
+# save clean dataset
+###################################################### 
+save(education_CCdistricts, file="clean datasets/education_CCdistricts.Rdata" )
+
+
+
+###################################################### 
+# making maps
+###################################################### 
 
 # Calculate centroids for each district
-data4_centroids <- data2 %>%
+data4_centroids <- education_CCdistricts %>%
   st_centroid()
 
 #Plots
 
 display.brewer.all()  # Shows all available palettes
 
-plot1 <- ggplot(data = data2, aes(fill = less_than_hs_pct)) + 
+plot1 <- ggplot(data = education_CCdistricts, aes(fill = less_than_hs_pct)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -174,7 +164,7 @@ plot1 <- ggplot(data = data2, aes(fill = less_than_hs_pct)) +
   )
 
 
-plot2 <- ggplot(data = data2, aes(fill = hs_grad_pct)) + 
+plot2 <- ggplot(data = education_CCdistricts, aes(fill = hs_grad_pct)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -194,7 +184,7 @@ plot2 <- ggplot(data = data2, aes(fill = hs_grad_pct)) +
   )
 
 
-plot3 <- ggplot(data = data2, aes(fill = some_college_pct)) + 
+plot3 <- ggplot(data = education_CCdistricts, aes(fill = some_college_pct)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -214,7 +204,7 @@ plot3 <- ggplot(data = data2, aes(fill = some_college_pct)) +
   )
 
 
-plot4 <- ggplot(data = data2, aes(fill = college_grad_pct)) + 
+plot4 <- ggplot(data = education_CCdistricts, aes(fill = college_grad_pct)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
