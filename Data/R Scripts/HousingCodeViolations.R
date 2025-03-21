@@ -81,10 +81,18 @@ district_data <- total_join %>%
 #of parcels per district as the denominator (because parcel seems to be the unique ID for both datasets)
 
 
-#Add building footprints dataset
+#Add building footprints dataset to use as a denominstor 
+#(I am reading in the file, then grouping by parcel_id and then using a spatial join to get the 
+#district associated with each parcel (district was not in the dataset),then I am summing up 
+#the number of parcels in each district to use as the denominator)
 
 building_footprints <- read_csv("Raw/LI_BUILDING_FOOTPRINTS.csv")
-building_footprints_shape <- read_sf('Raw/LI_BUILDING_FOOTPRINTS/LI_BUILDING_FOOTPRINTS.shp')
+
+#I had to save the shape file for buildiing footprints as a zippedfile so that it woudld load to github. 
+#this is how you read in the zipped file. 
+temp_dir <- tempdir()
+unzip("Raw/LI_BUILDING_FOOTPRINTS.zip", exdir = temp_dir)
+building_footprints_shape <- read_sf(file.path(temp_dir, "LI_BUILDING_FOOTPRINTS", "LI_BUILDING_FOOTPRINTS.shp"))
 
 #fixing invalid districts
 sum(!st_is_valid(building_footprints_shape))
