@@ -1,0 +1,68 @@
+Map,Data source,Orignal data,Years,Link to Meta / Variables ,Notes,Updated?
+Heat Vulnerability Index,Open Data Philly,Tract,2018,https://metadata.phila.gov/#home/datasetdetails/61c3840862f14b001e21e837/representationdetails/61c3840962f14b001e21e83b/,Uses a scale of Very High to Very Low. Also weighted based on Area not on Population,2/28/2025
+Owner vs. Renter,ACS  5 year,Block Group,2022,"#B25003_001 --> Estimate!!Total: block group
+#B25003_002 --> Estimate!!Total:!!Owner occupied block group
+#B25003_003 --> Estimate!!Total:!!Renter occupied block group  ",Weighted by HH per block (looks similar to when it was done by population. Also fixed mutate issue. ,3/9/2025
+Kitchen + Plumbing Facilities,ACS  5 year,Tract,2022,"#B25048_001 --> Total Occupied housing units tract
+#B25048_003 --> Lacking plumbing occupied housing units tract
+
+#B25052_001 --> Total Occupied housing units tract
+#B25052_003 --> Lacking complete kitchen facilities tract",Should I switch Weight to HH instead of population like in Owner Renter map?,3/10/2025
+Median Age,ACS  5 year,Block Group,2022,"#B01002_001 : Total Median Age by Sex
+#B01002_002 : Male Median Age by Sex
+#B01002_003 : Female Median Age by Sex","Had to fix weight, used Total Age as weight, switched to population. Graphs look the same",3/2/2025
+Health Insurance,ACS 5 year,Tract,2022,"#B18135_007 -- Estimate!!Total:!!Under 19 years:!!With a disability:!!No health insurance coverage
+#B18135_012 -- Estimate!!Total:!!Under 19 years:!!No disability:!!No health insurance coverage
+
+#B18135_018 -- Estimate!!Total:!!19 to 64 years:!!With a disability:!!No health insurance coverage
+#B18135_023 -- Estimate!!Total:!!19 to 64 years:!!No disability:!!No health insurance coverage
+
+#B18135_029 -- Estimate!!Total:!!65 years and over:!!With a disability:!!No health insurance coverage
+#B18135_034 -- Estimate!!Total:!!65 years and over:!!No disability:!!No health insurance coverage
+",. Fixed graph to 5 year ACS,3/3/2025
+Race,ACS 5 year,Block Group,2022,"#B02001_001 Total pop
+#B03002_003 White Not hispanic or Latino
+#B02001_003 Black
+#B02001_004 American Indian/Alaska Native
+#B02001_005 Asian
+#B02001_006 Native Hawaiian/Pacific Islander
+#B02001_007 Some other race
+#B02001_008 Two or more races
+
+#B03001_001 Total pop
+#B03002_012 Hispanic/Latino
+#B03002_002 Not Hispanic or Latino","Did not add district numbers, crowded. Updated “ACS Estimate,” changed White variable to Non-Hispanic, and updated 1 year to 5 year ACS",3/3/2025
+Fatal Crashes,Open Data Philly,Point ,2019 - Present,https://metadata.phila.gov/#home/datasetdetails/5d89169eb5d0de0010bf1ed1/representationdetails/5d89169fb5d0de0010bf1ed5/,"Fixed year (2019- Present) not 2020. Need to fix the caption, not sure why it's not centered",3/3/2025
+Tree Canopy,UHC,Tract,2019,https://data.uhcdata.org/dataset/average-percent-tree-canopy-national-land-cover-dataset-nlcd-contiguous-us/resource/d54b8080-ba6c-4987-ab88-332bf5e3bee0,,3/3/2025
+Educational Attainment,ACS 5 year,Block Group,2022,"#""B15003_001"" = total pop over 25, 
+#""B15003_002"" = No schooling
+#""B15003_003"" = Nursery School 
+#""B15003_004""= Kindergarten
+#""B15003_005"" = 1st
+#""B15003_006"" = 2nd, 
+#""B15003_007"" = 3rd 
+#""B15003_008"" = 4th, 
+#""B15003_009"" = 5th, 
+#""B15003_010"" = 6th
+#""B15003_011"" = 7th 
+#""B15003_012""= 8th 
+#""B15003_013"" 9th 
+#""B15003_014""= 10th 
+#""B15003_015"" = 11th
+#""B15003_016"" = 12th no diploma 
+#""B15003_017"" HS grad, 
+#""B15003_018"" = GED or equivalent 
+#""B15003_019"" = some college less than 1 yr
+#""B15003_020""= some college 1 yr or more no degree
+#""B15003_021""= Associates 
+#""B15003_022""= Bachelors 
+#""B15003_023""= Masters 
+#""B15003_024""= Professional school 
+#""B15003_025"" = Doctorate","Fixed title to 25 and over, and 5 year ACS (not 1 year). Fixed mutate step for pcts. Fixed weight",3/9/2025
+Businesses,Open Data Philly,Council District,2020 - Oct 2024,https://metadata.phila.gov/#home/datasetdetails/5543865a20583086178c4ed2/representationdetails/5e985a5e344ed50018936bb8/,"2 maps. Map 1 No rentals and No dumpster licenses. Map 2 Rental type only. No percentages, only total number of businesses shown. ",3/9/2025
+Nonfatal + Fatal Shoot,Open Data Philly,Point ,2015 - Present,https://metadata.phila.gov/#home/datasetdetails/5719551277d6389f3005a610/representationdetails/5719551277d6389f3005a614/,"2 maps with Nonfatal shootings and fatal shootings side by side. Want to make maps for the different years but need to decide increments. Calculated Rate per 100,000 working on plots",3/10/2025
+Housing Code,Open Data Philly,Council District,2019 - July 2024,https://metadata.phila.gov/#home/datasetdetails/5543ca7a5c4ae4cd66d3ff86/ https://metadata.phila.gov/#home/datasetdetails/5543864f20583086178c4ea5/representationdetails/595e8e85ac27025c82c53c7c/,Made a new percentage with violations based on Building Footprints dataset,3/9/2025
+Median Income,ACS 5 year,Block Group,2022,"#B19013_001 - Estimate!!Median household income in the past 12 months (in 2022 inflation-adjusted dollars)
+#B11001_001 - Estimate!!Total:Household Type (Including Living Alone)","Fixed weights by HH not pop, added districts",3/10/2025
+Poverty,ACS 5 year,Tract,2022,"#B17001_002 #Estimate!!Total:!!Income in the past 12 months below poverty level:
+#B17001_001 #Estimate: Total","Added CD numbers, and updated mutate step",3/10/2025
