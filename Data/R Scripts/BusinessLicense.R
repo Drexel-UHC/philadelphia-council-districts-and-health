@@ -23,9 +23,12 @@ library(readr)
 library(tidyverse)
 library(tidygeocoder)
 library(RColorBrewer)
+library(here)
+
 
 ##Import CSV of All Business Licenses (OPEN DATA PHILLY)
-data <- read_csv("C:/Documents/IDEA Fellow/business_licenses.csv")
+setwd(here("Data"))
+data<-arrow::read_parquet("Raw/business_licenses.parquet")
 
 
 #Remove NA and 0 
@@ -34,16 +37,26 @@ data <- read_csv("C:/Documents/IDEA Fellow/business_licenses.csv")
 
 Active <- data %>% filter(licensestatus == "Active")
 
-table(Active$licensetype)
+#fix the council district variable (there are some entries that are "01" and others that are "1")
+Active<- Active %>%  mutate(council_district = case_when(council_district=="00" ~ NA_character_, # not clear what district this was supposed to be so I removed it. There were only 57 observations with "00" - TR
+                                                          council_district=="01" ~ "1",
+                                                          council_district=="02" ~ "2",
+                                                          council_district=="03" ~ "3",
+                                                          council_district=="04" ~ "4",
+                                                          council_district=="05" ~ "5",
+                                                          council_district=="06" ~ "6",
+                                                          council_district=="07" ~ "7",
+                                                          council_district=="08" ~ "8",
+                                                          council_district=="09" ~ "9",
+                                                          TRUE~ council_district
+                                                          ))
 
-table(Active$rentalcategory)
-
-table(Active$council_district, useNA = "always")
+# table(Active$licensetype)
+# table(Active$rentalcategory)
+# table(Active$council_district, useNA = "always")
 
 ##Further filter for "Company" only? Remove all "individual"  
-
 ##Company <- Active %>% filter(legalentitytype =="Company")
-
 #Active <- Active %>% 
    #mutate(rental = case_when(rentalcategory == "Residential Dwellings"~1,
                              # TRUE~0))
@@ -66,19 +79,9 @@ NoRental <- Active %>%  filter(rental == 0)
 # Remove dumpster-related businesses
 NoDumpsters <- NoRental %>% filter(dumpster == 0)
 
-#Keep rentals! Map 2
+#Keep rentals only! Map 2
 Rental <- Active %>% filter(rental ==1) #Do not need to remove dumpsters
 
-
-
-
-#Already has council distict included in dataset
-#Need to convert numeric to character for join
-#Company <- Company %>% mutate(council_district = as.character(council_district))
-
-NoDumpsters <- NoDumpsters %>% mutate(council_district = as.character(council_district))
-
-Rental <- Rental %>% mutate(council_district = as.character(council_district))
 
 #NoResidental <- NoResidental %>% mutate(council_district = as.character(council_district))
 
@@ -107,90 +110,45 @@ Companies_per_district2<- Rental %>%
  # filter(council_district != 0 & !is.na(council_district))
 
 #Add in Crosswalk and Block geometry
-#Population per Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
-#check geometry
-mapview(total_population_blocks)
+load("clean datasets/CCDistrict_pop.Rdata" )
 
-#Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-View(Blocks2020_CouncilDistrict2024)
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
 
 #Join Companies with District geometry
 
-total_join <- joined_blocks %>%
+#all active licenses minus dumpsters and rentals
+Active_licenses <- CCDistrict_pop %>%
   left_join (Companies_per_district, by = c("DISTRICT"="council_district"))
 
-total_join2 <- joined_blocks %>%
+#all active rental licenses
+Active_licenses_rentals <- CCDistrict_pop %>%
   left_join (Companies_per_district2, by = c("DISTRICT"="council_district"))
 
-#total_join2 <- joined_blocks %>%
-  #left_join (Bus_per_district, by = c("DISTRICT"="council_district"))
+#############################################
+#   save dataset
+#############################################
+
+save(Active_licenses,file="clean datasets/Active_licenses.Rdata" ) #all active licenses minus dumpsters and rentals
+save(Active_licenses_rentals,file="clean datasets/Active_licenses_rentals.Rdata" ) #all active rental licenses
 
 
-mapview(total_join,zcol = "total_companies")
 
-#Clean up geometry
-district_data <- total_join %>%
-  group_by(DISTRICT) %>%
-  summarize(
-    total_companies = unique(total_companies),  # Take unique value
-    geometry = st_union(geometry)  # Dissolve geometries into one per district
-  ) %>%
-  st_as_sf()  # Ensure it remains an sf object
+##############################
+# make maps
+##############################
 
-#Clean up geometry
-district_data2 <- total_join2 %>%
-  group_by(DISTRICT) %>%
-  summarize(
-    total_companies = unique(total_companies),  # Take unique value
-    geometry = st_union(geometry)  # Dissolve geometries into one per district
-  ) %>%
-  st_as_sf()  # Ensure it remains an sf object
-
-#district_data2 <- total_join2 %>%
-  #group_by(DISTRICT) %>%
-  #summarize(
-    #total_companies = unique(total_companies),  # Take unique value
-    #geometry = st_union(geometry)  # Dissolve geometries into one per district
- # ) %>%
- # st_as_sf()  # Ensure it remains an sf object
-
-#Plot
-#ggplot(data = district_data2, aes(fill = total_companies)) + 
-  #geom_sf() + 
-  #labs(title = "Total Number of Companies by 
-      # Philadelphia City Council District",
-      # caption = "Data source: Open Data Philly") + 
-  #theme_void() +
-# scale_fill_viridis_c()  
-
-#sum(district_data2$total_companies) 
-
-# Calculate centroids for each district
-data4_centroids <- district_data%>%
+# Calculate centroids for each district for mapping
+data4_centroids <- Active_licenses%>%
   st_centroid()
 
-# Calculate centroids for each district
-data5_centroids <- district_data2%>%
+data5_centroids <- Active_licenses_rentals%>%
   st_centroid()
 
-display.brewer.all()
+#display.brewer.all()
 
 # Plot the result using ggplot2
+
 ##Map 1 -- NO rentals and NO dumpsters
-ggplot(data = district_data, aes(fill = total_companies)) + 
+ggplot(data = Active_licenses, aes(fill = total_companies)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -198,16 +156,14 @@ ggplot(data = district_data, aes(fill = total_companies)) +
                 label = DISTRICT), 
             size = 4, color = "black") + 
   scale_fill_distiller(palette = "YlGnBu", direction = 1) +  # Keep only this
-  labs(title = "     Businesses in Philadelphia by City Council District, 
-No Rental and No Dumpster License Type, 2020 to Oct 2024",
-       fill = "  Number of
-  Businesses",
+  labs(title = "Businesses in Philadelphia by City Council District,\nNo Rental and No Dumpster License Type, 2020-Oct 2024",
+       fill = "Number of\nBusinesses",
        caption = "Data source: Open Data Philly") + 
   theme_void()
 
 # Plot the result using ggplot2
 #Map 2 -- rentals only
-ggplot(data = district_data2, aes(fill = total_companies)) + 
+ggplot(data = Active_licenses_rentals, aes(fill = total_companies)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -215,9 +171,8 @@ ggplot(data = district_data2, aes(fill = total_companies)) +
                 label = DISTRICT), 
             size = 4, color = "black") + 
   scale_fill_distiller(palette = "Spectral", direction = 1) +  # Keep only this
-  labs(title = "    Businesses in Philadelphia by City Council District, 
-Only Rental License Type, 2020 to Oct 2024",
-       fill = "  Number of
-  Businesses",
+  labs(title = "Businesses in Philadelphia by City Council District, \nOnly Rental License Type, 2020-Oct 2024",
+       fill = "Number of\nBusinesses",
        caption = "Data source: Open Data Philly") + 
   theme_void()
+
