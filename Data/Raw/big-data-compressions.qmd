@@ -43,8 +43,9 @@ df_license %>%
 
 #import violations dataset and convert to parquet
 df_violations = read_csv("VIOLATIONS.csv")
+head(df_violations)
 df_violations %>% 
-  select(council_district,violationstatus) %>% 
+  select(council_district,violationstatus, address) %>% 
   arrow::write_parquet('violations.parquet')
 
 ```
