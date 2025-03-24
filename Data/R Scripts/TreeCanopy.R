@@ -1,3 +1,7 @@
+# same issue as HVI - the tree canopy cover dataset uses 2010 census blocks
+#we need to make a crosswalk between 2010 census tracts and 2020 census blocks
+
+
 #Tree Canopy Cover UHC --2019
 
 library(tidycensus)
@@ -11,10 +15,13 @@ library(ggplot2)
 library(readr)
 library(tidyverse)
 library(tidygeocoder)
+library(here)
+
+setwd(here("Data"))
 
 #Import CSV
 
-data <- read_csv("C:/Documents/IDEA Fellow/Tree Canopy Cover UHC.csv")
+data <- read_csv("Raw/Tree Canopy Cover UHC.csv")
 
 #Filter just for 2019 (most recent)
 
