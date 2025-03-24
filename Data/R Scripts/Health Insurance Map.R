@@ -20,24 +20,15 @@ library(dplyr)
 library(readxl)
 library(stringr)
 library(ggplot2)
+library(here)
+
+setwd(here("Data"))
 
 vars <- load_variables(2022, "acs5")
 
-#Population per Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
+#load the block population
+load("clean datasets/population_census_blocks.Rdata") 
 
-##No longer need, used GEOID as a whole for merge
-#Census block number
-  #Extact from GEOID above
-###Census_block_number <- total_population_blocks %>%
- #### mutate(block_number = str_sub(GEOID, -4))
 
 #Uninsured by Tract
 uninsured_PA <- get_acs(
@@ -47,33 +38,20 @@ uninsured_PA <- get_acs(
   state = "PA",
   county = "Philadelphia",
   year = 2022,
-  survey = "acs5"
-)
+  survey = "acs5")
+
 #Now add all variables together by census tract
 uninsured_PA_total <- uninsured_PA %>% 
   group_by(GEOID) %>% 
   summarize(total_uninsured = sum(estimate, na.rm = TRUE)) %>% 
   ungroup()
 
-#Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
-
-
-####NO LONGER NEED, MERGED EARLIER
-#Merge Block population
-###total_join <- joined_blocks %>% 
-  ####left_join(Census_block_number, by = c("BLOCKCE20"="block_number"))
-
 
 #Merge Tract insurance pop
 
 #Need to recreate GEOID minus 4 for the block to join. 
 
-total_population_blocks <- joined_blocks %>%
+total_population_blocks <- population_census_blocks %>%
   mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
 
 #I need to do a join where the values repeat?
@@ -85,35 +63,34 @@ total_join <- total_population_blocks %>%
 #Weight = Blocks / Total block in same tract
 
 data <- total_join %>%
-group_by(GEOIDTRACT) %>%
+  group_by(GEOIDTRACT) %>%
   mutate(Weight = value/sum(value), 
          Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block#
-ungroup()
+  ungroup()
 
-##data_clean <- na.omit(data)
 
 #Council District Insurance value
-
-##temp <- data %>% 
-##  filter(DISTRICT == 1)
-
 data2 <- data %>%
   group_by(DISTRICT) %>%
-  summarize(CD_insurance = sum(total_uninsured*Weight, na.rm = TRUE), 
-            CD_pop = sum(value, na.rm = TRUE)) %>% #estimate is number uninsured per tract#
-  ungroup()
-
-#weighted mean argument
-
-data3 <- data2 %>% 
-  group_by(DISTRICT) %>% 
-  summarize(percentage_uninsured = ((CD_insurance/CD_pop)*100)) %>% 
-  ungroup()
+  summarize(CD_uninsurance = sum(total_uninsured*Weight, na.rm = TRUE), 
+            CD_pop = sum(value, na.rm = TRUE)) %>%  
+  ungroup() %>% 
+  mutate(percentage_uninsured = ((CD_uninsurance/CD_pop)*100))
 
 
+##########################################
+#         save clean dataset
+##########################################
+uninsured_CCdistrict<-data2
+save(uninsured_CCdistrict, file="clean datasets/uninsured_CCdistrict.Rdata")
+
+
+##########################################
+#         plot 
+##########################################
 #Plot total number
 
-ggplot(data = data2, aes(fill = CD_insurance)) + 
+ggplot(data = data2, aes(fill = CD_uninsurance)) + 
   geom_sf() + 
   scale_fill_distiller(palette = "RdPu", 
                        direction = 1) + 
@@ -123,11 +100,11 @@ ggplot(data = data2, aes(fill = CD_insurance)) +
   theme_void()
 
 # Calculate centroids for each district
-data3_centroids <- data3 %>%
+data3_centroids <- data2 %>%
   st_centroid()
 
 # Plot with district numbers centered
-ggplot(data = data3, aes(fill = percentage_uninsured)) + 
+ggplot(data = data2, aes(fill = percentage_uninsured)) + 
   geom_sf() + 
   geom_text(data = data3_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
