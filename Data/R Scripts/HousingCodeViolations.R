@@ -13,6 +13,7 @@ library(arrow)
 library(tidyverse)
 library(here)
 
+here()
 setwd(here("Data"))
 
 ##Import CSV of Violations
@@ -36,44 +37,16 @@ violations_per_district <- Open_cases2 %>%
 # View the cleaned data
 #print(violations_per_district)
 
-#get the decennial census population per Census Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
-#check geometry
-#mapview(total_population_blocks)
+#Load the council district population dataset
+load("clean datasets/CCDistrict_pop.Rdata" )
 
-#Council District #
-# Blocks2020_CouncilDistrict2024 <- read_excel("C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-
-Blocks2020_CouncilDistrict2024 <- read_excel("Raw/Blocks2020_CouncilDistrict2024.xlsx")
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
-
-#Check geometry by district
-#mapview(joined_blocks, zcol = "DISTRICT")
 
 ##Join Open cases and joined blocks by District
 
-total_join <- joined_blocks %>%
+district_data <- CCDistrict_pop %>%
   left_join (violations_per_district, by = c("DISTRICT"="council_district"))
 
 # mapview(total_join, zcol = "total_violations")
-
-district_data <- total_join %>%
-  group_by(DISTRICT) %>%
-  summarize(
-    total_violations = unique(total_violations),  # Take unique value
-    geometry = st_union(geometry)  # Dissolve geometries into one per district
-  ) %>%
-  ungroup() %>% 
-  st_as_sf()  # Ensure it remains an sf object
 
 
 #Building footprint dataset, use polygons as points and use as denominator
@@ -124,7 +97,7 @@ housing_violations_per_CCdistrict <- district_data %>%
   st_as_sf() 
 
 #remove geometry to save as csv:
-housing_violations_per_CCdistrict<-housing_violations_per_CCdistrict %>%   st_drop_geometry()
+#housing_violations_per_CCdistrict<-housing_violations_per_CCdistrict %>%   st_drop_geometry()
 
 #############################################
 #     save the cleaned district data        #
@@ -136,7 +109,7 @@ housing_violations_per_CCdistrict<-housing_violations_per_CCdistrict %>%   st_dr
 #building footprint data from Open Data Philly is "current" downloaded in March 2025
 #violation data from Open Data Philly is from 2020 - present and was downloaded on XX-XX-2025
 
-write.csv(housing_violations_per_CCdistrict,"clean datasets/housing_violations_per_CCdistrict.csv" )
+save(housing_violations_per_CCdistrict,file="clean datasets/housing_violations_per_CCdistrict.Rdata" )
 
 
 
