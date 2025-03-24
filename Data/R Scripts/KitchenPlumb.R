@@ -19,19 +19,15 @@ library(ggplot2)
 library(matrixStats)
 library(patchwork)
 library(RColorBrewer)
+library(here)
+
+setwd(here('Data'))
 
 #Find Variables
 vars <- load_variables(2022, "acs5")
 
-#Population per Block (need geometry for crosswalk)
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
+#load the block population
+load("clean datasets/population_census_blocks.Rdata") 
 
 #Facilities (Kitchen + Plumbing) by Tract
 facilities <- get_acs(
@@ -44,7 +40,7 @@ facilities <- get_acs(
 )
 
 #change variable names
-facilities <- facilities %>%
+facilities_wide <- facilities %>%
   group_by(GEOID) %>%
   summarize(
     total_plumb = sum(estimate[variable == "B25048_001"]),
@@ -53,45 +49,45 @@ facilities <- facilities %>%
     lack_kitch = sum(estimate[variable == "B25052_003"])) %>%
   ungroup()
 
-#Council District #Crosswalk
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
 
 #TRACT Need to recreate GEOID minus 4 for the block to join. 
 
-total_population_blocks <- joined_blocks %>%
+total_population_blocks <- population_census_blocks %>%
   mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
 
 total_join <- total_population_blocks %>%
-  left_join (facilities, by = c("GEOIDTRACT"="GEOID"))
+  left_join (facilities_wide, by = c("GEOIDTRACT"="GEOID"))
 
 #Weight population per block #variable= value
 data <- total_join %>%
   group_by(GEOIDTRACT) %>%
   mutate(Weight = value/sum(value), 
-         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight),
-         totalplumbweight = total_plumb*Weight) %>% #value is pop per block#
+         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% 
   ungroup()
 
 #Create percents
 data2 <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    total_plumb2 = sum(total_plumb * Weight, na.rm = TRUE), 
-    lack_plumb2 = sum(lack_plumb * Weight, na.rm = TRUE),
-    total_kitch2 = sum(total_kitch * Weight, na.rm = TRUE),
-    lack_kitch2 = sum(lack_kitch * Weight, na.rm = TRUE)) %>%
+    district_total_housingunits = sum(total_plumb * Weight, na.rm = TRUE), 
+    district_lack_plumbing = sum(lack_plumb * Weight, na.rm = TRUE),
+    district_lack_kitchen = sum(lack_kitch * Weight, na.rm = TRUE)) %>%
   ungroup() %>% 
   mutate(
-    lack_plumb_pct = (lack_plumb2/total_plumb2)*100,
-    lack_kitch_pct = (lack_kitch2/total_kitch2)*100
+    district_lack_plumb_pct = (district_lack_plumbing/district_total_housingunits)*100,
+    district_lack_kitch_pct = (district_lack_kitchen/district_total_housingunits)*100
   )
 
+#################################################
+# save clean datasets
+#################################################
+lack_of_plumb_kitch_CCdistrict<-data2
 
+save(lack_of_plumb_kitch_CCdistrict, file="clean datasets/lack_of_plumb_kitch_CCdistrict.Rdata")
+
+#################################################
 #Plots
+#################################################
 
 display.brewer.all()  # Shows all available palettes
 
@@ -102,7 +98,7 @@ data4_centroids <- data2 %>%
 
 # Lack Plumbing
 plot1 <- ggplot(data = data2) + 
-  geom_sf(aes(fill = lack_plumb_pct)) + 
+  geom_sf(aes(fill = district_lack_plumb_pct)) + 
   geom_text(data = data4_centroids, aes(x = X, y = Y, label = DISTRICT), 
             size = 4, color = "black") + 
   scale_fill_distiller(palette = "PuBu", direction = 1) + 
@@ -119,7 +115,7 @@ plot1 <- ggplot(data = data2) +
 
 #Lack Kitchen
 plot2 <- ggplot(data = data2) + 
-  geom_sf(aes(fill = lack_kitch_pct)) + 
+  geom_sf(aes(fill = district_lack_kitch_pct)) + 
   geom_text(data = data4_centroids, aes(x = X, y = Y, label = DISTRICT), 
             size = 4, color = "black") + 
   scale_fill_distiller(palette = "OrRd", direction = 1) + 
