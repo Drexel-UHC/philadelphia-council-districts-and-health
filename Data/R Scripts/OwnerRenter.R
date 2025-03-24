@@ -17,6 +17,10 @@ library(ggplot2)
 library(matrixStats)
 library(patchwork)
 library(RColorBrewer)
+library(here)
+
+setwd(here('Data'))
+
 
 #Find Variables
 vars <- load_variables(2020, "pl")
@@ -25,7 +29,7 @@ vars <- load_variables(2020, "pl")
 #H1_002N #Total occupied
 
 
-#Population per Block (need geometry for crosswalk)
+#Population per Block and households per block (need geometry for crosswalk)
 total_population_blocks <- get_decennial(
   geography = "block",
   variables = c("P1_001N", "H1_002N"), # Total population
@@ -53,7 +57,7 @@ Occupany <- get_acs(
 )
 
 #change variable names
-Occupany <- Occupany %>%
+Occupany_wide <- Occupany %>%
   group_by(GEOID) %>%
   summarize(
     total_HH = sum(estimate[variable == "B25003_001"]),
@@ -62,8 +66,7 @@ Occupany <- Occupany %>%
   ungroup()
 
 #Council District #Crosswalk
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
+Blocks2020_CouncilDistrict2024 <- read_excel("Raw/Blocks2020_CouncilDistrict2024.xlsx")
 
 joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
                       by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
@@ -74,23 +77,16 @@ total_population_blocks <- joined_blocks %>%
   mutate(GEOIDBG = str_sub(GEOID, 1, 12))
 
 total_join <- total_population_blocks %>%
-  left_join (Occupany, by = c("GEOIDBG"="GEOID"))
+  left_join (Occupany_wide, by = c("GEOIDBG"="GEOID"))
 
-#Weight population per block #variable= value
-#data <- total_join %>%
-  #group_by(GEOIDBG) %>%
- # mutate(Weight = value/sum(value), 
-        # Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block#
-  #ungroup()
 
-#Weight HH per block #variable= value
+#Weight HH per block #variable= value (creating the weights based on the number of households in a census block)
 data <- total_join %>%
   group_by(GEOIDBG) %>%
   mutate(Weight = HH/sum(HH), 
          Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% 
   ungroup()
 
-##Weighted based on population? Should I do HH?
 
 # Aggregate data at the Council District level
 data2 <- data %>%
@@ -107,8 +103,19 @@ data2 <- data %>%
   )
 
 
-#Plots
+#################################################################
+# save clean dataset
+#################################################################
 
+owner_renter_HH_CCdistrict<-data2
+
+save(owner_renter_HH_CCdistrict, file="clean datasets/owner_renter_HH_CCdistrict.Rdata")
+
+
+
+#################################################################
+#Plots
+#################################################################
 display.brewer.all()  # Shows all available palettes
 
 # Calculate centroids
