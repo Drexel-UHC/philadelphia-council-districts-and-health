@@ -25,9 +25,11 @@ library(ggplot2)
 library(matrixStats)
 library(patchwork)
 library(tidyr)
+library(here)
+
+setwd(here("Data"))
 
 vars <- load_variables(2022, "acs5")
-View(vars) 
 
 #Population per Block
 total_population_blocks <- get_decennial(
@@ -50,7 +52,7 @@ race <- get_acs(
                 "B02001_006", #Native Hawaiian/PI
                 "B02001_007", #Other
                 "B02001_008", #2 or more
-                "B03001_001", #Total His
+                # "B03001_001", #Total His (Amber: this does not work becuase it is by tract and not block group -TR)
                 "B03002_012", #Hispanic
                 "B03002_002"), #Not Hispanic
   state = "PA",
@@ -60,7 +62,7 @@ race <- get_acs(
 )
 
 #change variable names
-race <- race %>%
+race_wide <- race %>%
   group_by(GEOID) %>%
   summarize(
     total_race = sum(estimate[variable == "B02001_001"]),
@@ -71,26 +73,25 @@ race <- race %>%
     pi = sum(estimate[variable == "B02001_006"]),
     other = sum(estimate[variable == "B02001_007"]),
     two_more = sum(estimate[variable == "B02001_008"]),
-    total_hispanic = sum(estimate[variable == "B03001_001"]), #not working, but total matches total race
+    # total_hispanic = sum(estimate[variable == "B03001_001"]), #not working, but total matches total race (because the variable is at the tract level-TR)
     hispanic = sum(estimate[variable == "B03002_012"]),
     not_hispanic = sum(estimate[variable == "B03002_002"]))%>%
-  ungroup()
+  ungroup() %>% 
+  mutate(asian_pi = asian+pi)
 
 #Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-View(Blocks2020_CouncilDistrict2024)
+Blocks2020_CouncilDistrict2024 <- read_excel("Raw/Blocks2020_CouncilDistrict2024.xlsx")
+# View(Blocks2020_CouncilDistrict2024)
 
 joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
                       by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
 
 #Need to recreate GEOID minus 3 for the block group to join. 
-
-total_population_blocks <- joined_blocks %>%
+joined_blocks2 <- joined_blocks %>%
   mutate(GEOIDBG = str_sub(GEOID, 1, 12))
 
-total_join <- total_population_blocks %>%
-  left_join (race, by = c("GEOIDBG"="GEOID"))
+total_join <- joined_blocks2 %>%
+  left_join (race_wide, by = c("GEOIDBG"="GEOID"))
 
 #weights
 data <- total_join %>%
@@ -107,29 +108,43 @@ data <- data %>%
 data_cd <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    total_pop = sum(total_race * Weight, na.rm = TRUE),  # Tract total pop
+    total_pop = sum(value, na.rm=TRUE),
     white = sum(white * Weight, na.rm = TRUE),
     black = sum(black * Weight, na.rm = TRUE),
     native = sum(native * Weight, na.rm = TRUE),
     asian = sum(asian * Weight, na.rm = TRUE),
     pi = sum(pi * Weight, na.rm = TRUE),
     other = sum(other * Weight, na.rm = TRUE),
+    asian_pi = sum(asian_pi*Weight,na.rm=TRUE),
     two_more = sum(two_more * Weight, na.rm = TRUE),
     hispanic = sum(hispanic * Weight, na.rm = TRUE),
-    not_hispanic = sum(not_hispanic * Weight, na.rm = TRUE),
-    pct_white = ((white / total_pop)*100),
-    pct_black = ((black / total_pop)*100),
-    pct_native = ((native / total_pop)*100),
-    pct_asian = ((asian / total_pop)*100),
-    pct_pi = ((pi / total_pop)*100),
-    pct_other = ((other/ total_pop)*100),
-    pct_two_more = ((two_more / total_pop)*100),
-    pct_hispanic = ((hispanic / total_pop)*100),
-    pct_not_hispanic = ((not_hispanic / total_pop)*100),
-    geometry = st_union(geometry)) %>% #should keep geometry?
-  ungroup()
+    not_hispanic = sum(not_hispanic * Weight, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(     pct_white = ((white / total_pop)*100),
+              pct_black = ((black / total_pop)*100),
+              pct_native = ((native / total_pop)*100),
+              pct_asian = ((asian / total_pop)*100),
+              pct_pi = ((pi / total_pop)*100),
+              pct_asian_pi = ((asian_pi/total_pop)*100),
+              pct_other = ((other/ total_pop)*100),
+              pct_two_more = ((two_more / total_pop)*100),
+              pct_hispanic = ((hispanic / total_pop)*100),
+              pct_not_hispanic = ((not_hispanic / total_pop)*100))
 
+
+#######################################
+# save file
+#######################################
+
+race_CCdistricts<-data_cd
+
+save(race_CCdistricts, file="clean datasets/race_CCdistricts.Rdata" )
+
+
+#######################################
 #Plot
+#######################################
+
 library(RColorBrewer)
 display.brewer.all()  # Shows all available palettes
 
@@ -137,8 +152,8 @@ display.brewer.all()  # Shows all available palettes
 plot <- ggplot(data = data_cd, aes(fill = pct_white)) + 
   geom_sf() + 
   scale_fill_distiller(palette = "Blues", direction = 1) + 
-  labs(title = "White", 
-       fill = "% White") + 
+  labs(title = "Non-Hispanic White", 
+       fill = "% NH White") + 
   theme_void() +
   theme(
     plot.title = element_text(size = 8.5, hjust = 0.5, margin = margin(b = 5)),
@@ -165,9 +180,8 @@ plot2 <- ggplot(data = data_cd, aes(fill = pct_black)) +
 plot3 <- ggplot(data = data_cd, aes(fill = pct_native)) + 
   geom_sf() + 
   scale_fill_distiller(palette = "BuPu", direction = 1) + 
-  labs(title = "American Indian/Alaska Native", 
-       fill = "% American 
-Indian/Alaska Native") + 
+  labs(title = "American Indian and Alaska Native", 
+       fill = "% American Indian and \nAlaska Native") + 
   theme_void() +
   theme(
     plot.title = element_text(size = 8.5, hjust = 0.5, margin = margin(b = 5)),
