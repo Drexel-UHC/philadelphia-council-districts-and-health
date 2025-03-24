@@ -17,6 +17,10 @@ library(stringr)
 library(ggplot2)
 library(matrixStats)
 library(patchwork)
+library(here)
+
+
+setwd(here('Data'))
 
 vars <- load_variables(2022, "acs5")
 
@@ -30,7 +34,7 @@ total_population_blocks <- get_decennial(
   geometry = TRUE #will add block geometry in this step
 )
 
-total_population_blocks <- total_population_blocks %>%
+total_population_blocks_wide <- total_population_blocks %>%
   group_by(GEOID) %>%
   summarize(
     pop = sum(value[variable == "P1_001N"]),
@@ -48,7 +52,7 @@ medianHH <- get_acs(
 )
 
 #change variable names
-medianHH <- medianHH %>%
+medianHH_wide <- medianHH %>%
   group_by(GEOID) %>%
   summarize(
     total_HH = sum(estimate[variable == "B11001_001"]),
@@ -56,10 +60,9 @@ medianHH <- medianHH %>%
   ungroup()
 
 #Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
+Blocks2020_CouncilDistrict2024 <- read_excel("Raw/Blocks2020_CouncilDistrict2024.xlsx")
 
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
+joined_blocks <-merge(total_population_blocks_wide, Blocks2020_CouncilDistrict2024, 
                       by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
 
 #Need to recreate GEOID minus 3 for the block group to join. 
@@ -68,7 +71,7 @@ total_population_blocks <- joined_blocks %>%
   mutate(GEOIDBG = str_sub(GEOID, 1, 12))
 
 total_join <- total_population_blocks %>%
-  left_join (medianHH, by = c("GEOIDBG"="GEOID"))
+  left_join (medianHH_wide, by = c("GEOIDBG"="GEOID"))
 
 #weights? Should find number of HH#
 data <- total_join %>%
@@ -81,18 +84,29 @@ data <- total_join %>%
 data2 <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    total_HH_district = sum(total_HH * Weight, na.rm = TRUE),
-    medianHH_district = weightedMedian(medianHH, Weight, na.rm = TRUE)) %>% 
+    total_HH_district2 = sum(HH, na.rm = TRUE),
+    medianHH_income_district = weightedMedian(medianHH, Weight, na.rm = TRUE)) %>% 
   #do I want to use a weighted Median?? -> yes
   ungroup()
 
-#plot
+
+#################################################
+#         save clean dataset
+#################################################
+median_HH_income_CCdistrict<-data2
+
+save(median_HH_income_CCdistrict, file="clean datasets/median_HH_income_CCdistrict.Rdata")
+
+
+#################################################
+#       map median HH income
+#################################################
 # Calculate centroids
 data4_centroids <- data2 %>%
   st_centroid() %>%
   mutate(X = st_coordinates(.)[,1], Y = st_coordinates(.)[,2])
 
-ggplot(data = data2, aes(fill = medianHH_district)) + 
+ggplot(data = data2, aes(fill = medianHH_income_district)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, aes(x = X, y = Y, label = DISTRICT), 
             size = 4, color = "black") + 
