@@ -14,19 +14,16 @@ library(readxl)
 library(stringr)
 library(ggplot2)
 library(patchwork)
+library(here)
+
+setwd(here("Data"))
 
 vars <- load_variables(2022, "acs5")
 
-#Population per Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
+#load block population data
+load("clean datasets/population_census_blocks.Rdata") 
 
+#import poverty data from the census ACS
 #Total Poverty by Tract
 Poverty_Philly <- get_acs(
   geography = "tract",
@@ -38,7 +35,7 @@ Poverty_Philly <- get_acs(
 )
 
 #change variable names
-Poverty_Philly <- Poverty_Philly %>%
+Poverty_Philly_wide <- Poverty_Philly %>%
   group_by(GEOID) %>%
   summarize(
     total_pop = sum(estimate[variable == "B17001_001"]),
@@ -46,46 +43,37 @@ Poverty_Philly <- Poverty_Philly %>%
   ungroup()
 
 #Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
-
-total_population_blocks <- joined_blocks %>%
+total_population_blocks <- population_census_blocks %>%
   mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
 
-#Join them
+#Join poverty and block data
 total_join <- total_population_blocks %>%
-  left_join (Poverty_Philly, by = c("GEOIDTRACT"="GEOID"))
+  left_join (Poverty_Philly_wide, by = c("GEOIDTRACT"="GEOID"))
 
-#weights? 
+#weights 
 data <- total_join %>%
   group_by(GEOIDTRACT) %>%
-  mutate(Weight = value/sum(value), #value is pop per block#
+  mutate(Weight = value/sum(value), #value is pop per block and sum(value) is the population of the census tract#
          Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% 
   ungroup()
 
 # Step 2: Summarize the values at the tract level, ensuring no duplication
-data <- data %>% 
-  group_by(GEOIDTRACT) %>% 
-  summarize(
-    Weight = first(Weight),  # Use the first value of weight per tract
-    tract_poor = sum(total_poor, na.rm = TRUE),  # Sum poor population per tract
-    tract_pop = sum(total_pop, na.rm = TRUE),
-    DISTRICT = first(DISTRICT)# Sum total population per tract
-  ) %>% 
-  ungroup()
 
 data2 <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    CD_Poor = sum(tract_poor * Weight, na.rm = TRUE),  # Weighted poor population
-    CD_pop = sum(tract_pop * Weight, na.rm = TRUE)     # Weighted total population
+    CD_Poor = sum(total_poor * Weight, na.rm = TRUE),  # Weighted poor population
+    CD_pop = sum(value, na.rm = TRUE)     # Using the district population as the denominator 
   ) %>%
   ungroup() %>%
-  mutate(CD_pct = (CD_Poor / CD_pop) * 100)  # Percentage calculation
+  mutate(CD_pct_poverty = (CD_Poor / CD_pop) * 100)  # Percentage calculation
 
+#####################################################
+# save clean dataset
+############################################
+poverty_status_CCdistrict<-data2
+
+save(poverty_status_CCdistrict, file="clean datasets/poverty_status_CCdistrict.Rdata")
 
 
 #Plots
@@ -94,7 +82,7 @@ data4_centroids <- data2 %>%
   st_centroid() %>%
   mutate(X = st_coordinates(.)[,1], Y = st_coordinates(.)[,2])
 
-ggplot(data = data2, aes(fill = CD_pct)) + 
+ggplot(data = data2, aes(fill = CD_pct_poverty)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, aes(x = X, y = Y, label = DISTRICT), 
                         size = 4, color = "black") + 
