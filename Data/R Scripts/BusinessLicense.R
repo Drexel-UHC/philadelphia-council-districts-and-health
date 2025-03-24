@@ -110,25 +110,27 @@ Companies_per_district2<- Rental %>%
  # filter(council_district != 0 & !is.na(council_district))
 
 #Add in Crosswalk and Block geometry
-load("clean datasets/CCDistrict_pop.Rdata" )
+load("clean datasets/CCDistrict_pop.RData" )
 
 
 #Join Companies with District geometry
 
 #all active licenses minus dumpsters and rentals
 Active_licenses <- CCDistrict_pop %>%
-  left_join (Companies_per_district, by = c("DISTRICT"="council_district"))
+  left_join (Companies_per_district, by = c("DISTRICT"="council_district")) %>% 
+  rename(total_active_licenses_norentals = total_companies)
 
 #all active rental licenses
 Active_licenses_rentals <- CCDistrict_pop %>%
-  left_join (Companies_per_district2, by = c("DISTRICT"="council_district"))
+  left_join (Companies_per_district2, by = c("DISTRICT"="council_district"))%>% 
+  rename(total_active_licenses_rentalsonly = total_companies)
 
 #############################################
 #   save dataset
 #############################################
 
-save(Active_licenses,file="clean datasets/Active_licenses.Rdata" ) #all active licenses minus dumpsters and rentals
-save(Active_licenses_rentals,file="clean datasets/Active_licenses_rentals.Rdata" ) #all active rental licenses
+save(Active_licenses,file="clean datasets/Active_licenses.RData" ) #all active licenses minus dumpsters and rentals
+save(Active_licenses_rentals,file="clean datasets/Active_licenses_rentals.RData" ) #all active rental licenses
 
 
 

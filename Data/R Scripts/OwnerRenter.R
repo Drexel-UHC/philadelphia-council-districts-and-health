@@ -92,7 +92,7 @@ data <- total_join %>%
 data2 <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    total_HH_district = sum(total_HH * Weight, na.rm = TRUE),
+    total_HH_district = sum(HH, na.rm = TRUE),
     total_owner_district = sum(owner * Weight, na.rm = TRUE),
     total_renter_district = sum(renter * Weight, na.rm = TRUE) 
   ) %>% 
@@ -109,7 +109,7 @@ data2 <- data %>%
 
 owner_renter_HH_CCdistrict<-data2
 
-save(owner_renter_HH_CCdistrict, file="clean datasets/owner_renter_HH_CCdistrict.Rdata")
+save(owner_renter_HH_CCdistrict, file="clean datasets/owner_renter_HH_CCdistrict.RData")
 
 
 

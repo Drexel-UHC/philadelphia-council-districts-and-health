@@ -73,7 +73,7 @@ data2 <- data %>%
 ############################################
 poverty_status_CCdistrict<-data2
 
-save(poverty_status_CCdistrict, file="clean datasets/poverty_status_CCdistrict.Rdata")
+save(poverty_status_CCdistrict, file="clean datasets/poverty_status_CCdistrict.RData")
 
 
 #Plots

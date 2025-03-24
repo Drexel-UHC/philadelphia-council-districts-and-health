@@ -84,7 +84,7 @@ data <- total_join %>%
 data2 <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    total_HH_district2 = sum(HH, na.rm = TRUE),
+    total_HH_district = sum(HH, na.rm = TRUE),
     medianHH_income_district = weightedMedian(medianHH, Weight, na.rm = TRUE)) %>% 
   #do I want to use a weighted Median?? -> yes
   ungroup()
@@ -95,7 +95,7 @@ data2 <- data %>%
 #################################################
 median_HH_income_CCdistrict<-data2
 
-save(median_HH_income_CCdistrict, file="clean datasets/median_HH_income_CCdistrict.Rdata")
+save(median_HH_income_CCdistrict, file="clean datasets/median_HH_income_CCdistrict.RData")
 
 
 #################################################

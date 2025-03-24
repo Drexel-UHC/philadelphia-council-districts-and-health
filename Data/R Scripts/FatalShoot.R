@@ -45,7 +45,7 @@ CCDistrict_pop <- CCDistrict_pop %>%
   st_transform(crs = 4326)
 
 st_crs(CCDistrict_pop)
-st_crs(Fatal)
+st_crs(data)
 
 #intersect the council districts with the shooting point data, then summarize by district
 shootings_by_district <- st_join(data, CCDistrict_pop, join = st_within) %>% 
@@ -65,8 +65,12 @@ Shootings_CCDistrict<-CCDistrict_pop %>%
 #           save the clean dataset
 ##############################################################
 
-save(Shootings_CCDistrict, file="clean datasets/Shootings_CCDistrict.Rdata")
+save(Shootings_CCDistrict, file="clean datasets/Shootings_CCDistrict.RData")
 
+
+##############################################################
+#           Mapping
+##############################################################
 # FATAL Calculate centroids for each district
 data_centroids <- Shootings_CCDistrict %>%
   st_centroid() %>%

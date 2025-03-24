@@ -73,7 +73,7 @@ data2 <- data %>%
 ##################################################
 median_age_CCdistrict<-data2
 
-save(median_age_CCdistrict, file="clean datasets/median_age_CCdistrict.Rdata" )
+save(median_age_CCdistrict, file="clean datasets/median_age_CCdistrict.RData" )
 
 ##################################################
 # plotting

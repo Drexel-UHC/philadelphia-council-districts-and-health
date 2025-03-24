@@ -109,13 +109,15 @@ housing_violations_per_CCdistrict <- district_data %>%
 #building footprint data from Open Data Philly is "current" downloaded in March 2025
 #violation data from Open Data Philly is from 2020 - present and was downloaded on XX-XX-2025
 
-save(housing_violations_per_CCdistrict,file="clean datasets/housing_violations_per_CCdistrict.Rdata" )
+save(housing_violations_per_CCdistrict,file="clean datasets/housing_violations_per_CCdistrict.RData" )
 
 
 
 
 
-#PLOTTING
+#############################################
+#     mapping                               #
+#############################################
 # Calculate centroids for each district (so that the labels will be in the center of the district when mapped)
 data4_centroids <- housing_violations_per_CCdistrict %>%
   st_centroid()

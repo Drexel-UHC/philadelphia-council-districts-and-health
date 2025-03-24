@@ -82,7 +82,7 @@ data2 <- data %>%
 #         save clean dataset
 ##########################################
 uninsured_CCdistrict<-data2
-save(uninsured_CCdistrict, file="clean datasets/uninsured_CCdistrict.Rdata")
+save(uninsured_CCdistrict, file="clean datasets/uninsured_CCdistrict.RData")
 
 
 ##########################################

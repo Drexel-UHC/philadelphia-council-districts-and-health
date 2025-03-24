@@ -63,7 +63,7 @@ Crashes_CCDistrict<-CCDistrict_pop %>%
 #  save clean dataset
 ########################################################
 
-save(Crashes_CCDistrict, file="clean datasets/Crashes_CCDistrict.Rdata")
+save(Crashes_CCDistrict, file="clean datasets/Crashes_CCDistrict.RData")
 
 ###########################################################
 #  map

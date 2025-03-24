@@ -83,7 +83,7 @@ data2 <- data %>%
 #################################################
 lack_of_plumb_kitch_CCdistrict<-data2
 
-save(lack_of_plumb_kitch_CCdistrict, file="clean datasets/lack_of_plumb_kitch_CCdistrict.Rdata")
+save(lack_of_plumb_kitch_CCdistrict, file="clean datasets/lack_of_plumb_kitch_CCdistrict.RData")
 
 #################################################
 #Plots

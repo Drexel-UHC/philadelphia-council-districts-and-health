@@ -16,7 +16,7 @@ setwd(here("Data"))
 
 
 #Load Crosswalk
-load("clean datasets/population_census_blocks")
+load("clean datasets/population_census_blocks.Rdata")
 
 #Load ACS education data
 #vars <- load_variables(2022, "acs5")
@@ -94,7 +94,7 @@ Education_Categories <- Education %>%
 
 #Need to recreate GEOID minus 3 for the block group to join. 
 
-total_population_blocks <- joined_blocks %>%
+total_population_blocks <- population_census_blocks %>%
   mutate(GEOID_blockgroup = str_sub(GEOID, 1, 12))
 
 #I need to do a join where the values repeat?
@@ -128,7 +128,7 @@ mutate(
 ###################################################### 
 # save clean dataset
 ###################################################### 
-save(education_CCdistricts, file="clean datasets/education_CCdistricts.Rdata" )
+save(education_CCdistricts, file="clean datasets/education_CCdistricts.RData" )
 
 
 

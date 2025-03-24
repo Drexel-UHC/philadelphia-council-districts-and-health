@@ -138,7 +138,7 @@ data_cd <- data %>%
 
 race_CCdistricts<-data_cd
 
-save(race_CCdistricts, file="clean datasets/race_CCdistricts.Rdata" )
+save(race_CCdistricts, file="clean datasets/race_CCdistricts.RData" )
 
 
 #######################################
