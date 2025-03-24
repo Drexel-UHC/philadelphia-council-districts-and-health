@@ -16,17 +16,14 @@ library(stringr)
 library(ggplot2)
 library(matrixStats)
 library(patchwork)
+library(here)
+
+setwd(here('Data'))
 
 
-#Population per Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
+#load the Population per Block dataset
+load("clean datasets/population_census_blocks.Rdata") 
+
 
 #medianAge by Block Group
 medianAge <- get_acs(
@@ -38,29 +35,22 @@ medianAge <- get_acs(
   survey = "acs5"
 )
 
-#change variable names
-medianAge <- medianAge %>%
+#change variable names and make a wide dataset
+medianAge_wide <- medianAge %>%
   group_by(GEOID) %>%
   summarize(
-    total_Age = sum(estimate[variable == "B01002_001"]),
-    medianMale = sum(estimate[variable == "B01002_002"]),
-    medianFemale = sum(estimate[variable =="B01002_003"])) %>%
+    median_age_total = sum(estimate[variable == "B01002_001"]),
+    median_age_male = sum(estimate[variable == "B01002_002"]),
+    median_age_female = sum(estimate[variable =="B01002_003"])) %>%
   ungroup()
 
-#Council District #
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
-
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
 
 #Need to recreate GEOID minus 3 for the block group to join. 
-
-total_population_blocks <- joined_blocks %>%
+total_population_blocks <- population_census_blocks %>%
   mutate(GEOIDBG = str_sub(GEOID, 1, 12))
 
 total_join <- total_population_blocks %>%
-  left_join (medianAge, by = c("GEOIDBG"="GEOID"))
+  left_join (medianAge_wide, by = c("GEOIDBG"="GEOID"))
 
 #weights? Should find number of Age#
 data <- total_join %>%
@@ -73,12 +63,21 @@ data <- total_join %>%
 data2 <- data %>%
   group_by(DISTRICT) %>%
   summarize(
-    medianAge_district = weightedMedian(total_Age, Weight, na.rm = TRUE),
-    medianAge_district_male = weightedMedian(medianMale, Weight, na.rm = TRUE),
-    medianAge_district_female = weightedMedian(medianFemale, Weight, na.rm = TRUE)) %>% 
-  #do I want to use a weighted Median??
+    district_median_age_total = weightedMedian(median_age_total, Weight, na.rm = TRUE),
+    district_median_age_male = weightedMedian(median_age_male, Weight, na.rm = TRUE),
+    district_median_age_female = weightedMedian(median_age_female, Weight, na.rm = TRUE)) %>% 
   ungroup()
 
+##################################################
+# save datset
+##################################################
+median_age_CCdistrict<-data2
+
+save(median_age_CCdistrict, file="clean datasets/median_age_CCdistrict.Rdata" )
+
+##################################################
+# plotting
+##################################################
 # Calculate centroids for each district
 data4_centroids <- data2 %>%
   st_centroid()
@@ -87,7 +86,7 @@ data4_centroids <- data2 %>%
 #ggplot(data = data2, aes(fill = medianAge_district)) + 
  # geom_sf() + 
   #scale_fill_distiller(palette = "BuPu", 
-                       direction = 1) + 
+                       # direction = 1) + 
   #labs(title = 
        #  "Weighted Median Age by Philadelphia City
           #    Council District 2022 (Male and Female)",
@@ -120,7 +119,7 @@ data4_centroids <- data2 %>%
  # theme_void()
 
 # Plot for Male and Female combined
-plot1 <- ggplot(data = data2, aes(fill = medianAge_district)) + 
+plot1 <- ggplot(data = data2, aes(fill = district_median_age_total)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -138,7 +137,7 @@ plot1 <- ggplot(data = data2, aes(fill = medianAge_district)) +
   )
 
 # Plot for Male only
-plot2 <- ggplot(data = data2, aes(fill = medianAge_district_male)) + 
+plot2 <- ggplot(data = data2, aes(fill = district_median_age_male)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -157,7 +156,7 @@ plot2 <- ggplot(data = data2, aes(fill = medianAge_district_male)) +
   )
 
 # Plot for Female only
-plot3 <- ggplot(data = data2, aes(fill = medianAge_district_female)) + 
+plot3 <- ggplot(data = data2, aes(fill = district_median_age_female)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
