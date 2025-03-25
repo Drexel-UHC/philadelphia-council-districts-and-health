@@ -4,6 +4,7 @@ format:
   html:
     embed-resources: true
     toc: true
+server: shiny
 editor: source
 execute:
   warning: false
@@ -100,11 +101,11 @@ sf_districts %>%
   )
 ```
 
-Let's append the data.
+Let's append the data and save it for the app. 
 
 ```{r}
-sf_data = sf_districts %>% 
-  left_join(df_data)
+sf_data = sf_districts %>% left_join(df_data)
+save(sf_data, file = here("Data/clean datasets/app_v0.1.RData"))
 ```
 
 Now try some EDA.
@@ -123,7 +124,7 @@ library(ggplot2)
  
 Okay let's do both a distribution analysis as well as spatial analysis. 
 
-## Distribution analysis
+## Univariate Distribution analysis
 
 ```{r}
 layout_sidebar(
@@ -136,6 +137,25 @@ layout_sidebar(
       multiple = F
     ),
   ),
-  "Main Content"
+  shiny::plotOutput("output_plot")
 )
 ```
+
+
+
+```{r}
+#| context: server
+
+library(here)
+library(ggplot2)
+load(here("Data/clean datasets/app_v0.1.RData"))
+
+
+output$output_plot <- renderPlot({ 
+  sf_data %>% 
+    ggplot(aes_string(x = input$select_variable)) +
+    geom_density(fill = "blue", alpha = 0.5) +
+    labs(title = paste("Density plot of", input$select_variable))
+})
+```
+
