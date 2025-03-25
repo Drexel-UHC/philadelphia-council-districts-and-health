@@ -1,0 +1,117 @@
+---
+title: "2025-03-25 - Initial data EDA"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| code-summary: "Setup"
+#| code-fold: true
+
+## instal pacman if required
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse, arrow, here,
+  reactable,
+  sf, rmapshaper, leaflet
+)
+library(arrow)
+library(tidyverse)
+library(here)
+setwd(here("Data/notebooks"))
+
+```
+
+Here we just do a initial EDA on the data before we do any shiny apps. It would also be very helpful if Tamara/Amber created notebooks with the visualizations they want to turn into a Shiny app. 
+
+
+# Import Data
+
+So got an message that the final datasets are in `/clean datasets/council_measures_reduc.RData`; let's take a look!
+
+## Data
+
+```{r}
+load("../clean datasets/council_measures_reduc.RData")
+df_data = council_measures_reduc %>% 
+  janitor::clean_names()
+df_data %>% glimpse()
+```
+
+Looks okay. Note that there is another data object that contains intermediate variables as well. Which can be loaded below.  For Now let's focus on the curated object.
+
+```{{r}}
+load("../clean datasets/council_measures_reduc_geom.RData")
+df_intermediate = council_measures_reduc_geom %>% 
+  janitor::clean_names()
+df_intermediate %>% glimpse()
+```
+
+## Boundaries
+
+Boundaries to City Districts are found in the original Rdata files processed by Amber. Let's just extract that and do a quicks sanity check. 
+
+```{r}
+path_amber_rdata_1 = list.files(path = here("Data/clean datasets"), 
+           pattern = "\\Active_licenses.Rdata$", 
+           full.names = TRUE)
+
+load(path_amber_rdata_1)
+
+sf_districts = Active_licenses %>% 
+  janitor::clean_names() %>% 
+  select(district)
+glimpse(sf_districts)
+  
+```
+
+Let's take a quick look.
+
+```{r}
+sfa %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor = "red", 
+    weight = 1, 
+    fillOpacity = 0.2,
+    # Add these lines for hover functionality
+    highlightOptions = highlightOptions(
+      weight = 3,
+      color = "#666",
+      fillOpacity = 0.7,
+      bringToFront = TRUE
+    ),
+    # Create labels from your data
+    label = ~paste("District:", DISTRICT, "<br>",
+                  "Population:", CCDistrict_population, "<br>",
+                  "Active Licenses:", total_active_licenses_norentals),
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto"
+    )
+  )
+```
+
+Let's append the data.
+
+```{r}
+sf_data = sf_districts %>% 
+  left_join(df_data)
+```
+
+Now try some EDA.
+
+--- 
+
+# Exploratory Data Analysis
+
+The goal of this dashbaord is to enable the exploration of the data. So let's start with some basic EDA.
+
+
+```{r}
+
+```
