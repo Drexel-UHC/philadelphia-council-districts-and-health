@@ -1,0 +1,115 @@
+---
+title: "Spatial App - mockup"
+subtitle: "Note Mockups are not suppose to pretty just functional to develop core logic; we can make things pretty later"
+format: 
+  html:
+    embed-resources: true
+    toc: true
+server: shiny
+editor: source
+execute:
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| code-summary: "Setup Quarto"
+#| code-fold: true
+
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse, arrow, here,
+  reactable,
+  sf, rmapshaper, leaflet,
+  bslib, shiny
+)
+setwd(here::here("Data/notebooks/2025-03-25 - Initial data EDA"))
+
+```
+
+Goal here is to start developing a univariate mockup. Using the data tidied in the initial EDA notebook. You can see the code is identical to the one in the notebook - we only added an interactive input.  
+
+# Interactive Spatial
+
+
+```{r}
+#| context: setup
+
+## Load Dependencies
+library(bslib)  
+library(leaflet)
+library(here)
+
+## Import required data (see notebook )
+load(here("Data/clean datasets/app_v0.1.RData"))
+
+```
+
+
+```{r}
+layout_sidebar(
+  sidebar = sidebar(
+    shiny::selectizeInput(
+      inputId = "select_variable",
+      label = "Select Variable",
+      choices = names(sf_data  |> select(-district)),
+      selected = "cc_district_population",
+      multiple = F
+    ),
+  ),
+  leafletOutput("output_map")
+)
+```
+
+```{r}
+#| context: server
+
+## Leaflet output
+output$output_map <- renderLeaflet({
+  # Create a color palette based on the variable
+  pal <- colorNumeric(
+    palette = "viridis",
+    domain = sf_data[[input$select_variable]]
+  )
+  
+  # Create the leaflet map
+  sf_data %>% 
+    leaflet() %>%
+    addTiles() %>%
+    addPolygons(
+      fillColor = ~pal(get(input$select_variable)), 
+      weight = 1, 
+      opacity = 1,
+      color = "white",
+      dashArray = "3",
+      fillOpacity = 0.7,
+      # Add these lines for hover functionality
+      highlightOptions = highlightOptions(
+        weight = 3,
+        color = "#666",
+        fillOpacity = 0.9,
+        bringToFront = TRUE
+      ),
+      # Create labels from your data
+      label = ~paste(
+        "District:", district, "<br>",
+        input$select_variable, ":", round(get(input$select_variable), 2)
+      ),
+      labelOptions = labelOptions(
+        style = list("font-weight" = "normal", padding = "3px 8px"),
+        textsize = "15px",
+        direction = "auto"
+      )
+    ) %>% 
+    # Add a legend
+    addLegend(
+      position = "bottomright",
+      pal = pal,
+      values = ~get(input$select_variable),
+      title = input$select_variable,
+      opacity = 0.7)
+})
+```
+
