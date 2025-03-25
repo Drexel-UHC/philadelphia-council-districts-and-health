@@ -1,10 +1,9 @@
 ---
-title: "2025-03-25 - Initial data EDA"
+title: "phl-districts - 2025-03-25 - Initial data EDA"
 format: 
   html:
     embed-resources: true
     toc: true
-server: shiny
 editor: source
 execute:
   warning: false
@@ -110,50 +109,102 @@ Now try some EDA.
 
 --- 
 
-# Interactive EDA
+# EDA
 
-The goal of this section is to start developing interactive EDA sections. Let's start by setting up the interactive packages we need.
-
-```{r}
-#| context: setup
-library(bslib)  
-library(ggplot2)
-```
- 
-Okay let's do both a distribution analysis as well as spatial analysis. 
+The goal of this section is to mockup of visualizations for dashboard. 
 
 ## Univariate Distribution analysis
 
+Let's select variable to analyze.
+
 ```{r}
-layout_sidebar(
-  sidebar = sidebar(
-    shiny::selectizeInput(
-      inputId = "select_variable",
-      label = "Select Variable",
-      choices = names(df_data %>% select(-district)),
-      selected = "cc_district_population",
-      multiple = F
-    ),
-  ),
-  shiny::plotOutput("output_plot")
-)
+input = list()
+input$select_variable = 'cc_district_population '
+
 ```
 
-
+Let's write the visualization code
 
 ```{r}
-#| context: server
-
-library(here)
-library(ggplot2)
-load(here("Data/clean datasets/app_v0.1.RData"))
-
-
-output$output_plot <- renderPlot({ 
-  sf_data %>% 
-    ggplot(aes_string(x = input$select_variable)) +
+sf_data  %>% 
+    ggplot(aes_string(x = input$select_variable  )) +
     geom_density(fill = "blue", alpha = 0.5) +
-    labs(title = paste("Density plot of", input$select_variable))
-})
+    labs(title = paste("Density plot of ", input$select_variable))
 ```
 
+## Bivariate Distribution analysis
+
+Let's select variables to analyze.
+
+```{r}
+input = list()
+input$select_variable_1 = 'pct_white'
+input$select_variable_2 = 'median_hh_income_district'
+```
+
+Let's write the visualization code
+
+```{r}
+sf_data  %>% 
+    ggplot(aes_string(x = input$select_variable_1, y = input$select_variable_2 )) +
+    geom_point() +
+    labs(title = paste("Scatter plot of ", input$select_variable_1, " vs ", input$select_variable_2))
+```
+
+
+## Spatial Distribution
+
+Let's select variable to analyze.
+
+```{r}
+input = list()
+input$select_variable = 'cc_district_population'
+
+```
+
+Let's write the visualization code with leaflet.
+
+```{r}
+# Create a color palette based on the variable
+pal <- colorNumeric(
+  palette = "viridis",
+  domain = sf_data[[input$select_variable]]
+)
+
+# Create the leaflet map
+sf_data %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor = ~pal(get(input$select_variable)), 
+    weight = 1, 
+    opacity = 1,
+    color = "white",
+    dashArray = "3",
+    fillOpacity = 0.7,
+    # Add these lines for hover functionality
+    highlightOptions = highlightOptions(
+      weight = 3,
+      color = "#666",
+      fillOpacity = 0.9,
+      bringToFront = TRUE
+    ),
+    # Create labels from your data
+    label = ~paste(
+      "District:", district, "<br>",
+      input$select_variable, ":", round(get(input$select_variable), 2)
+    ),
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto"
+    )
+  ) %>% 
+  # Add a legend
+  addLegend(
+    position = "bottomright",
+    pal = pal,
+    values = ~get(input$select_variable),
+    title = input$select_variable,
+    opacity = 0.7)
+```
