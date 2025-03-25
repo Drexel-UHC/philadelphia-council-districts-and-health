@@ -2,3 +2,4 @@ Data/Raw/business_licenses.csv
 Data/Raw/VIOLATIONS.csv
 *.Rhistory
 *.DS_Store
+*.html
