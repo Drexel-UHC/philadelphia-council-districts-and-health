@@ -111,11 +111,31 @@ Now try some EDA.
 
 --- 
 
-# Exploratory Data Analysis
+# Interactive EDA
 
-The goal of this dashbaord is to enable the exploration of the data. So let's start with some basic EDA.
-
+The goal of this section is to start developing interactive EDA sections. Let's start by setting up the interactive packages we need.
 
 ```{r}
+#| context: setup
+library(bslib)  
+library(ggplot2)
+```
+ 
+Okay let's do both a distribution analysis as well as spatial analysis. 
 
+## Distribution analysis
+
+```{r}
+layout_sidebar(
+  sidebar = sidebar(
+    shiny::selectizeInput(
+      inputId = "select_variable",
+      label = "Select Variable",
+      choices = names(df_data %>% select(-district)),
+      selected = "cc_district_population",
+      multiple = F
+    ),
+  ),
+  "Main Content"
+)
 ```
