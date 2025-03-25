@@ -22,11 +22,9 @@ if (!require(pacman)) install.packages("pacman")
 pacman::p_load(
   tidyverse, arrow, here,
   reactable,
-  sf, rmapshaper, leaflet
-)
-library(arrow)
-library(tidyverse)
-library(here)
+  sf, rmapshaper, leaflet,
+  bslib, shiny
+) 
 setwd(here("Data/notebooks/2025-03-25 - Initial data EDA"))
 
 ```
