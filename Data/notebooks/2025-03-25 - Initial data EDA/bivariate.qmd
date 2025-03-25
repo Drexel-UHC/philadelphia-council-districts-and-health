@@ -1,0 +1,83 @@
+---
+title: "Bivariate App - mockup"
+subtitle: "Note Mockups are not suppose to pretty just functional to develop core logic; we can make things pretty later"
+format: 
+  html:
+    embed-resources: true
+    toc: true
+server: shiny
+editor: source
+execute:
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| code-summary: "Setup Quarto"
+#| code-fold: true
+
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse, arrow, here,
+  reactable,
+  sf, rmapshaper, leaflet,
+  bslib, shiny
+)
+setwd(here::here("Data/notebooks/2025-03-25 - Initial data EDA"))
+
+```
+
+Goal here is to start developing a univariate mockup. Using the data tidied in the initial EDA notebook. You can see the code is identical to the one in the notebook - we only added an interactive input.  
+
+# Interactive Bivariate
+
+
+```{r}
+#| context: setup
+
+## Load Dependencies
+library(bslib)  
+library(ggplot2)
+library(here)
+
+## Import required data (see notebook )
+load(here("Data/clean datasets/app_v0.1.RData"))
+
+```
+
+
+```{r}
+layout_sidebar(
+  sidebar = sidebar(
+    shiny::selectizeInput(
+      inputId = "select_variable_1",
+      label = "Select Variable 1",
+      choices = names(sf_data  |> select(-district)),
+      selected = "pct_white",
+      multiple = F
+    ),
+        shiny::selectizeInput(
+      inputId = "select_variable_2",
+      label = "Select Variable 2",
+      choices = names(sf_data  |> select(-district)),
+      selected = "median_hh_income_district",
+      multiple = F
+    ),
+  ),
+  shiny::plotOutput("output_plot")
+)
+```
+
+```{r}
+#| context: server
+
+output$output_plot <- renderPlot({ 
+  sf_data   |> 
+    ggplot(aes_string(x = input$select_variable_1, y = input$select_variable_2 )) +
+    geom_point() +
+    labs(title = paste("Scatter plot of ", input$select_variable_1, " vs ", input$select_variable_2))
+})
+```
+
