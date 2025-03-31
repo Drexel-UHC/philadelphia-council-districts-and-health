@@ -3,3 +3,4 @@ Data/Raw/VIOLATIONS.csv
 *.Rhistory
 *.DS_Store
 *.html
+*.badhistory
