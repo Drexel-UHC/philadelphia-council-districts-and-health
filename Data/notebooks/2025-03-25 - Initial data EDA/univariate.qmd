@@ -34,10 +34,13 @@ Goal here is to start developing a univariate mockup. Using the data tidied in t
 # Interactive Univariate
 
 
+## Setup 
+
 ```{r}
 #| context: setup
 
 ## Load Dependencies
+library(shiny)
 library(bslib)  
 library(ggplot2)
 library(here)
@@ -47,30 +50,39 @@ load(here("Data/clean datasets/app_v0.1.RData"))
 
 ```
 
+## UI (User Interface) (aka front end)
+
+This part of the code tells Shiny; what you want your app to look like.
 
 ```{r}
 layout_sidebar(
+  ## Side bar
   sidebar = sidebar(
     shiny::selectizeInput(
       inputId = "select_variable",
       label = "Select Variable",
       choices = names(sf_data  |> select(-district)),
-      selected = "cc_district_population",
+      selected = "pct_black",
       multiple = F
     ),
   ),
+  ## Main Panel
   shiny::plotOutput("output_plot")
 )
 ```
+
+## Backend (Server) (R process)
 
 ```{r}
 #| context: server
 
 output$output_plot <- renderPlot({ 
+
   sf_data |> 
     ggplot(aes_string(x = input$select_variable)) +
     geom_density(fill = "blue", alpha = 0.5) +
     labs(title = paste("Density plot of", input$select_variable))
+  
 })
 ```
 
