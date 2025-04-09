@@ -1,0 +1,96 @@
+---
+title: "Univariate App - mockup"
+subtitle: "Note Mockups are not suppose to pretty just functional to develop core logic; we can make things pretty later"
+format: 
+  html:
+    embed-resources: true
+    toc: true
+server: shiny
+editor: source
+execute:
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| code-summary: "Setup Quarto"
+#| code-fold: true
+
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse, arrow, here,
+  reactable,
+  sf, rmapshaper, leaflet,
+  bslib, shiny
+)
+#setwd(here::here("Data/notebooks/2025-03-25 - Initial data EDA"))
+
+```
+
+Goal here is to start developing a univariate mockup. Using the data tidied in the initial EDA notebook. You can see the code is identical to the one in the notebook - we only added an interactive input.  
+
+# Interactive Univariate
+
+
+## Setup 
+
+```{r}
+#| context: setup
+
+## Load Dependencies
+library(shiny)
+library(bslib)  
+library(ggplot2)
+library(here)
+library(dplyr)
+
+## Import required data (see notebook )
+load("C:/Documents/Github/philadelphia-council-districts-and-health/Data/clean datasets/council_measures_reduc.RData")
+
+```
+
+## UI (User Interface) (aka front end)
+
+This part of the code tells Shiny; what you want your app to look like.
+
+```{r}
+layout_sidebar(
+  ## Side bar
+  sidebar = sidebar(
+    shiny::selectizeInput(
+      inputId = "select_variable",
+      label = "Select Variable",
+      choices = names(council_measures_reduc  |> select(-DISTRICT)),
+      selected = "pct_black",
+      multiple = F
+    ),
+  ),
+  ## Main Panel
+  shiny::plotOutput("output_plot")
+)
+```
+
+## Backend (Server) (R process)
+
+```{r}
+#| context: server
+
+output$output_plot <- renderPlot({ 
+
+council_measures_reduc |> 
+  mutate(DISTRICT = factor(DISTRICT, levels = as.character(1:10))) |> 
+    ggplot(aes_string(x = "DISTRICT", y = input$select_variable, fill = input$select_variable)) +
+    geom_col(alpha = 0.7) +
+    labs(
+      title = paste("Bar plot of", input$select_variable, "by District"),
+      x = "District",
+      y = input$select_variable
+    ) +
+    scale_y_continuous(labels = scales::comma) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+})
+```
+
