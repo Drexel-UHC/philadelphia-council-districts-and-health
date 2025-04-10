@@ -27,79 +27,54 @@ data <- read_csv("Raw/Tree Canopy Cover UHC.csv")
 
 tree_2019 <- data %>% filter(YEAR == "2019")
 
-#Population per Block
-total_population_blocks <- get_decennial(
-  geography = "block",
-  variables = "P1_001N", # Total population
-  state = "PA",
-  county = "Philadelphia",
-  year = 2020,
-  geometry = TRUE #will add block geometry in this step
-)
-#check geometry
-mapview(total_population_blocks)
+#import 2010 to 2020 crosswalk
+cross <- read_csv("Raw/IPUMS_2010_2020_Crosswalk.csv")
 
-#Add in the crosswalk
-Blocks2020_CouncilDistrict2024 <- read_excel(
-  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
+tree_2019 <- tree_2019 %>%
+  mutate(geoid10 = as.character(GEOID10))
 
-joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
-                      by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
+cross <- cross %>%
+  mutate(tr2010ge = as.character(tr2010ge),
+         blk2020ge = as.character(blk2020ge))
 
+#load the block population
+load("clean datasets/population_census_blocks.Rdata") 
 
+#Left join to 2010 CT
+merge_2010 <- tree_2019 %>%
+  left_join(cross, by = c("GEOID10" = "tr2010ge"))
 
-#Need to remove Blockgroup from GEOID to join
-tract_join <- joined_blocks %>%
-  mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
-
-#Attempt join
-total_join <- tract_join %>%
-  left_join (tree_2019, by = c("GEOIDTRACT"="GEOID10"))
-
-#lots of missing values = I could remove them, but I'll leave it for now
-
-#mapview(total_join)
-
-#Need to think about how to show at CD level.
-#Currently have % for the tract, so what would be the % for the whole CD
-#Area?
-
-#Since shape area is at the block level --> I summed it for each Tract since
-#The original tree is by Census tract
-data2 <- total_join %>%
-  group_by(GEOIDTRACT) %>%
-  mutate(Tract_Area = sum(SHAPE_Area), 
-         Tract_Area = case_when(is.nan(Tract_Area)~0, TRUE~ Tract_Area)) %>%
-  mutate(tree = CTNLCDTREE/100)%>%
+#merge with CD crosswalk
+total_join <- population_census_blocks %>%
+  left_join (merge_2010, by = c("GEOID" = "blk2020ge"))
+  
+#Weight with 2010 P_Area value
+weighted_CD_tree <- total_join %>% 
+  group_by(DISTRICT) %>% 
+  summarise(CD_tree = weighted.mean(CTNLCDTREE, parea, na.rm = TRUE)) %>% 
   ungroup()
 
-#I took each Tract area, and created a weight for CD
-data3 <- data2 %>%
-  group_by(DISTRICT) %>%
-  mutate(Weight = Tract_Area/sum(Tract_Area),
-         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>%
-  ungroup()
+#################################################################
+# save clean dataset
+#################################################################
 
-#I used the weight to take the tree % coverage for each CD
-data4 <- data3 %>% 
-  group_by(DISTRICT) %>%
-  summarize(CD_tree = sum(CTNLCDTREE*Weight, na.rm = TRUE), CD_pop = sum(value, na.rm = TRUE)) %>%
-  ungroup()
+Tree_canopy_CCdistrict<-weighted_CD_tree
 
-#data5 <- data4 %>% 
-#  group_by(DISTRICT) %>%
-#  summarize(percentage_tree = (CD_tree * 100))
-#  ungroup()
-#
+save(Tree_canopy_CCdistrict, file="clean datasets/Tree_canopy_CCdistrict.RData")
+
+
+#################################################################
+#Plots
+#################################################################
 
 # Calculate centroids for each district
-data4_centroids <- data4 %>%
+data4_centroids <- weighted_CD_tree %>%
   st_centroid()
 
-display.brewer.all()
+#display.brewer.all()
 
 
-ggplot(data = data4, aes(fill = CD_tree)) + 
+ggplot(data = weighted_CD_tree, aes(fill = CD_tree)) + 
   geom_sf() + 
   geom_text(data = data4_centroids, 
             aes(x = st_coordinates(geometry)[,1], 
@@ -114,4 +89,75 @@ ggplot(data = data4, aes(fill = CD_tree)) +
        fill = "% Tree Canopy 
        Cover") +
   theme_void()
+
+#################################################################
+#Old Code
+#################################################################
+
+#Population per Block
+#total_population_blocks <- get_decennial(
+#  geography = "block",
+#  variables = "P1_001N", # Total population
+#  state = "PA",
+#  county = "Philadelphia",
+#  year = 2020,
+#  geometry = TRUE #will add block geometry in this step
+#)
+
+#check geometry
+#mapview(total_population_blocks)
+
+#Add in the CD crosswalk
+#Blocks2020_CouncilDistrict2024 <- read_excel(
+#  "C:/Documents/IDEA Fellow/Crosswalksmap/Blocks2020_CouncilDistrict2024.xlsx")
+
+#joined_blocks <-merge(total_population_blocks, Blocks2020_CouncilDistrict2024, 
+#                     by.x = "GEOID", by.y = "GEOID20", all.x = TRUE, all.y = TRUE)
+
+
+
+#Need to remove Blockgroup from GEOID to join
+#tract_join <- joined_blocks %>%
+#  mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
+
+#Attempt join
+#total_join <- tract_join %>%
+#  left_join (tree_2019, by = c("GEOIDTRACT"="GEOID10"))
+
+
+#mapview(total_join)
+
+#Need to think about how to show at CD level.
+#Currently have % for the tract, so what would be the % for the whole CD
+#Area?
+
+#Since shape area is at the block level --> I summed it for each Tract since
+#The original tree is by Census tract
+#data2 <- total_join %>%
+#  group_by(GEOIDTRACT) %>%
+#  mutate(Tract_Area = sum(SHAPE_Area), 
+#         Tract_Area = case_when(is.nan(Tract_Area)~0, TRUE~ Tract_Area)) %>%
+#  mutate(tree = CTNLCDTREE/100)%>%
+#  ungroup()
+
+#I took each Tract area, and created a weight for CD
+#data3 <- data2 %>%
+#  group_by(DISTRICT) %>%
+#  mutate(Weight = Tract_Area/sum(Tract_Area),
+#         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>%
+#  ungroup()
+
+#I used the weight to take the tree % coverage for each CD
+#data4 <- data3 %>% 
+#  group_by(DISTRICT) %>%
+#  summarize(CD_tree = sum(CTNLCDTREE*Weight, na.rm = TRUE), CD_pop = sum(value, na.rm = TRUE)) %>%
+#  ungroup()
+
+#data5 <- data4 %>% 
+#  group_by(DISTRICT) %>%
+#  summarize(percentage_tree = (CD_tree * 100))
+#  ungroup()
+#
+
+
   
