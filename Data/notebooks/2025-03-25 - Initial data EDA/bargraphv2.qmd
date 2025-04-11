@@ -25,7 +25,7 @@ pacman::p_load(
   sf, rmapshaper, leaflet,
   bslib, shiny
 )
-#setwd(here::here("Data/notebooks/2025-03-25 - Initial data EDA"))
+setwd(here::here("Data/notebooks/2025-03-25 - Initial data EDA"))
 
 ```
 
@@ -49,6 +49,37 @@ library(dplyr)
 ## Import required data (see notebook )
 load("C:/Documents/Github/philadelphia-council-districts-and-health/Data/clean datasets/council_measures_reduc.RData")
 
+variable_labels <- c(
+  "Total Population" = "CCDistrict_population",
+  "Active Business Licenses NonRentals" = "total_active_licenses_norentals",
+  "Active Business Licenses Rentals Only" = "total_active_licenses_rentalsonly",
+  "Fatal Crashes" = "count_crashes",
+  "Percent Less than High School" = "less_than_hs_pct",
+  "Percent High School Graduate or GED" = "hs_grad_pct",
+  "Percent with Some College" = "some_college_pct",
+  "Percent College Graduate or Higher" = "college_grad_pct", 
+  "Percent of Buildings with Code Violations" = "pct_violations",
+  "Percent of Buildings that Lack a Complete Kitchen" = "district_lack_kitch_pct",
+  "Percent of Buildings that Lack Complete Plumbing" = "district_lack_plumb_pct",
+  "Median Age for All Residents" = "district_median_age_total",
+  "Median Household Income" = "medianHH_income_district",
+  "Percent of Households that Own their homes" = "pct_owner",
+  "Percent of Households that Rent their homes" = "pct_renter",
+  "Percent of Residents in Poverty" = "CD_pct_poverty",
+  "Percent White" = "pct_white",
+  "Percent Black" = "pct_black",
+  "Percent Native American" = "pct_native",
+  "Percent Asian" = "pct_asian",
+  "Percent Other Race" = "pct_other",
+  "Percent 2 Races or More" = "pct_two_more",
+  "Percent Hispanic" = "pct_hispanic",
+  "Number of Fatal Shootings" = "count_fatal",
+  "Number of Nonfatal Shootings" = "count_non_fatal", 
+  "Percent without Health Insurance" = "percentage_uninsured",
+  "Percent of Tree Canopy Coverage" = "CD_tree", 
+  "Heat Vulnerability Index" = "weighted_hvi"
+)
+
 ```
 
 ## UI (User Interface) (aka front end)
@@ -62,7 +93,7 @@ layout_sidebar(
     shiny::selectizeInput(
       inputId = "select_variable",
       label = "Select Variable",
-      choices = names(council_measures_reduc  |> select(-DISTRICT)),
+      choices = variable_labels,
       selected = "pct_black",
       multiple = F
     ),
@@ -77,16 +108,21 @@ layout_sidebar(
 ```{r}
 #| context: server
 
+label_lookup <- setNames(names(variable_labels), variable_labels)
+
 output$output_plot <- renderPlot({ 
+  var <- input$select_variable
+  label <- label_lookup[[var]]
 
 council_measures_reduc |> 
   mutate(DISTRICT = factor(DISTRICT, levels = as.character(1:10))) |> 
-    ggplot(aes_string(x = "DISTRICT", y = input$select_variable, fill = input$select_variable)) +
+    ggplot(aes_string(x = "DISTRICT", y = var, fill = var)) +
     geom_col(alpha = 0.7) +
     labs(
-      title = paste("Bar plot of", input$select_variable, "by District"),
+      title = paste("Bar plot of", label, "by District"),
       x = "District",
-      y = input$select_variable
+      y = label,
+      fill = label
     ) +
     scale_y_continuous(labels = scales::comma) +
     theme_minimal() +

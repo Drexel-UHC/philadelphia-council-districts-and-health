@@ -60,7 +60,7 @@ weighted_CD_tree <- total_join %>%
 
 Tree_canopy_CCdistrict<-weighted_CD_tree
 
-save(Tree_canopy_CCdistrict, file="clean datasets/Tree_canopy_CCdistrict.RData")
+save(Tree_canopy_CCdistrict, file="clean datasets/Tree_canopy_CCdistrict.Rdata")
 
 
 #################################################################

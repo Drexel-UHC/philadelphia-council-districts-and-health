@@ -8,7 +8,7 @@ setwd(here('Data'))
 folder_path <- here("Data/clean datasets")
 
 # List all .RData files in the folder
-rdata_files <- list.files(path = folder_path, pattern = "\\.Rdata$", full.names = TRUE)
+rdata_files <- list.files(path = folder_path, pattern = "\\.R[Dd]ata$", full.names = TRUE)
 
 # Use purrr::walk to load each .RData file and extract the individual objects
 rdata_files %>%
@@ -47,7 +47,9 @@ council_measures<-Active_licenses %>%
   left_join(poverty_status_CCdistrict, by=c("DISTRICT","CCDistrict_population"="CD_pop"))%>% 
   left_join(race_CCdistricts, by=c("DISTRICT", "CCDistrict_population"="total_pop"))%>% 
   left_join(Shootings_CCDistrict, by=c("DISTRICT","CCDistrict_population"))%>% 
-  left_join(uninsured_CCdistrict, by=c("DISTRICT","CCDistrict_population"="CD_pop"))
+  left_join(uninsured_CCdistrict, by=c("DISTRICT","CCDistrict_population"="CD_pop")) %>% 
+  left_join(HVI_CCdistrict, by=c("DISTRICT")) %>% 
+  left_join(Tree_canopy_CCdistrict, by=c("DISTRICT"))
 
 
 #paired down dataset:
@@ -56,7 +58,7 @@ council_measures_reduc<-council_measures %>%
          count_crashes, less_than_hs_pct, hs_grad_pct, some_college_pct, college_grad_pct, pct_violations,
          district_lack_kitch_pct, district_lack_plumb_pct, district_median_age_total, medianHH_income_district, 
          pct_owner, pct_renter, CD_pct_poverty, pct_white, pct_black, pct_native, pct_asian, pct_pi, pct_other, 
-         pct_two_more, pct_hispanic, count_fatal, count_non_fatal, percentage_uninsured)
+         pct_two_more, pct_hispanic, count_fatal, count_non_fatal, percentage_uninsured, CD_tree, weighted_hvi)
 
 load("clean datasets/CCDistrict_pop.RData")
 
