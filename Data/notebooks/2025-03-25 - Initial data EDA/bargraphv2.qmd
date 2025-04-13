@@ -70,6 +70,7 @@ variable_labels <- c(
   "Percent Black" = "pct_black",
   "Percent Native American" = "pct_native",
   "Percent Asian" = "pct_asian",
+  "Percent Pacific Islander" = "pct_pi",
   "Percent Other Race" = "pct_other",
   "Percent 2 Races or More" = "pct_two_more",
   "Percent Hispanic" = "pct_hispanic",
