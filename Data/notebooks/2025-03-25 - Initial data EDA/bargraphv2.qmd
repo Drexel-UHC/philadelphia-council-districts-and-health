@@ -25,7 +25,7 @@ pacman::p_load(
   sf, rmapshaper, leaflet,
   bslib, shiny
 )
-setwd(here::here("Data/notebooks/2025-03-25 - Initial data EDA"))
+setwd(here())
 
 ```
 
@@ -47,7 +47,7 @@ library(here)
 library(dplyr)
 
 ## Import required data (see notebook )
-load("C:/Documents/Github/philadelphia-council-districts-and-health/Data/clean datasets/council_measures_reduc.RData")
+load("Data/clean datasets/council_measures_reduc.RData")
 
 variable_labels <- c(
   "Total Population" = "CCDistrict_population",
@@ -59,7 +59,7 @@ variable_labels <- c(
   "Percent with Some College" = "some_college_pct",
   "Percent College Graduate or Higher" = "college_grad_pct", 
   "Percent of Buildings with Code Violations" = "pct_violations",
-  "Percent of Buildings that Lack a Complete Kitchen" = "district_lack_kitch_pct",
+  "Percent of Buildings that \nLack a Complete Kitchen" = "district_lack_kitch_pct",
   "Percent of Buildings that Lack Complete Plumbing" = "district_lack_plumb_pct",
   "Median Age for All Residents" = "district_median_age_total",
   "Median Household Income" = "medianHH_income_district",
@@ -117,7 +117,7 @@ output$output_plot <- renderPlot({
 
 council_measures_reduc |> 
   mutate(DISTRICT = factor(DISTRICT, levels = as.character(1:10))) |> 
-    ggplot(aes_string(x = "DISTRICT", y = var, fill = var)) +
+    ggplot(aes_string(x = "DISTRICT", y = var)) +
     geom_col(alpha = 0.7) +
     labs(
       title = paste("Bar plot of", label, "by District"),
