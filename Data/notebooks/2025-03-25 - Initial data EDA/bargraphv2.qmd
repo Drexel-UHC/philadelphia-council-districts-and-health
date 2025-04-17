@@ -1,5 +1,5 @@
 ---
-title: "Univariate App - mockup"
+title: "Philadelphia City Council Districts Bargraphs"
 subtitle: "Note Mockups are not suppose to pretty just functional to develop core logic; we can make things pretty later"
 format: 
   html:
@@ -25,7 +25,9 @@ pacman::p_load(
   sf, rmapshaper, leaflet,
   bslib, shiny
 )
-setwd(here())
+
+load(here("Data/clean datasets/council_measures_reduc.RData"))
+
 
 ```
 
@@ -47,7 +49,8 @@ library(here)
 library(dplyr)
 
 ## Import required data (see notebook )
-load("Data/clean datasets/council_measures_reduc.RData")
+load(here::here("Data", "clean datasets", "council_measures_reduc.RData"))
+
 
 variable_labels <- c(
   "Total Population" = "CCDistrict_population",
