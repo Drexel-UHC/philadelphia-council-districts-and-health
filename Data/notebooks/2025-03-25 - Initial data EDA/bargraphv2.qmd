@@ -26,8 +26,7 @@ pacman::p_load(
   bslib, shiny
 )
 
-setwd(here())
-
+setwd(here("Data/notebooks/2025-03-25 - Initial data EDA"))
 
 ```
 
