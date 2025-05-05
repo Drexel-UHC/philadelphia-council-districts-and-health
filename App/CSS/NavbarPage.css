@@ -1,0 +1,57 @@
+.navbar {
+  background-color: var(--uhcBlue);
+  color: #ffffff;
+  font-family: 'Helvetica Neue', Helvetica;
+  font-weight: 600;
+  border-radius: 10px;
+  display: grid;
+}
+
+.navbar-brand {
+  display: none;
+}
+/* Navbar */
+.navbar {
+  background-color: var(--uhcBlue);
+  color: #ffffff;
+  font-family: 'Helvetica Neue', Helvetica;
+  font-weight: 600;
+  border-radius: 10px;
+  font-size: 15px;
+  display: grid;
+}
+
+.navbar-brand {
+  display: none;
+}
+
+.navbar-default .navbar-nav > li {
+  padding-right: 15px;
+}
+/*Navbar Items Inactive*/
+.navbar-default .navbar-nav > li > a {
+  color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a:hover {
+  color: var(--uhcYellow);
+  background-color: var(--uhcBlue);
+}
+
+/*Navbar Items Active*/
+.navbar-default .navbar-nav > .active > a {
+  color: var(--uhcYellow);
+  background-color: var(--uhcBlue);
+}
+.navbar-default .navbar-nav > .active > a:hover {
+  color: var(--uhcYellow);
+  background-color: var(--uhcBlue);
+}
+.navbar-default .navbar-nav > .active > a:focus {
+  color: var(--uhcYellow);
+  background-color: var(--uhcBlue);
+}
+
+/*Foot details*/
+.salurbal_hr {
+  border-top: 1px dashed var(--uhcBlue);
+}

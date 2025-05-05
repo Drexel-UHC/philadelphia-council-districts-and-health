@@ -1,0 +1,48 @@
+:root {
+  --bchcLightBlue: #ccdfe8;
+  --bchcLighterBlue: #f0f8fc;
+  --bchcGray: #faf9f6;
+  --uhcBlue: #07294d;
+  --uhcBrightBlue: #006298;
+  --uhcGreenTone: #bac5b9;
+  --uhcLightBlue: #6cace4;
+  --uhcYellow: #ffc600;
+  --uhcOrange: #de7c00;
+  --uhcGray: #f3f3f3;
+  --uhcLime: #b7bf10;
+  --uhcGray2: #a7a8aa;
+  --uhcGray1: #c7c7c7;
+}
+
+/* Learn More */
+.BCHC_top_row {
+  padding: 5px;
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  align-items: center;
+}
+.BCHC_top_row img {
+  grid-column: 1/2;
+  height: 100px;
+}
+.BCHC_learn_more {
+  grid-column: 3/4;
+  padding: 23px;
+  justify-self: start;
+}
+.BCHC_learn_more_text {
+  color: var(--uhcGray2);
+  font-size: 11px;
+}
+.BCHC_learn_more_link {
+  color: var(--uhcBlue);
+  font-size: 14px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+/* Util */
+
+.salurbal_hr {
+  border-top: 1px dashed var(--uhcBlue);
+}
