@@ -31,7 +31,7 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
       ),
       column(6,
         div(class = "border p-2 bg-light",
-          plotOutput(ns("mapPlot"), height = "300px")
+          leafletOutput(ns("output_map"), height = "300px") 
         )
       )
     )
@@ -44,19 +44,8 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
     # Create a reactive filtered dataset that updates when input changes
     sf_data_filtered <- reactive({
 
-      ## Validations
       req(input$healthMetric, df_data, sf_districts)
-      validate(
-        need(is.data.frame(df_data), "df_data must be a dataframe"),
-        need("var_name" %in% names(df_data), "df_data must contain 'var_name' column"),
-        need(inherits(sf_districts, "sf"), "sf_districts must be an sf object"),
-        need("district" %in% names(sf_districts), "sf_districts must contain 'district' column")
-      )
-      validate(
-        need(input$healthMetric %in% df_data$var_name, 
-            paste("Selected metric", input$healthMetric, "not found in data"))
-      )
-
+  
       # Filter data for selected metric
       df_data_filtered <- df_data |>
         filter(var_name == input$healthMetric)
@@ -66,7 +55,7 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
     
       # Make sure we're preserving the sf class
       sf_result <- sf_districts |>
-        dplyr::left_join(df_data_filtered, by = c("district" = "district"))
+        dplyr::left_join(df_data_filtered, by = c("district" = "district")) 
 
       return(sf_result)
     })
@@ -87,11 +76,52 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
     })
     
     # Generate the map visualization based on selected health metric  
-    output$mapPlot <- renderPlot({ 
-      plot(1:10, 1:10, type = "n") 
+    output$output_map <- renderLeaflet({
+      sf_data <- sf_data_filtered()
+      var_label_tmp <- sf_data$var_label[1]
+
+      # Create a color palette based on the variable
+      pal <- colorNumeric(
+        palette = "viridis",
+        domain = sf_data$value
+      )
+
+      # Create the leaflet map - using value instead of input$select_variable
+      sf_data %>% 
+        leaflet() %>%
+        addTiles() %>%
+        addPolygons(
+          fillColor = ~pal(value), 
+          weight = 1, 
+          opacity = 1,
+          color = "white",
+          dashArray = "3",
+          fillOpacity = 0.7,
+          # Add these lines for hover functionality
+          highlightOptions = highlightOptions(
+            weight = 3,
+            color = "#666",
+            fillOpacity = 0.9,
+            bringToFront = TRUE
+          ),
+          # Create labels from your data
+          label = ~lapply(paste0(
+            "District: ", district, "<br>",
+            var_label, ": ", formatC(value, big.mark = ",")
+          ), HTML),
+          labelOptions = labelOptions(
+            style = list("font-weight" = "normal", padding = "3px 8px"),
+            textsize = "15px",
+            direction = "auto"
+          )
+        ) %>% 
+        # Add a legend
+        addLegend(
+          position = "bottomright",
+          pal = pal,
+          values = ~value,
+          title = sf_data$var_label[1],
+          opacity = 0.7)
     })
-    
-  
-    
-  })
-}
+  }) # Add this closing curly brace for moduleServer
+} # This is the closing curly brace for the CityDistrictDashboard_Server function

@@ -3,7 +3,8 @@
   library(shiny)
   library(bslib)
   library(waiter)
-
+  library(leaflet) 
+  
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
@@ -79,7 +80,7 @@ server <- function(input, output, session) {
   ## Loader code: Server (start)
   Sys.sleep(1) # do something that takes time
   library(dplyr)
-  library(leaflet) 
+
   library(sf)
   load("data/app_v0.1.Rdata")
   waiter_hide()
