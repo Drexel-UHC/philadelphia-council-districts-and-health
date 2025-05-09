@@ -3,17 +3,17 @@
   library(shiny)
   library(bslib)
   library(waiter)
-  
+
 
   ## Load Modules
   source("R/Modules/OldFaithful.R")
-  # source("R/Modules/SyncMap.R")
+  source("R/Modules/CityDistrictDashboard.R")
 
   ## Loader code: Global Scope
   loading_screen = div(
     tags$img(
       src = "logo.png",
-      height = 175
+      height = 175 
     ),
     div(
       style = "padding-top: 50px;",
@@ -34,8 +34,8 @@ ui <- fluidPage(
   navbarPage( id = 'navbar',
               title = "Title",
               tabPanel("Home",includeHTML("HTML/Home.html")),
-              tabPanel("Figure1",OldFaithful_UI("Figure1"))#,
-              # tabPanel("Sync Map",SyncMap_UI("SyncMap"))
+              tabPanel("Figure1",OldFaithful_UI("Figure1")),
+              tabPanel("Dashboard",CityDistrictDashboard_UI("Dashboard"))
   ),
   includeHTML("HTML/Footer.html")
 )
@@ -55,7 +55,7 @@ server <- function(input, output, session) {
   OldFaithful_Server("Figure1")
 
   ## Module 2: Sync Map
-  # SyncMap_Server('SyncMap')
+  CityDistrictDashboard_Server('Dashboard')
 }
 
 shinyApp(ui, server)
