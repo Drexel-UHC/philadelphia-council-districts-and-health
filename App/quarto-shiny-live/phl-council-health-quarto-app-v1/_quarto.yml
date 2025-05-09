@@ -1,0 +1,28 @@
+project:
+  type: website
+  output-dir: _site
+  resources: 
+  - shinylive-sw.js
+
+website:  
+  repo-url: https://github.com/coatless-quarto/r-shinylive-demo
+  repo-actions: [edit, issue]
+  title: "r-shinylive in Quarto"
+  navbar:
+    search: false
+    left:
+      - text: "Tutorial (Home)"
+        file: index.qmd
+      - text: "Joe's Shiny App"
+        file: R-shinylive-demo.qmd
+      - text: "Skeletal Template"
+        file: template-r-shinylive.qmd
+
+format:
+  html:
+    grid: 
+      body-width: 1350px
+      sidebar-width: 200px
+      margin-width: 200px
+    toc: true
+

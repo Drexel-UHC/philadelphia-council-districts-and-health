@@ -1,0 +1,7 @@
+/.quarto/
+.Rproj.user
+/.luarc.json
+*.html
+*.DS_Store
+.Rhistory
+_site
