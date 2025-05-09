@@ -4,11 +4,11 @@
   library(bslib)
   library(waiter)
   library(leaflet) 
-  
+
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
-  load("data/app_v1.Rdata")
+  load("data/app_v1.RData")
 
   ## Loader code: Global Scope
   loading_screen = div(
@@ -70,7 +70,6 @@ ui <- page_fluid(
   CityDistrictDashboard_UI("Dashboard", df_metadata),
   
   # Document-like footer
-  hr(),
   div(class = "section small text-muted",
     includeHTML("HTML/Footer.html")
   )
@@ -82,7 +81,7 @@ server <- function(input, output, session) {
   library(dplyr)
 
   library(sf)
-  load("data/app_v0.1.Rdata")
+  load("data/app_v1.RData")
   waiter_hide()
   ## Loader code: Server (end)
 

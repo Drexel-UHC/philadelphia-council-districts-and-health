@@ -1,0 +1,13 @@
+name: phl-council-health-app-dev-v1
+title: phl-council-health-app-dev-v1
+username: drexel-uhc
+account: drexel-uhc
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14723630
+bundleId: 10258617
+url: https://drexel-uhc.shinyapps.io/phl-council-health-app-dev-v1/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .vscode/mcp.json
