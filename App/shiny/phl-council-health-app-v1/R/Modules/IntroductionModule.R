@@ -10,7 +10,7 @@ IntroductionModule_UI <- function(id) {
   
   # Introduction section
   div(class = "section",
-    h3("Introduction", class = "section-title"),
+    h2("Introduction", class = "section-title"),
     p("The health of Philadelphia residents varies drastically across the city – differences that reflect broader disparities in income, opportunity, and access to essential resources. These are not just personal choices made by the city’s residents – they are shaped by federal, state and local laws and policies."),
     
     p("This project takes a closer look at those conditions by analyzing publicly available data and mapping key health indicators and social determinants of health across all 10 Philadelphia City Council Districts. By doing this, we aim to provide a clearer picture of how politics and geography intersect to shape the health of Philadelphians."),

@@ -65,34 +65,7 @@ ui <- page_fluid(
   IntroductionModule_UI("Introduction"),
   
   # Dashboard section - now more integrated into the document flow
-  div(class = "section",
-    h2("Health Indicators", class = "section-title"),
-    
-    fluidRow(
-      column(4,
-        div(class = "form-group",
-          selectInput("healthMetric", "Select Health Indicator:", 
-                    choices = c("Percentage of Residence Uninsured"))
-        )
-      ),
-      column(8, "")
-    ),
-    
-    fluidRow(
-      column(6,
-        h4("Bar plot of Percent without Health Insurance by District", class = "text-center mb-3"),
-        div(class = "border p-2 bg-light",
-          plotOutput("barPlot", height = "300px")
-        )
-      ),
-      column(6,
-        h4("Geographic Distribution", class = "text-center mb-3"),
-        div(class = "border p-2 bg-light",
-          plotOutput("mapPlot", height = "300px")
-        )
-      )
-    )
-  ),
+  CityDistrictDashboard_UI("Dashboard"),
   
   # Document-like footer
   hr(),
@@ -114,28 +87,9 @@ server <- function(input, output, session) {
   IntroductionModule_Server("Introduction")
 
   # Reuse the dashboard module functionality but adapt to the single page layout
-  dashboardData <- CityDistrictDashboard_Server('Dashboard')
+  CityDistrictDashboard_Server("Dashboard")
   
-  # Example placeholder outputs - replace with actual plotting logic from your module
-  output$barPlot <- renderPlot({
-    # Generate the bar chart based on selected health metric
-    barplot(1:10, main = input$healthMetric)
-  })
-  
-  output$mapPlot <- renderPlot({
-    # Generate the map visualization based on selected health metric
-    plot(1:10, 1:10, type = "n")
-    text(5, 5, "Map Visualization\nwill appear here")
-  })
-  
-  # Find district functionality
-  observeEvent(input$findDistrict, {
-    showModal(modalDialog(
-      title = "Find Your District",
-      "District lookup feature would be implemented here",
-      easyClose = TRUE
-    ))
-  })
+ 
 }
 
 shinyApp(ui, server)
