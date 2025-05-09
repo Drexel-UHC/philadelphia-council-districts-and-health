@@ -2,13 +2,8 @@
   ## Dependencies
   library(shiny)
   library(bslib)
-  library(dplyr)
   library(waiter)
-  library(leaflet)
-  library(sf)
-  library(leafsync)
-  # library(shinyUHC)
-  library(purrr)
+  
 
   ## Load Modules
   source("R/Modules/OldFaithful.R")
@@ -49,6 +44,9 @@ server <- function(input, output, session) {
 
   ## Loader code: Server (start)
   Sys.sleep(1) # do something that takes time
+  library(dplyr)
+  library(leaflet) 
+  load("data/app_v0.1.Rdata")
   waiter_hide()
   ## Loader code: Server (end)
 
