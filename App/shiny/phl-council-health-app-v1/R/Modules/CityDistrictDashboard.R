@@ -1,6 +1,20 @@
-CityDistrictDashboard_UI <- function(id) {
+CityDistrictDashboard_UI <- function(id, metadata) {
   ns <- NS(id)
+
+  # Create choices from metadata if available
+  choices <- NULL
+  if (!is.null(metadata)) {
+    # Filter to only columns that exist in your data
+    choices <- setNames(
+      metadata$var_id,
+      metadata$var_label
+    )
+  } else {
+    # Fallback if metadata not provided
+    choices <- c("percentage_uninsured" = "Percentage Without Health Insurance")
+  }
   
+
   div(class = "section",
     h4("How to Use:", class = "mt-4 section-title"),
     p("To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city."),
@@ -9,7 +23,7 @@ CityDistrictDashboard_UI <- function(id) {
       column(4,
         div(class = "form-group",
           selectInput(ns("healthMetric"), "", 
-                    choices = c("percentage_uninsured"))
+                    choices = choices)
         )
       ),
       column(8, "")

@@ -7,6 +7,7 @@
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
+  load("data/app_v0.1.Rdata")
 
   ## Loader code: Global Scope
   loading_screen = div(
@@ -65,7 +66,7 @@ ui <- page_fluid(
   IntroductionModule_UI("Introduction"),
   
   # Dashboard section - now more integrated into the document flow
-  CityDistrictDashboard_UI("Dashboard"),
+  CityDistrictDashboard_UI("Dashboard", df_metadata),
   
   # Document-like footer
   hr(),
