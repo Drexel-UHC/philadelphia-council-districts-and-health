@@ -6,7 +6,6 @@
 
 
   ## Load Modules
-  source("R/Modules/OldFaithful.R")
   source("R/Modules/CityDistrictDashboard.R")
 
   ## Loader code: Global Scope
@@ -34,7 +33,6 @@ ui <- fluidPage(
   navbarPage( id = 'navbar',
               title = "Title",
               tabPanel("Home",includeHTML("HTML/Home.html")),
-              tabPanel("Figure1",OldFaithful_UI("Figure1")),
               tabPanel("Dashboard",CityDistrictDashboard_UI("Dashboard"))
   ),
   includeHTML("HTML/Footer.html")
@@ -50,11 +48,7 @@ server <- function(input, output, session) {
   waiter_hide()
   ## Loader code: Server (end)
 
-
-  ## Module 1: ggplot
-  OldFaithful_Server("Figure1")
-
-  ## Module 2: Sync Map
+  ## Module 1: Dashboard
   CityDistrictDashboard_Server('Dashboard')
 }
 
