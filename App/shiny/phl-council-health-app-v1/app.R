@@ -80,6 +80,7 @@ server <- function(input, output, session) {
   Sys.sleep(1) # do something that takes time
   library(dplyr)
   library(leaflet) 
+  library(sf)
   load("data/app_v0.1.Rdata")
   waiter_hide()
   ## Loader code: Server (end)
