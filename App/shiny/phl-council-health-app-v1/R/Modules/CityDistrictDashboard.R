@@ -10,7 +10,7 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
   
 
   div(class = "section",
-    h4("How to Use:", class = "mt-4 section-title"),
+    h3("How to Use:", class = "mt-4 section-title"),
     p("To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city."),
     
     fluidRow(

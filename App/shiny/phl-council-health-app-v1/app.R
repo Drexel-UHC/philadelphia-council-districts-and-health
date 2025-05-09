@@ -8,6 +8,7 @@
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
+  source("R/Modules/OutroModule.R")
   load("data/app_v1.RData")
 
   ## Loader code: Global Scope
@@ -68,7 +69,10 @@ ui <- page_fluid(
   
   # Dashboard section - now more integrated into the document flow
   CityDistrictDashboard_UI("Dashboard", df_metadata),
-  
+
+  # Outro section with acknowledgements
+  OutroModule_UI("Outro"),
+
   # Document-like footer
   div(class = "section small text-muted",
     includeHTML("HTML/Footer.html")
@@ -91,6 +95,7 @@ server <- function(input, output, session) {
   # Reuse the dashboard module functionality but adapt to the single page layout
   CityDistrictDashboard_Server("Dashboard", df_data, sf_districts)
   
+  OutroModule_Server("Outro")
 }
 
 shinyApp(ui, server)
