@@ -1,18 +1,12 @@
-CityDistrictDashboard_UI <- function(id, metadata) {
+CityDistrictDashboard_UI <- function(id, df_metadata) {
   ns <- NS(id)
 
   # Create choices from metadata if available
-  choices <- NULL
-  if (!is.null(metadata)) {
-    # Filter to only columns that exist in your data
-    choices <- setNames(
-      metadata$var_id,
-      metadata$var_label
-    )
-  } else {
-    # Fallback if metadata not provided
-    choices <- c("percentage_uninsured" = "Percentage Without Health Insurance")
-  }
+  choices <- setNames(
+    df_metadata$var_name,
+    df_metadata$var_label
+  )
+ 
   
 
   div(class = "section",
@@ -44,28 +38,57 @@ CityDistrictDashboard_UI <- function(id, metadata) {
   )
 }
 
-CityDistrictDashboard_Server <- function(id, sf_data) {
+CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
   moduleServer(id, function(input, output, session) {
+    
+    # Create a reactive filtered dataset that updates when input changes
+    filtered_data <- reactive({
+      req(input$healthMetric, df_data)
+      
+      # Filter data for selected metric
+      df_data_filtered <- df_data |>
+        filter(var_name == input$healthMetric)
+      
+      # Handle case where filtering returns no rows
+      validate(
+        need(nrow(df_data_filtered) > 0, "No data available for selected metric")
+      )
+      
+      return(df_data_filtered)
+    })
+    
+    # Get joined spatial data reactively
+    spatial_data <- reactive({
+      req(filtered_data(), sf_districts)
+      
+      sf_districts |>
+        left_join(filtered_data(), by = c("district" = "district"))
+    })
+    
     # Generate the bar chart based on selected health metric
     output$barPlot <- renderPlot({
-      req(sf_data)
-      # Use the sf_data to create your plot
-      barplot(sf_data[[input$healthMetric]], 
-              names.arg = sf_data$district,
-              main = input$healthMetric)
+      # Get filtered data
+      df_tmp <- filtered_data()
+      var_label_tmp <- df_tmp$var_label[1]
+      
+      # Create bar plot
+      barplot(df_tmp$value, 
+              names.arg = df_tmp$district,
+              main = var_label_tmp,
+              xlab = "Council District",
+              ylab = var_label_tmp)
     })
     
     # Generate the map visualization based on selected health metric  
-    output$mapPlot <- renderPlot({
-      plot(1:10, 1:10, type = "n")
-      text(5, 5, "Map Visualization\nwill appear here")
+    output$mapPlot <- renderPlot({ 
+      plot(1:10, 1:10, type = "n") 
     })
     
     # Return reactive values if needed
     return(reactive({
       list(
-        selectedMetric = input$healthMetric
-        # Add more reactive values as needed
+        selectedMetric = input$healthMetric,
+        filteredData = filtered_data()
       )
     }))
   })

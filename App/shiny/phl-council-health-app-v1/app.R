@@ -7,7 +7,7 @@
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
-  load("data/app_v0.1.Rdata")
+  load("data/app_v1.Rdata")
 
   ## Loader code: Global Scope
   loading_screen = div(
@@ -88,7 +88,7 @@ server <- function(input, output, session) {
   IntroductionModule_Server("Introduction")
 
   # Reuse the dashboard module functionality but adapt to the single page layout
-  CityDistrictDashboard_Server("Dashboard", sf_data)
+  CityDistrictDashboard_Server("Dashboard", df_data, sf_districts)
   
 }
 
