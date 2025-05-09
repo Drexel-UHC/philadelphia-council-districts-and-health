@@ -30,8 +30,7 @@ setwd(here("Data/notebooks/2025-03-25 - Initial data EDA"))
 
 Here we just do a initial EDA on the data before we do any shiny apps. It would also be very helpful if Tamara/Amber created notebooks with the visualizations they want to turn into a Shiny app. 
 
-
-# Import Data
+# Import 
 
 So got an message that the final datasets are in `/clean datasets/council_measures_reduc.RData`; let's take a look!
 
@@ -103,9 +102,80 @@ Let's append the data and save it for the app.
 ```{r}
 sf_data = sf_districts %>% left_join(df_data)
 save(sf_data, file = here("Data/clean datasets/app_v0.1.RData"))
+
 ```
 
+
+## Metadata
+
+Here we import the documentation specifically the `Docuemntaiton for Dashbaord` sheet from the documentation excel sheet.
+
+```{r}
+#| code-summary: "Shiny App UI"
+
+library(readxl)
+library(janitor)
+
+df_metadata = read_excel(
+  here("Data/data documentation/Data documentation for council variables.xlsx"),
+  sheet = "Documentation for Dashboard") %>% 
+  janitor::clean_names() %>% 
+  select(
+    var_label = metric_name,
+    var_def = metric_description_say_whether_it_is_a_percent_rate_count_etc,
+    source = data_source,
+    aggregation_notes = geography_of_original_estimate_and_aggregation_technique,
+    cleaning_notes = notes
+  )  %>% 
+  mutate(var_id = recode(var_label,
+    "Median Age" = "district_median_age_total",
+    "Total population" = "cc_district_population",
+    "Active Business Licenses No Rentals" = "total_active_licenses_norentals",
+    "Active Business Licenses Rentals Only" = "total_active_licenses_rentalsonly",
+    "Fatal Crashes" = "count_crashes",
+    "Less Than High School" = "less_than_hs_pct",
+    "High School Graduate" = "hs_grad_pct",
+    "Some College" = "some_college_pct",
+    "College Graduate" = "college_grad_pct",
+    "Code Violations" = "pct_violations",
+    "Lack Complete Kitchen" = "district_lack_kitch_pct",
+    "Lack Complete Plumbing" = "district_lack_plumb_pct",
+    "Median Household Income" = "median_hh_income_district",
+    "Owners" = "pct_owner",
+    "Renters" = "pct_renter",
+    "White" = "pct_white",
+    "Black" = "pct_black",
+    "Native American" = "pct_native",
+    "Asian" = "pct_asian",
+    "Pacific Islander" = "pct_pi",
+    "Other Race" = "pct_other",
+    "Two or More Races" = "pct_two_more",
+    "Hispanic" = "pct_hispanic",
+    "Fatal Shootings" = "count_fatal",
+    "Nonfatal Shootings" = "count_non_fatal",
+    "Uninsured" = "percentage_uninsured",
+    "Tree Canopy Coverage" = "cd_tree",
+    "Heat Vulnerabillity Index" = "weighted_hvi",
+    "Poverty" = "cd_pct_poverty"
+  ))
+  
+## Check metadata-data compatibility
+assertthat::assert_that(
+  all(df_metadata$var_id %in% colnames(sf_data)),
+  msg = "Metadata variable names do not match data variable names"
+)
+assertthat::assert_that(
+  all(sf_data %>% names() %>% discard(~.x%in%c("district","geometry"))  %in% df_metadata$var_id),
+  msg = "Metadata variable names do not match data variable names"
+)
+
+save(sf_data, df_metadata, file = here("App/shiny/phl-council-health-app-v1/data/app_v0.1.RData"))
+
+```
+
+
 Now try some EDA.
+
 
 --- 
 
