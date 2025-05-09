@@ -2,13 +2,14 @@ CityDistrictDashboard_UI <- function(id) {
   ns <- NS(id)
   
   div(class = "section",
-    h2("Health Indicators", class = "section-title"),
+    h4("How to Use:", class = "mt-4 section-title"),
+    p("To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city."),
     
     fluidRow(
       column(4,
         div(class = "form-group",
-          selectInput(ns("healthMetric"), "Select Health Indicator:", 
-                    choices = c("Percentage of Residence Uninsured"))
+          selectInput(ns("healthMetric"), "", 
+                    choices = c("percentage_uninsured"))
         )
       ),
       column(8, "")
@@ -16,13 +17,11 @@ CityDistrictDashboard_UI <- function(id) {
     
     fluidRow(
       column(6,
-        h4("Bar plot of Percent without Health Insurance by District", class = "text-center mb-3"),
         div(class = "border p-2 bg-light",
           plotOutput(ns("barPlot"), height = "300px")
         )
       ),
       column(6,
-        h4("Geographic Distribution", class = "text-center mb-3"),
         div(class = "border p-2 bg-light",
           plotOutput(ns("mapPlot"), height = "300px")
         )
@@ -31,11 +30,15 @@ CityDistrictDashboard_UI <- function(id) {
   )
 }
 
-CityDistrictDashboard_Server <- function(id) {
+CityDistrictDashboard_Server <- function(id, sf_data) {
   moduleServer(id, function(input, output, session) {
     # Generate the bar chart based on selected health metric
     output$barPlot <- renderPlot({
-      barplot(1:10, main = input$healthMetric)
+      req(sf_data)
+      # Use the sf_data to create your plot
+      barplot(sf_data[[input$healthMetric]], 
+              names.arg = sf_data$district,
+              main = input$healthMetric)
     })
     
     # Generate the map visualization based on selected health metric  

@@ -87,9 +87,8 @@ server <- function(input, output, session) {
   IntroductionModule_Server("Introduction")
 
   # Reuse the dashboard module functionality but adapt to the single page layout
-  CityDistrictDashboard_Server("Dashboard")
+  CityDistrictDashboard_Server("Dashboard", sf_data)
   
- 
 }
 
 shinyApp(ui, server)
