@@ -42,33 +42,40 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
   moduleServer(id, function(input, output, session) {
     
     # Create a reactive filtered dataset that updates when input changes
-    filtered_data <- reactive({
-      req(input$healthMetric, df_data)
-      
+    sf_data_filtered <- reactive({
+
+      ## Validations
+      req(input$healthMetric, df_data, sf_districts)
+      validate(
+        need(is.data.frame(df_data), "df_data must be a dataframe"),
+        need("var_name" %in% names(df_data), "df_data must contain 'var_name' column"),
+        need(inherits(sf_districts, "sf"), "sf_districts must be an sf object"),
+        need("district" %in% names(sf_districts), "sf_districts must contain 'district' column")
+      )
+      validate(
+        need(input$healthMetric %in% df_data$var_name, 
+            paste("Selected metric", input$healthMetric, "not found in data"))
+      )
+
       # Filter data for selected metric
       df_data_filtered <- df_data |>
         filter(var_name == input$healthMetric)
-      
-      # Handle case where filtering returns no rows
       validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
       )
-      
-      return(df_data_filtered)
+    
+      # Make sure we're preserving the sf class
+      sf_result <- sf_districts |>
+        dplyr::left_join(df_data_filtered, by = c("district" = "district"))
+
+      return(sf_result)
     })
     
-    # Get joined spatial data reactively
-    spatial_data <- reactive({
-      req(filtered_data(), sf_districts)
-      
-      sf_districts |>
-        left_join(filtered_data(), by = c("district" = "district"))
-    })
-    
+   
     # Generate the bar chart based on selected health metric
     output$barPlot <- renderPlot({
       # Get filtered data
-      df_tmp <- filtered_data()
+      df_tmp <- sf_data_filtered()
       var_label_tmp <- df_tmp$var_label[1]
       
       # Create bar plot
@@ -84,12 +91,7 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
       plot(1:10, 1:10, type = "n") 
     })
     
-    # Return reactive values if needed
-    return(reactive({
-      list(
-        selectedMetric = input$healthMetric,
-        filteredData = filtered_data()
-      )
-    }))
+  
+    
   })
 }
