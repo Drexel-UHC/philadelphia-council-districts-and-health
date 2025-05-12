@@ -128,3 +128,10 @@ council_measures_reduc_geom<-CCDistrict_pop %>%
 #########################################
 save(council_measures_reduc, file="clean datasets/council_measures_reduc.RData")
 save(council_measures_reduc_geom, file="clean datasets/council_measures_reduc_geom.RData")
+save(City_average, file = "clean datasets/City_average.RData")
+
+#########################################
+# bargraphs for city wide
+#########################################
+
+
