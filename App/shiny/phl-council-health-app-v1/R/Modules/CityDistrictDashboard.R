@@ -37,29 +37,24 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
   )
 }
 
-CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts) {
+CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts, geojson_districts) {
   moduleServer(id, function(input, output, session) {
     
-    # Data Reactive -----------------------------------------------------------
+    # Data  -----------------------------------------------------------
     # Create a reactive filtered dataset that updates when input changes
-    sf_data_filtered <- reactive({
+    df_data_filtered <- reactive({
       req(input$healthMetric, df_data, sf_districts)
   
       # Filter data for selected metric
       df_data_filtered <- df_data |>
         filter(var_name == input$healthMetric) %>% 
-        left_join(df_metadata)
-      print(df_data_filtered)
+        left_join(df_metadata)%>% 
+        mutate(district_int = as.integer(district)) %>% 
+        arrange(desc(value))  
       shiny::validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
-      )
-      # Make sure we're preserving the sf class
-      sf_result <- sf_districts |>
-        dplyr::left_join(df_data_filtered, by = c("district" = "district")) %>% 
-        mutate(district_int = as.integer(district)) %>% 
-        arrange(district_int) 
-
-      return(sf_result)
+      ) 
+      return(df_data_filtered)
     })
     
 
@@ -68,10 +63,9 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts)
     output$bar_chart <- renderHighchart({
       
       # Get filtered data
-      dfa <- sf_data_filtered() 
+      dfa <- df_data_filtered() 
       var_label_tmp <- dfa$var_label[1]
 
-      print("HI2")
       
       # Create highcharter bar chart
       highchart() %>%
@@ -123,26 +117,17 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts)
     # Generate the map visualization based on selected health metric  
     output$output_map <- renderHighchart({
 
-      ## Geojson conversion
-      sf_result <- sf_data_filtered()
-      sf_geojson <- geojsonio::geojson_json(sf_result)
-      sf_map_data <- jsonlite::fromJSON(sf_geojson, simplifyVector = FALSE)
-    
-      ## Data formatting
-      map_data_df <- data.frame(
-        district = sf_result$district,
-        value = sf_result$value,
-        var_label = sf_result$var_label[1],
-        stringsAsFactor = FALSE
-      )
-
+      # Get filtered data
+      df_data_filtered <- df_data_filtered() 
+      var_label_tmp <- df_data_filtered$var_label[1]
+      
       ## Map
       highchart() %>%
-        hc_title(text = "Code Violations by District") %>%
-        hc_subtitle(text = paste("Source:", sf_result$source[1])) %>%
+        hc_title(text = var_label_tmp) %>%
+        hc_subtitle(text = paste("Source:", df_data_filtered$source[1])) %>%
         hc_add_series_map(
-          map = sf_map_data,
-          df = map_data_df,
+          map = geojson_districts,
+          df = df_data_filtered,
           name = sf_result$var_label[1],
           value = "value",
           joinBy = c("district", "district"),  # Join using the district field on both sides
@@ -156,8 +141,8 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts)
           )
         ) %>%
         hc_colorAxis(
-          min = min(map_data_df$value),
-          max = max(map_data_df$value),
+          min = min(df_data_filtered$value),
+          max = max(df_data_filtered$value),
           stops = list(
             list(0, "#EFEFFF"),  # Light color for low values
             list(0.5, "#4444BB"),

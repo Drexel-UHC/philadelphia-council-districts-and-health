@@ -48,14 +48,12 @@ sf_result <- sf_districts |>
   arrange(district_int) 
 
 # Replicate with sf  ------------------------------------------------------------------
+
+## Geojson
 library(geojsonio)
 library(jsonlite)
-sf_geojson <- geojsonio::geojson_json(sf_result)
-sf_map_data <- jsonlite::fromJSON(sf_geojson, simplifyVector = FALSE)
-source_tmp = sf_result$source[1]
-var_tmp = sf_result$var_name[1]
-var_label_tmp = sf_result$var_label[1]
-df_data_filtered; str(sf_map_data, max.level = 3)
+geojson_districts
+
 
 # Create a properly formatted data frame matching the GeoJSON structure
 map_data_df <- data.frame(
@@ -66,11 +64,13 @@ map_data_df <- data.frame(
 )
 
 # Create the map with proper joinBy fields
- highchart() %>%
+source_tmp = sf_result$source[1]
+var_label_tmp = sf_result$var_label[1]
+highchart() %>%
   hc_title(text = "Code Violations by District") %>%
   hc_subtitle(text = paste("Source:", source_tmp)) %>%
   hc_add_series_map(
-    map = sf_map_data, 
+    map = json_districts, 
     df = map_data_df,
     name = var_label_tmp,
     value = "value", 
