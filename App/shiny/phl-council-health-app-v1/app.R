@@ -4,6 +4,7 @@
   library(bslib)
   library(waiter)
   library(leaflet) 
+  library(highcharter)
 
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
