@@ -3,7 +3,7 @@
   library(shiny)
   library(bslib)
   library(waiter)
-  library(leaflet) 
+  library(highcharter)
 
   ## Load Modules
   source("R/Modules/IntroductionModule.R")
@@ -81,11 +81,10 @@ ui <- page_fluid(
 
 server <- function(input, output, session) {
   ## Loader code: Server (start)
-  Sys.sleep(1) # do something that takes time
+  Sys.sleep(0.5) # do something that takes time
   library(dplyr)
-
-  library(sf)
   load("data/app_v1.RData")
+  geojson_districts = readRDS("data/json_districts.rds")
   waiter_hide()
   ## Loader code: Server (end)
 
@@ -93,7 +92,7 @@ server <- function(input, output, session) {
   IntroductionModule_Server("Introduction")
 
   # Reuse the dashboard module functionality but adapt to the single page layout
-  CityDistrictDashboard_Server("Dashboard", df_data, sf_districts)
+  CityDistrictDashboard_Server("Dashboard", df_data, df_metadata, sf_districts, geojson_districts)
   
   OutroModule_Server("Outro")
 }
