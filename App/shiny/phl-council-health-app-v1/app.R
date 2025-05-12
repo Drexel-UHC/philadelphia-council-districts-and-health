@@ -80,20 +80,16 @@ ui <- page_fluid(
 )
 
 server <- function(input, output, session) {
-  ## Loader code: Server (start)
-  Sys.sleep(0.5) # do something that takes time
+  ## Loader code: Setup Server 
   library(dplyr)
   load("data/app_v1.RData") 
   waiter_hide()
-  ## Loader code: Server (end)
 
-  # Initialize the dashboard module
+  # Modules
   IntroductionModule_Server("Introduction")
-
-  # Reuse the dashboard module functionality but adapt to the single page layout
-  CityDistrictDashboard_Server("Dashboard", df_data, df_metadata, sf_districts, geojson_districts)
-  
+  CityDistrictDashboard_Server("Dashboard", df_data, df_metadata, geojson_districts)
   OutroModule_Server("Outro")
+  
 }
 
 shinyApp(ui, server)

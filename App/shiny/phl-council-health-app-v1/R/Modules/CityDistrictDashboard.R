@@ -37,13 +37,13 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
   )
 }
 
-CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts, geojson_districts) {
+CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_districts) {
   moduleServer(id, function(input, output, session) {
     
     # Data  -----------------------------------------------------------
     # Create a reactive filtered dataset that updates when input changes
     df_data_filtered <- reactive({
-      req(input$healthMetric, df_data, sf_districts)
+      req(input$healthMetric, df_data)
   
       # Filter data for selected metric
       df_data_filtered <- df_data |>
