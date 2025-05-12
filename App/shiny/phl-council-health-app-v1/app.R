@@ -84,8 +84,9 @@ server <- function(input, output, session) {
   ## Loader code: Server (start)
   Sys.sleep(1) # do something that takes time
   library(dplyr)
-
   library(sf)
+  library(geojsonio)
+  library(jsonlite)
   load("data/app_v1.RData")
   waiter_hide()
   ## Loader code: Server (end)

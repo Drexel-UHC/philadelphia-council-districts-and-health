@@ -53,6 +53,8 @@ library(jsonlite)
 sf_geojson <- geojsonio::geojson_json(sf_result)
 sf_map_data <- jsonlite::fromJSON(sf_geojson, simplifyVector = FALSE)
 source_tmp = sf_result$source[1]
+var_tmp = sf_result$var_name[1]
+var_label_tmp = sf_result$var_label[1]
 df_data_filtered; str(sf_map_data, max.level = 3)
 
 # Create a properly formatted data frame matching the GeoJSON structure
@@ -70,7 +72,7 @@ map_data_df <- data.frame(
   hc_add_series_map(
     map = sf_map_data, 
     df = map_data_df,
-    name = "Code Violations (%)",
+    name = var_label_tmp,
     value = "value", 
     joinBy = c("district", "district"),  # Join using the district field on both sides
     dataLabels = list(

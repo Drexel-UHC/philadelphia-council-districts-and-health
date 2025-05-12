@@ -22,15 +22,15 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
     ),
     
     fluidRow(
-      column(6,
+      column(7,
         div(class = "border p-2 bg-light",
           # Replace plotOutput with highchartOutput
-          highchartOutput(ns("bar_chart"), height = "300px")
+          highchartOutput(ns("bar_chart"), height = "400px")
         )
       ),
-      column(6,
+      column(5,
         div(class = "border p-2 bg-light",
-          leafletOutput(ns("output_map"), height = "300px") 
+            highchartOutput(ns("output_map"), height = "400px")
         )
       )
     )
@@ -49,10 +49,10 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts)
       df_data_filtered <- df_data |>
         filter(var_name == input$healthMetric) %>% 
         left_join(df_metadata)
-      validate(
+      print(df_data_filtered)
+      shiny::validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
       )
-    
       # Make sure we're preserving the sf class
       sf_result <- sf_districts |>
         dplyr::left_join(df_data_filtered, by = c("district" = "district")) %>% 
@@ -66,16 +66,18 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts)
     # Bar Chart ---------------------------------------------------------------
     # Generate the bar chart based on selected health metric
     output$bar_chart <- renderHighchart({
+      
       # Get filtered data
-      dfa <- sf_data_filtered() %>% sf::st_drop_geometry()
+      dfa <- sf_data_filtered() 
       var_label_tmp <- dfa$var_label[1]
-      source_tmp = dfa$source[1]
+
+      print("HI2")
       
       # Create highcharter bar chart
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
-        hc_subtitle(text = glue::glue("Source: {source_tmp}")) %>%
+        hc_subtitle(text = paste("Source:", dfa$source[1])) %>%
         hc_xAxis(
           categories = dfa$district,
           title = list(text = "Council District")
@@ -119,52 +121,53 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts)
     
     # Map ---------------------------------------------------------------
     # Generate the map visualization based on selected health metric  
-    output$output_map <- renderLeaflet({
-      sf_data <- sf_data_filtered()
-      var_label_tmp <- sf_data$var_label[1]
+    output$output_map <- renderHighchart({
 
-      # Create a color palette based on the variable
-      pal <- colorNumeric(
-        palette = "viridis",
-        domain = sf_data$value
+      ## Geojson conversion
+      sf_result <- sf_data_filtered()
+      sf_geojson <- geojsonio::geojson_json(sf_result)
+      sf_map_data <- jsonlite::fromJSON(sf_geojson, simplifyVector = FALSE)
+    
+      ## Data formatting
+      map_data_df <- data.frame(
+        district = sf_result$district,
+        value = sf_result$value,
+        var_label = sf_result$var_label[1],
+        stringsAsFactor = FALSE
       )
 
-      # Create the leaflet map - using value instead of input$select_variable
-      sf_data %>% 
-        leaflet() %>%
-        addTiles() %>%
-        addPolygons(
-          fillColor = ~pal(value), 
-          weight = 1, 
-          opacity = 1,
-          color = "white",
-          dashArray = "3",
-          fillOpacity = 0.7,
-          # Add these lines for hover functionality
-          highlightOptions = highlightOptions(
-            weight = 3,
-            color = "#666",
-            fillOpacity = 0.9,
-            bringToFront = TRUE
+      ## Map
+      highchart() %>%
+        hc_title(text = "Code Violations by District") %>%
+        hc_subtitle(text = paste("Source:", sf_result$source[1])) %>%
+        hc_add_series_map(
+          map = sf_map_data,
+          df = map_data_df,
+          name = sf_result$var_label[1],
+          value = "value",
+          joinBy = c("district", "district"),  # Join using the district field on both sides
+          dataLabels = list(
+            enabled = TRUE,
+            format = "{point.district}"  # Display district number as label
           ),
-          # Create labels from your data
-          label = ~lapply(paste0(
-            "District: ", district, "<br>",
-            var_label, ": ", formatC(value, big.mark = ",")
-          ), HTML),
-          labelOptions = labelOptions(
-            style = list("font-weight" = "normal", padding = "3px 8px"),
-            textsize = "15px",
-            direction = "auto"
+          tooltip = list(
+            # headerFormat = '<span style="font-size:14px"><b>{series.name}</b></span><br/>',
+            pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value:.1f}%</span>'
           )
-        ) %>% 
-        # Add a legend
-        addLegend(
-          position = "bottomright",
-          pal = pal,
-          values = ~value,
-          title = sf_data$var_label[1],
-          opacity = 0.7)
+        ) %>%
+        hc_colorAxis(
+          min = min(map_data_df$value),
+          max = max(map_data_df$value),
+          stops = list(
+            list(0, "#EFEFFF"),  # Light color for low values
+            list(0.5, "#4444BB"),
+            list(1, "#000066")   # Dark color for high values
+          )
+        ) %>%
+        hc_legend(valueDecimals = 1, valueSuffix = "%") %>%
+        hc_mapNavigation(enabled = TRUE)
     })
-  }) # Add this closing curly brace for moduleServer
-} # This is the closing curly brace for the CityDistrictDashboard_Server function
+    
+  }) 
+  
+} 
