@@ -112,8 +112,8 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           )
         ) %>%
         hc_tooltip(
-          headerFormat = '<span style="font-size: 11px">District {point.district}</span><br/>',
-          pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.1f}</b><br/>'
+          headerFormat = paste0("<span style='font-size:13px'><b>",var_label_tmp,"</b></span><br/>"),
+          pointFormat = '<span style="color:{point.color}">\u25CF</span>  <b>District {point.district}:</b>  {point.y:.1f}<br/>'
         ) %>%
         hc_exporting(
           enabled = TRUE,
