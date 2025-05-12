@@ -100,9 +100,14 @@ sf_districts %>%
 Let's append the data and save it for the app. 
 
 ```{r}
-sf_data = sf_districts %>% left_join(df_data)
-save(sf_data, file = here("Data/clean datasets/app_v0.1.RData"))
 
+library(geojsonio)
+library(jsonlite)
+
+geojson_districts <- sf_districts %>% 
+  geojsonio::geojson_json() %>% 
+  jsonlite::fromJSON(simplifyVector = FALSE)
+geojson_districts %>% write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts.rds"))
 ```
 
 
@@ -161,11 +166,11 @@ df_metadata = read_excel(
   
 ## Check metadata-data compatibility
 assertthat::assert_that(
-  all(df_metadata$var_name %in% colnames(sf_data)),
+  all(df_metadata$var_name %in% colnames(df_data)),
   msg = "Metadata variable names do not match data variable names"
 )
 assertthat::assert_that(
-  all(sf_data %>% names() %>% discard(~.x%in%c("district","geometry"))  %in% df_metadata$var_name),
+  all(df_data %>% names() %>% discard(~.x%in%c("district","geometry"))  %in% df_metadata$var_name),
   msg = "Metadata variable names do not match data variable names"
 )
 
@@ -174,19 +179,23 @@ assertthat::assert_that(
 Let's also tidy the data for the dashboard
 
 ```{r}
-sf_districts = sf_data %>% select(district, geometry) 
-df_data = sf_data %>% 
+df_data = df_data %>% 
   sf::st_drop_geometry() %>% 
   pivot_longer(-district, names_to = 'var_name') %>% 
   left_join(df_metadata %>% select(var_name, var_label))
 
-save(sf_districts, df_data, df_metadata, 
+
+```
+
+
+# Export
+
+
+```{r}
+save(df_data, df_metadata, geojson_districts,sf_districts,
      file = here("App/shiny/phl-council-health-app-v1/data/app_v1.RData"))
 ```
 
-Now try some EDA.
-
---- 
 
 # EDA
 
@@ -198,38 +207,19 @@ Let's select variable to analyze.
 
 ```{r}
 input = list()
-input$select_variable = 'cc_district_population '
+input$select_variable = 'cc_district_population'
 
 ```
 
 Let's write the visualization code
 
 ```{r}
-sf_data  %>% 
-    ggplot(aes_string(x = input$select_variable  )) +
+df_data  %>% 
+  filter(var_name == input$select_variable) %>% 
+    ggplot(aes(x = value  )) +
     geom_density(fill = "blue", alpha = 0.5) +
     labs(title = paste("Density plot of ", input$select_variable))
 ```
-
-## Bivariate Distribution analysis
-
-Let's select variables to analyze.
-
-```{r}
-input = list()
-input$select_variable_1 = 'pct_white'
-input$select_variable_2 = 'median_hh_income_district'
-```
-
-Let's write the visualization code
-
-```{r}
-sf_data  %>% 
-    ggplot(aes_string(x = input$select_variable_1, y = input$select_variable_2 )) +
-    geom_point() +
-    labs(title = paste("Scatter plot of ", input$select_variable_1, " vs ", input$select_variable_2))
-```
-
 
 ## Spatial Distribution
 
@@ -247,15 +237,17 @@ Let's write the visualization code with leaflet.
 # Create a color palette based on the variable
 pal <- colorNumeric(
   palette = "viridis",
-  domain = sf_data[[input$select_variable]]
+  domain = df_data[[input$select_variable]]
 )
 
 # Create the leaflet map
-sf_data %>% 
+
+sf_districts %>% 
+  left_join(df_data %>% filter(var_name == input$select_variable) )%>%
   leaflet() %>%
   addTiles() %>%
   addPolygons(
-    fillColor = ~pal(get(input$select_variable)), 
+    fillColor = ~pal(value), 
     weight = 1, 
     opacity = 1,
     color = "white",
@@ -267,23 +259,14 @@ sf_data %>%
       color = "#666",
       fillOpacity = 0.9,
       bringToFront = TRUE
-    ),
-    # Create labels from your data
-    label = ~paste(
-      "District:", district, "<br>",
-      input$select_variable, ":", round(get(input$select_variable), 2)
-    ),
-    labelOptions = labelOptions(
-      style = list("font-weight" = "normal", padding = "3px 8px"),
-      textsize = "15px",
-      direction = "auto"
     )
+   
   ) %>% 
   # Add a legend
   addLegend(
     position = "bottomright",
     pal = pal,
-    values = ~get(input$select_variable),
+    values = ~value,
     title = input$select_variable,
     opacity = 0.7)
 ```

@@ -83,8 +83,7 @@ server <- function(input, output, session) {
   ## Loader code: Server (start)
   Sys.sleep(0.5) # do something that takes time
   library(dplyr)
-  load("data/app_v1.RData")
-  geojson_districts = readRDS("data/json_districts.rds")
+  load("data/app_v1.RData") 
   waiter_hide()
   ## Loader code: Server (end)
 
