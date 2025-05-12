@@ -12,13 +12,19 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
     p("To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city."),
     
     fluidRow(
-      column(4,
+      column(5,
         div(class = "form-group",
           selectInput(ns("healthMetric"), "", 
                     choices = choices)
         )
       ),
-      column(8, "")
+      column(7, ""
+             # Add hover information display
+            #  div(class = "border p-2 bg-light",
+            #      h5("Currently Viewing", class = "mb-3"),
+            #      uiOutput(ns("hover_info"))
+            #  )
+             )
     ),
     
     fluidRow(
@@ -39,7 +45,9 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
 CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_districts) {
   moduleServer(id, function(input, output, session) {
     
-    # Data  -----------------------------------------------------------
+    
+    # Reactives Data  -----------------------------------------------------------
+    ## Data  -----------------------------------------------------------
     # Create a reactive filtered dataset that updates when input changes
     df_data_filtered <- reactive({
       req(input$healthMetric, df_data)
@@ -55,6 +63,9 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       ) 
       return(df_data_filtered)
     })
+
+    ## Hovered District  -----------------------------------------------------------
+    hovered_district <- reactiveVal(NULL)
     
 
     # Bar Chart ---------------------------------------------------------------
@@ -65,8 +76,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
 
-      
-      # Create highcharter bar chart
+      # Create highcharter bar chart WITHOUT hover event handlers
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
@@ -80,10 +90,16 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           min = 0
         ) %>%
         hc_add_series(
-          data = df_data_filtered$value,
+          data = lapply(1:nrow(df_data_filtered), function(i) {
+            list(
+              y = df_data_filtered$value[i],
+              district = df_data_filtered$district[i],
+              color = "grey",  # Default color
+              id = df_data_filtered$district[i]  # Use district as point ID for easier reference
+            )
+          }),
           name = var_label_tmp,
-          color = 'grey',
-          showInLegend = FALSE  
+          showInLegend = FALSE
         ) %>%
         hc_plotOptions(
           column = list(
@@ -96,7 +112,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           )
         ) %>%
         hc_tooltip(
-          headerFormat = '<span style="font-size: 11px">District {point.key}</span><br/>',
+          headerFormat = '<span style="font-size: 11px">District {point.district}</span><br/>',
           pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.1f}</b><br/>'
         ) %>%
         hc_exporting(
@@ -109,13 +125,60 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           href = "#"
         ) %>%
         hc_add_theme(hc_theme_smpl())
-      
     })
+
+    # Observer to update bar chart colors when district is hovered
+    observeEvent(input$hoveredDistrict, {
+      # Get the bar chart proxy
+      chart_proxy <- highchartProxy(session$ns("bar_chart"))
+      
+      # Get the filtered data
+      df <- df_data_filtered()
+      
+      if (!is.null(input$hoveredDistrict)) {
+        # Get the district being hovered
+        hovered_district_id <- input$hoveredDistrict$district
+        
+        # Prepare the updated points with the right colors
+        updated_points <- lapply(1:nrow(df), function(i) {
+          district <- df$district[i]
+          # Use RED for the hovered district, grey for others
+          color <- ifelse(district == hovered_district_id, "#6666FF", "#CCCCCC")
+          
+          list(
+            y = df$value[i],
+            district = district,
+            color = color,
+            id = district
+          )
+        })
+      } else {
+        # Reset ALL colors to grey when nothing is hovered
+        updated_points <- lapply(1:nrow(df), function(i) {
+          list(
+            y = df$value[i],
+            district = df$district[i],
+            color = "#CCCCCC",  # Default grey
+            id = df$district[i]
+          )
+        })
+      }
+      
+      # Force a complete update of the series with the updated points
+      # This approach ensures the color changes are applied consistently
+      chart_proxy %>%
+        hcpxy_update(
+          series = list(
+            list(
+              data = updated_points
+            )
+          )
+        )
+    }, ignoreNULL = FALSE)  # Critical: Process NULL values too
     
     # Map ---------------------------------------------------------------
     # Generate the map visualization based on selected health metric  
     output$output_map <- renderHighchart({
-
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
@@ -129,23 +192,38 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           df = df_data_filtered,
           name = var_label_tmp,
           value = "value",
-          joinBy = c("district", "district"),  # Join using the district field on both sides
+          joinBy = c("district", "district"),
           dataLabels = list(
             enabled = TRUE,
-            format = "{point.district}"  # Display district number as label
+            format = "{point.district}"
           ),
           tooltip = list(
-            # headerFormat = '<span style="font-size:14px"><b>{series.name}</b></span><br/>',
             pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value:.1f}%</span>'
+          ),
+          # Add event handlers for hover
+          point = list(
+            events = list(
+              # When hovering over a district, update the reactive value
+              mouseOver = JS(paste0("function() {
+                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', {
+                  district: this.district,
+                  value: this.value
+                });
+              }")),
+              # When moving out of a district, clear the value
+              mouseOut = JS(paste0("function() {
+                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null, {priority: 'event'});
+              }"))
+            )
           )
         ) %>%
         hc_colorAxis(
           min = min(df_data_filtered$value),
           max = max(df_data_filtered$value),
           stops = list(
-            list(0, "#EFEFFF"),  # Light color for low values
+            list(0, "#EFEFFF"),
             list(0.5, "#4444BB"),
-            list(1, "#000066")   # Dark color for high values
+            list(1, "#000066")
           )
         ) %>%
         hc_exporting(
@@ -157,6 +235,30 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
         hc_add_theme(hc_theme_smpl())
     })
     
+
+    # Observer ----------------------------------------------------------------
+    # Observer to update the reactive value when hovering
+    observeEvent(input$hoveredDistrict, {
+      # Only update when it's actually changing
+      isolate({
+        if(!identical(hovered_district(), input$hoveredDistrict)) {
+          hovered_district(input$hoveredDistrict)
+        }
+      })
+    }, ignoreNULL = FALSE)  # Important: Process NULL values too
+    
+    
+    # Observer downstream ----------------------------------------------------------------
+    # Render the hovered district information
+    output$hover_info <- renderUI({
+      district_data <- hovered_district()
+      if (is.null(district_data)) {
+        return(p("None"))
+      } else {
+        return(p(district_data$district))
+      }
+    })
+    
   }) 
   
-} 
+}
