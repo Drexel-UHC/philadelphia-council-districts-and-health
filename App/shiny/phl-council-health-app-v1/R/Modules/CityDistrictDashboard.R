@@ -75,8 +75,9 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
+      city_avg_tmp <- df_data_filtered$city_avg[1]
 
-      # Create highcharter bar chart WITHOUT hover event handlers
+      # Create highcharter bar chart WITH city average line
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
@@ -87,7 +88,21 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
         ) %>%
         hc_yAxis(
           title = list(text = var_label_tmp),
-          min = 0
+          min = 0,
+          plotLines = list(
+            list(
+              value = city_avg_tmp,
+              color = "#707070",
+              dashStyle = "shortdash",
+              width = 2,
+              label = list(
+                text = paste("City Average:", round(city_avg_tmp, 1)),
+                align = "right",
+                style = list(color = "#707070")
+              ),
+              zIndex = 5
+            )
+          )
         ) %>%
         hc_add_series(
           data = lapply(1:nrow(df_data_filtered), function(i) {
