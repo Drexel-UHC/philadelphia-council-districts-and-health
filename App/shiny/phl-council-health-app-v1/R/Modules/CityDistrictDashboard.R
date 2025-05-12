@@ -7,8 +7,6 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
     df_metadata$var_label
   )
  
-  
-
   div(class = "section",
     h3("How to Use:", class = "mt-4 section-title"),
     p("To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city."),
@@ -26,7 +24,8 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
     fluidRow(
       column(6,
         div(class = "border p-2 bg-light",
-          plotOutput(ns("barPlot"), height = "300px")
+          # Replace plotOutput with highchartOutput
+          highchartOutput(ns("bar_chart"), height = "300px")
         )
       ),
       column(6,
@@ -41,9 +40,9 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
 CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
   moduleServer(id, function(input, output, session) {
     
+    # Data Reactive -----------------------------------------------------------
     # Create a reactive filtered dataset that updates when input changes
     sf_data_filtered <- reactive({
-
       req(input$healthMetric, df_data, sf_districts)
   
       # Filter data for selected metric
@@ -55,26 +54,72 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
     
       # Make sure we're preserving the sf class
       sf_result <- sf_districts |>
-        dplyr::left_join(df_data_filtered, by = c("district" = "district")) 
+        dplyr::left_join(df_data_filtered, by = c("district" = "district")) %>% 
+        mutate(district_int = as.integer(district)) %>% 
+        arrange(district_int) 
 
       return(sf_result)
     })
     
-   
+
+    # Bar Chart ---------------------------------------------------------------
     # Generate the bar chart based on selected health metric
-    output$barPlot <- renderPlot({
+    output$bar_chart <- renderHighchart({
       # Get filtered data
-      df_tmp <- sf_data_filtered()
-      var_label_tmp <- df_tmp$var_label[1]
+      sf_data <- sf_data_filtered()
+      var_label_tmp <- sf_data$var_label[1]
       
-      # Create bar plot
-      barplot(df_tmp$value, 
-              names.arg = df_tmp$district,
-              main = var_label_tmp,
-              xlab = "Council District",
-              ylab = var_label_tmp)
+      # Create a data frame for the highcharter bar chart
+      chart_data <- data.frame(
+        district = sf_data$district,
+        value = sf_data$value
+      )
+      
+      # Create highcharter bar chart
+      plot = highchart() %>%
+        hc_chart(type = "column") %>%
+        hc_title(text = var_label_tmp) %>%
+        hc_xAxis(
+          categories = chart_data$district,
+          title = list(text = "Council District")
+        ) %>%
+        hc_yAxis(
+          title = list(text = var_label_tmp),
+          min = 0
+        ) %>%
+        hc_add_series(
+          data = chart_data$value,
+          name = var_label_tmp,
+          colorByPoint = TRUE
+        ) %>%
+        hc_plotOptions(
+          column = list(
+            dataLabels = list(
+              enabled = TRUE,
+              format = "{point.y:.1f}"
+            ),
+            borderWidth = 0,
+            pointPadding = 0.1
+          )
+        ) %>%
+        hc_tooltip(
+          headerFormat = '<span style="font-size: 11px">District {point.key}</span><br/>',
+          pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.1f}</b><br/>'
+        ) %>%
+        hc_exporting(
+          enabled = TRUE,
+          filename = paste0("philly-council-", input$healthMetric)
+        ) %>%
+        hc_credits(
+          enabled = TRUE,
+          text = "Source: Philadelphia City Council Districts Dashboard",
+          href = "#"
+        )
+      
+      return(plot)
     })
     
+    # Map ---------------------------------------------------------------
     # Generate the map visualization based on selected health metric  
     output$output_map <- renderLeaflet({
       sf_data <- sf_data_filtered()
