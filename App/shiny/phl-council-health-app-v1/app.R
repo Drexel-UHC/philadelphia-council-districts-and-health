@@ -51,35 +51,30 @@
 ui <- page_fluid(
   theme = app_theme,
 
-  ## Loader code: UI (start)
+  ## UI Setup 
   useWaiter(),
   waiterShowOnLoad(html = loading_screen, color = 'white'),
-  ## Loader code: UI (end)
-  
   tags$head(includeCSS("CSS/Header.css")),
   tags$head(includeCSS("CSS/NavbarPage.css")),
   tags$head(includeCSS("CSS/Home.css")),
   tags$head(includeHTML("HTML/FontAwesomeLoader.html")),
 
-  # Simple header without navigation
+  # Header
   includeHTML("HTML/Header.html"),
   
-  # Title and intro - Quarto-like document header
+  # Modules
   IntroductionModule_UI("Introduction"),
-  
-  # Dashboard section - now more integrated into the document flow
   CityDistrictDashboard_UI("Dashboard", df_metadata),
-
-  # Outro section with acknowledgements
   OutroModule_UI("Outro"),
 
-  # Document-like footer
+  # Footer
   div(class = "section small text-muted",
     includeHTML("HTML/Footer.html")
   )
 )
 
 server <- function(input, output, session) {
+  
   ## Loader code: Setup Server 
   library(dplyr)
   load("data/app_v1.RData") 
