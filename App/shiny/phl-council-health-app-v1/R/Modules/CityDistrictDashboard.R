@@ -18,12 +18,13 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
                     choices = choices)
         )
       ),
-      column(7,
+      column(7, ""
              # Add hover information display
-             div(class = "border p-2 bg-light",
-                 h5("Currently Viewing", class = "mb-3"),
-                 uiOutput(ns("hover_info"))
-             ))
+            #  div(class = "border p-2 bg-light",
+            #      h5("Currently Viewing", class = "mb-3"),
+            #      uiOutput(ns("hover_info"))
+            #  )
+             )
     ),
     
     fluidRow(
@@ -75,8 +76,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
 
-      
-      # Create highcharter bar chart
+      # Create highcharter bar chart WITHOUT hover event handlers
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
@@ -90,10 +90,16 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           min = 0
         ) %>%
         hc_add_series(
-          data = df_data_filtered$value,
+          data = lapply(1:nrow(df_data_filtered), function(i) {
+            list(
+              y = df_data_filtered$value[i],
+              district = df_data_filtered$district[i],
+              color = "grey",  # Default color
+              id = df_data_filtered$district[i]  # Use district as point ID for easier reference
+            )
+          }),
           name = var_label_tmp,
-          color = 'grey',
-          showInLegend = FALSE  
+          showInLegend = FALSE
         ) %>%
         hc_plotOptions(
           column = list(
@@ -106,7 +112,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           )
         ) %>%
         hc_tooltip(
-          headerFormat = '<span style="font-size: 11px">District {point.key}</span><br/>',
+          headerFormat = '<span style="font-size: 11px">District {point.district}</span><br/>',
           pointFormat = '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y:.1f}</b><br/>'
         ) %>%
         hc_exporting(
@@ -119,8 +125,56 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           href = "#"
         ) %>%
         hc_add_theme(hc_theme_smpl())
-      
     })
+
+    # Observer to update bar chart colors when district is hovered
+    observeEvent(input$hoveredDistrict, {
+      # Get the bar chart proxy
+      chart_proxy <- highchartProxy(session$ns("bar_chart"))
+      
+      # Get the filtered data
+      df <- df_data_filtered()
+      
+      if (!is.null(input$hoveredDistrict)) {
+        # Get the district being hovered
+        hovered_district_id <- input$hoveredDistrict$district
+        
+        # Prepare the updated points with the right colors
+        updated_points <- lapply(1:nrow(df), function(i) {
+          district <- df$district[i]
+          # Use RED for the hovered district, grey for others
+          color <- ifelse(district == hovered_district_id, "#6666FF", "#CCCCCC")
+          
+          list(
+            y = df$value[i],
+            district = district,
+            color = color,
+            id = district
+          )
+        })
+      } else {
+        # Reset ALL colors to grey when nothing is hovered
+        updated_points <- lapply(1:nrow(df), function(i) {
+          list(
+            y = df$value[i],
+            district = df$district[i],
+            color = "#CCCCCC",  # Default grey
+            id = df$district[i]
+          )
+        })
+      }
+      
+      # Force a complete update of the series with the updated points
+      # This approach ensures the color changes are applied consistently
+      chart_proxy %>%
+        hcpxy_update(
+          series = list(
+            list(
+              data = updated_points
+            )
+          )
+        )
+    }, ignoreNULL = FALSE)  # Critical: Process NULL values too
     
     # Map ---------------------------------------------------------------
     # Generate the map visualization based on selected health metric  
@@ -207,4 +261,4 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
     
   }) 
   
-} 
+}
