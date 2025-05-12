@@ -34,13 +34,15 @@ Here we just do a initial EDA on the data before we do any shiny apps. It would 
 
 So got an message that the final datasets are in `/clean datasets/council_measures_reduc.RData`; let's take a look!
 
-## Data
+## Data 
+
+### Districts
 
 ```{r}
 load(here("Data/clean datasets/council_measures_reduc.RData"))
-df_data = council_measures_reduc %>% 
+df_data_raw = council_measures_reduc %>% 
   janitor::clean_names()
-df_data %>% glimpse()
+df_data_raw %>% glimpse()
 ```
 
 Looks okay. Note that there is another data object that contains intermediate variables as well. Which can be loaded below.  For Now let's focus on the curated object.
@@ -50,6 +52,58 @@ load(here("Data/clean datasets/council_measures_reduc_geom.RData"))
 df_intermediate = council_measures_reduc_geom %>% 
   janitor::clean_names()
 df_intermediate %>% glimpse()
+```
+
+Let's tidy
+
+```{r}
+df_data_int = df_data_raw %>% 
+  sf::st_drop_geometry() %>% 
+  pivot_longer(-district, names_to = 'var_name')
+
+
+```
+
+### City
+
+The original data is not able to be mapped to the data we ahve. 
+
+```{{r}}
+load(here("Data/clean datasets/City_average.RData"))
+df_city = City_average %>% 
+  janitor::clean_names() %>% 
+  mutate(id = 'city_avg') %>% 
+  pivot_longer(-id, names_to = 'var_name') %>%
+  rename(var_name_city_raw = var_name)
+df_city %>%  count(var_name_city_raw)
+```
+
+Let's just do our own 
+
+```{r}
+df_pop_district = df_data_int %>% 
+  filter(var_name == 'cc_district_population') %>% 
+  select(district, pop_district = value)
+
+df_city_avg = df_data_int %>% 
+  filter(var_name != 'cc_district_population') %>%
+  left_join(df_pop_district) %>% 
+  summarise(city_avg = weighted.mean(value, pop_district),
+            .by = 'var_name')
+```
+
+Let's append this to df_data and quarentine some variables from city average that doesn't make sense. 
+
+
+```{r}
+vec__remove_city_average = c(
+  ''
+)
+
+df_data_final = df_data_int %>% 
+  filter(var_name != 'cc_district_population') %>%
+  left_join(df_city_avg) %>% 
+  mutate(city_avg = ifelse(var_name  %in% vec__remove_city_average, NA, city_avg)) 
 ```
 
 ## Boundaries
@@ -107,7 +161,6 @@ library(jsonlite)
 geojson_districts <- sf_districts %>% 
   geojsonio::geojson_json() %>% 
   jsonlite::fromJSON(simplifyVector = FALSE)
-geojson_districts %>% write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts.rds"))
 ```
 
 
@@ -162,29 +215,26 @@ df_metadata = read_excel(
     "Tree Canopy Coverage" = "cd_tree",
     "Heat Vulnerabillity Index" = "weighted_hvi",
     "Poverty" = "cd_pct_poverty"
-  ))
+  )) %>% 
+  filter(!var_name %in% c('cc_district_population'))
   
 ## Check metadata-data compatibility
 assertthat::assert_that(
-  all(df_metadata$var_name %in% colnames(df_data)),
+  all(df_metadata$var_name %in% df_data_final$var_name),
   msg = "Metadata variable names do not match data variable names"
 )
 assertthat::assert_that(
-  all(df_data %>% names() %>% discard(~.x%in%c("district","geometry"))  %in% df_metadata$var_name),
+  all(df_data_final$var_name %>% discard(~.x%in%c("district","geometry"))  %in% df_metadata$var_name),
   msg = "Metadata variable names do not match data variable names"
 )
 
 ```
 
-Let's also tidy the data for the dashboard
+Let's add basic metadat to the data.
 
 ```{r}
-df_data = df_data %>% 
-  sf::st_drop_geometry() %>% 
-  pivot_longer(-district, names_to = 'var_name') %>% 
+df_data = df_data_final %>% 
   left_join(df_metadata %>% select(var_name, var_label))
-
-
 ```
 
 
