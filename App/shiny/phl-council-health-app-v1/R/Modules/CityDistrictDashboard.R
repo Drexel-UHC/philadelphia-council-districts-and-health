@@ -12,13 +12,18 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
     p("To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city."),
     
     fluidRow(
-      column(4,
+      column(5,
         div(class = "form-group",
           selectInput(ns("healthMetric"), "", 
                     choices = choices)
         )
       ),
-      column(8, "")
+      # column(7, 
+      #        # Add hover information display
+      #        div(class = "border p-2 bg-light",
+      #            h5("Currently Viewing", class = "mb-3"),
+      #            uiOutput(ns("hover_info"))
+      #        ))
     ),
     
     fluidRow(
@@ -40,7 +45,9 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
 CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts, geojson_districts) {
   moduleServer(id, function(input, output, session) {
     
-    # Data  -----------------------------------------------------------
+    
+    # Reactives Data  -----------------------------------------------------------
+    ## Data  -----------------------------------------------------------
     # Create a reactive filtered dataset that updates when input changes
     df_data_filtered <- reactive({
       req(input$healthMetric, df_data, sf_districts)
@@ -56,6 +63,9 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts,
       ) 
       return(df_data_filtered)
     })
+
+    ## Hovered District  -----------------------------------------------------------
+    hovered_district <- reactiveVal(NULL)
     
 
     # Bar Chart ---------------------------------------------------------------
@@ -116,7 +126,6 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts,
     # Map ---------------------------------------------------------------
     # Generate the map visualization based on selected health metric  
     output$output_map <- renderHighchart({
-
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
@@ -130,13 +139,12 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts,
           df = df_data_filtered,
           name = var_label_tmp,
           value = "value",
-          joinBy = c("district", "district"),  # Join using the district field on both sides
+          joinBy = c("district", "district"),
           dataLabels = list(
             enabled = TRUE,
-            format = "{point.district}"  # Display district number as label
+            format = "{point.district}"
           ),
           tooltip = list(
-            # headerFormat = '<span style="font-size:14px"><b>{series.name}</b></span><br/>',
             pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value:.1f}%</span>'
           )
         ) %>%
@@ -144,14 +152,35 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts,
           min = min(df_data_filtered$value),
           max = max(df_data_filtered$value),
           stops = list(
-            list(0, "#EFEFFF"),  # Light color for low values
+            list(0, "#EFEFFF"),
             list(0.5, "#4444BB"),
-            list(1, "#000066")   # Dark color for high values
+            list(1, "#000066")
           )
         ) %>%
         hc_legend(valueDecimals = 1, valueSuffix = "%") %>%
         hc_mapNavigation(enabled = TRUE)
     })
+    
+
+    # Observer ----------------------------------------------------------------
+    # Observer to update the reactive value when hovering
+    # observeEvent(input$hoveredDistrict, {
+    #   hovered_district(input$hoveredDistrict)
+    # })    
+    
+    
+    # Observer downstream ----------------------------------------------------------------
+    # Render the hovered district information
+    # output$hover_info <- renderUI({
+    #   district_data <- hovered_district()
+      
+    #   if (is.null(district_data)) {
+    #     return(p("Hover over a district to see details", class = "text-muted fst-italic"))
+    #   } else {
+    #     # Just show the district ID
+    #     h4(paste("District", district_data$district))
+    #   }
+    # })
     
   }) 
   
