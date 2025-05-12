@@ -2,8 +2,8 @@
 library(shiny)
 library(bslib)
 library(waiter)
-library(leaflet) 
 library(highcharter)
+library(dplyr)
 load("data/app_v1.RData")
 
 # Data --------------------------------------------------------------------

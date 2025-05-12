@@ -23,8 +23,7 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
     
     fluidRow(
       column(7,
-        div(class = "border p-2 bg-light",
-          # Replace plotOutput with highchartOutput
+        div(class = "border p-2 bg-light", 
           highchartOutput(ns("bar_chart"), height = "400px")
         )
       ),
@@ -48,7 +47,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       # Filter data for selected metric
       df_data_filtered <- df_data |>
         filter(var_name == input$healthMetric) %>% 
-        left_join(df_metadata)%>% 
+        left_join(df_metadata) %>% 
         mutate(district_int = as.integer(district)) %>% 
         arrange(desc(value))  
       shiny::validate(
@@ -63,17 +62,17 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
     output$bar_chart <- renderHighchart({
       
       # Get filtered data
-      dfa <- df_data_filtered() 
-      var_label_tmp <- dfa$var_label[1]
+      df_data_filtered <- df_data_filtered() 
+      var_label_tmp <- df_data_filtered$var_label[1]
 
       
       # Create highcharter bar chart
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
-        hc_subtitle(text = paste("Source:", dfa$source[1])) %>%
+        hc_subtitle(text = paste("Source:", df_data_filtered$source[1])) %>%
         hc_xAxis(
-          categories = dfa$district,
+          categories = df_data_filtered$district,
           title = list(text = "Council District")
         ) %>%
         hc_yAxis(
@@ -81,7 +80,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
           min = 0
         ) %>%
         hc_add_series(
-          data = dfa$value,
+          data = df_data_filtered$value,
           name = var_label_tmp,
           color = 'grey',
           showInLegend = FALSE  
@@ -102,7 +101,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
         ) %>%
         hc_exporting(
           enabled = TRUE,
-          filename = paste0("philly-council-", input$healthMetric)
+          filename = paste0("philly-council-chart-", input$healthMetric)
         ) %>%
         hc_credits(
           enabled = TRUE,
@@ -149,8 +148,13 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
             list(1, "#000066")   # Dark color for high values
           )
         ) %>%
+        hc_exporting(
+          enabled = TRUE,
+          filename = paste0("philly-council-map-", input$healthMetric)
+        )  %>%
         hc_legend(valueDecimals = 1, valueSuffix = "%") %>%
-        hc_mapNavigation(enabled = TRUE)
+        hc_mapNavigation(enabled = TRUE) %>%
+        hc_add_theme(hc_theme_smpl())
     })
     
   }) 
