@@ -9,7 +9,8 @@ load("data/app_v1.RData")
 # Data --------------------------------------------------------------------
 input = lst(); input$healthMetric = "pct_violations"
 df_data_filtered <- df_data |>
-  filter(var_name == input$healthMetric) 
+  filter(var_name == input$healthMetric)  %>% 
+  left_join(df_metadata)
 sf_result <- sf_districts |>
   dplyr::left_join(df_data_filtered, by = c("district" = "district")) %>% 
   mutate(district_int = as.integer(district)) %>% 
@@ -26,21 +27,16 @@ barplot(df_tmp$value,
         ylab = var_label_tmp)
 
 # Highcharts -------------------------------------------------------------
-sf_data <- sf_result %>% sf::st_drop_geometry()
-var_label_tmp <- sf_data$var_label[1]
+dfa <- sf_result %>% sf::st_drop_geometry()
+var_label_tmp <- dfa$var_label[1]
 
-# Create a data frame for the highcharter bar chart
-chart_data <- data.frame(
-  district = sf_data$district,
-  value = sf_data$value
-)
 
 # Create highcharter bar chart
 highchart() %>%
   hc_chart(type = "column") %>%
   hc_title(text = var_label_tmp) %>%
   hc_xAxis(
-    categories = chart_data$district,
+    categories = dfa$district,
     title = list(text = "Council District")
   ) %>%
   hc_yAxis(
@@ -48,7 +44,7 @@ highchart() %>%
     min = 0
   ) %>%
   hc_add_series(
-    data = chart_data$value,
+    data = dfa$value,
     name = var_label_tmp,
     colorByPoint = TRUE
   ) %>%

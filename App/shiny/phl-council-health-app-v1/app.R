@@ -94,7 +94,7 @@ server <- function(input, output, session) {
   IntroductionModule_Server("Introduction")
 
   # Reuse the dashboard module functionality but adapt to the single page layout
-  CityDistrictDashboard_Server("Dashboard", df_data, sf_districts)
+  CityDistrictDashboard_Server("Dashboard", df_data, df_metadata, sf_districts)
   
   OutroModule_Server("Outro")
 }

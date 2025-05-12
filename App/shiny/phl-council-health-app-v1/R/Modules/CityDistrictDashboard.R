@@ -37,7 +37,7 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
   )
 }
 
-CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
+CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts) {
   moduleServer(id, function(input, output, session) {
     
     # Data Reactive -----------------------------------------------------------
@@ -47,7 +47,8 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
   
       # Filter data for selected metric
       df_data_filtered <- df_data |>
-        filter(var_name == input$healthMetric)
+        filter(var_name == input$healthMetric) %>% 
+        left_join(df_metadata)
       validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
       )
@@ -66,21 +67,17 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
     # Generate the bar chart based on selected health metric
     output$bar_chart <- renderHighchart({
       # Get filtered data
-      sf_data <- sf_data_filtered()
-      var_label_tmp <- sf_data$var_label[1]
-      
-      # Create a data frame for the highcharter bar chart
-      chart_data <- data.frame(
-        district = sf_data$district,
-        value = sf_data$value
-      )
+      dfa <- sf_data_filtered() %>% sf::st_drop_geometry()
+      var_label_tmp <- dfa$var_label[1]
+      source_tmp = dfa$source[1]
       
       # Create highcharter bar chart
-      plot = highchart() %>%
+      highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
+        hc_subtitle(text = glue::glue("Source: {source_tmp}")) %>%
         hc_xAxis(
-          categories = chart_data$district,
+          categories = dfa$district,
           title = list(text = "Council District")
         ) %>%
         hc_yAxis(
@@ -88,9 +85,10 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
           min = 0
         ) %>%
         hc_add_series(
-          data = chart_data$value,
+          data = dfa$value,
           name = var_label_tmp,
-          colorByPoint = TRUE
+          color = 'grey',
+          showInLegend = FALSE  
         ) %>%
         hc_plotOptions(
           column = list(
@@ -112,11 +110,11 @@ CityDistrictDashboard_Server <- function(id, df_data, sf_districts) {
         ) %>%
         hc_credits(
           enabled = TRUE,
-          text = "Source: Philadelphia City Council Districts Dashboard",
+          text = "Urban Health Collaborative, Health of Philadelphia City Council Districts Dashboard, 2025",
           href = "#"
-        )
+        ) %>%
+        hc_add_theme(hc_theme_smpl())
       
-      return(plot)
     })
     
     # Map ---------------------------------------------------------------
