@@ -56,7 +56,9 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       df_data_filtered <- df_data |>
         filter(var_name == input$healthMetric) %>% 
         left_join(df_metadata) %>% 
-        mutate(district_int = as.integer(district)) %>% 
+        mutate(district_int = as.integer(district),
+               source_year =  paste0("Source: ", source," (",
+                                     year,")")) %>% 
         arrange(desc(value))  
       shiny::validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
@@ -75,13 +77,16 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
+      var_def_tmp = df_data_filtered$var_def[1]
       city_avg_tmp <- df_data_filtered$city_avg[1]
+      source_year_tmp =   df_data_filtered$source_year[1]
+      
 
       # Create highcharter bar chart WITH city average line
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
-        hc_subtitle(text = paste("Source:", df_data_filtered$source[1])) %>%
+        hc_subtitle(text = var_def_tmp) %>%
         hc_xAxis(
           categories = df_data_filtered$district,
           title = list(text = "Council District")
@@ -136,8 +141,8 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
         ) %>%
         hc_credits(
           enabled = TRUE,
-          text = "Urban Health Collaborative, Health of Philadelphia City Council Districts Dashboard, 2025",
-          href = "#"
+          text = source_year_tmp
+          # href = "#"
         ) %>%
         hc_add_theme(hc_theme_smpl())
     })
