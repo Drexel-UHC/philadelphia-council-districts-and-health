@@ -158,7 +158,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
               }")),
               # When moving out of a district, clear the value
               mouseOut = JS(paste0("function() {
-                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null);
+                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null, {priority: 'event'});
               }"))
             )
           )
@@ -185,8 +185,13 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
     # Observer ----------------------------------------------------------------
     # Observer to update the reactive value when hovering
     observeEvent(input$hoveredDistrict, {
-      hovered_district(input$hoveredDistrict)
-    })
+      # Only update when it's actually changing
+      isolate({
+        if(!identical(hovered_district(), input$hoveredDistrict)) {
+          hovered_district(input$hoveredDistrict)
+        }
+      })
+    }, ignoreNULL = FALSE)  # Important: Process NULL values too
     
     
     # Observer downstream ----------------------------------------------------------------
@@ -194,10 +199,9 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
     output$hover_info <- renderUI({
       district_data <- hovered_district()
       if (is.null(district_data)) {
-        return(p("Hover over a district to see details", class = "text-muted fst-italic"))
+        return(p("None"))
       } else {
-        # Just show the district ID
-        h4(paste("District", district_data$district))
+        return(p(district_data$district))
       }
     })
     
