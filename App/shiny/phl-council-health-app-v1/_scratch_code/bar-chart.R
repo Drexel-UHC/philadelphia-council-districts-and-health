@@ -74,4 +74,5 @@ highchart() %>%
     enabled = TRUE,
     text = "Source: Philadelphia City Council Districts Dashboard",
     href = "#"
-  )
+  ) %>%
+  hc_add_theme(hc_theme_smpl())
