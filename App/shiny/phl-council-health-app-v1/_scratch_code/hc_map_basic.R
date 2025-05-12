@@ -52,7 +52,7 @@ library(geojsonio)
 library(jsonlite)
 sf_geojson <- geojsonio::geojson_json(sf_result)
 sf_map_data <- jsonlite::fromJSON(sf_geojson, simplifyVector = FALSE)
-
+source_tmp = sf_result$source[1]
 df_data_filtered; str(sf_map_data, max.level = 3)
 
 # Create a properly formatted data frame matching the GeoJSON structure
@@ -66,7 +66,7 @@ map_data_df <- data.frame(
 # Create the map with proper joinBy fields
  highchart() %>%
   hc_title(text = "Code Violations by District") %>%
-  hc_subtitle(text = "Source: Open Data") %>%
+  hc_subtitle(text = paste("Source:", source_tmp)) %>%
   hc_add_series_map(
     map = sf_map_data, 
     df = map_data_df,
@@ -76,12 +76,21 @@ map_data_df <- data.frame(
     dataLabels = list(
       enabled = TRUE,
       format = "{point.district}"  # Display district number as label
+    ),
+    tooltip = list(
+      # headerFormat = '<span style="font-size:14px"><b>{series.name}</b></span><br/>',
+      pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value:.1f}%</span>'
     )
   ) %>%
-  hc_colorAxis(
-    min = min(map_data_df$value),
-    max = max(map_data_df$value),
-    stops = color_stops()) %>%
+   hc_colorAxis(
+     min = min(map_data_df$value),
+     max = max(map_data_df$value),
+     stops = list(
+       list(0, "#EFEFFF"),  # Light color for low values
+       list(0.5, "#4444BB"), 
+       list(1, "#000066")   # Dark color for high values
+     )
+   ) %>%
   hc_legend(valueDecimals = 1, valueSuffix = "%") %>%
   hc_mapNavigation(enabled = TRUE)
 
