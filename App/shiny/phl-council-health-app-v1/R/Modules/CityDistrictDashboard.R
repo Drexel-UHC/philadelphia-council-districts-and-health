@@ -128,7 +128,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, sf_districts,
         hc_add_series_map(
           map = geojson_districts,
           df = df_data_filtered,
-          name = sf_result$var_label[1],
+          name = var_label_tmp,
           value = "value",
           joinBy = c("district", "district"),  # Join using the district field on both sides
           dataLabels = list(
