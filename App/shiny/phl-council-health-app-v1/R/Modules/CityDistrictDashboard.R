@@ -18,22 +18,16 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
                     choices = choices)
         )
       ),
-      column(7, ""
-             # Add hover information display
-            #  div(class = "border p-2 bg-light",
-            #      h5("Currently Viewing", class = "mb-3"),
-            #      uiOutput(ns("hover_info"))
-            #  )
-             )
+      column(7, "" )
     ),
     
     fluidRow(
-      column(7,
-        div(class = "border p-2 bg-light", 
+      column(7, 
+        div(class = "border p-2 bg-light",
           highchartOutput(ns("bar_chart"), height = "400px")
         )
       ),
-      column(5,
+      column(5, # ""
         div(class = "border p-2 bg-light",
             highchartOutput(ns("output_map"), height = "400px")
         )

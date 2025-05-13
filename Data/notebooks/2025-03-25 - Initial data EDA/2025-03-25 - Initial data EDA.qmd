@@ -161,6 +161,11 @@ library(jsonlite)
 geojson_districts <- sf_districts %>% 
   geojsonio::geojson_json() %>% 
   jsonlite::fromJSON(simplifyVector = FALSE)
+
+geojson_districts_simp <- sf_districts %>% 
+  rmapshaper::ms_simplify() %>%
+  geojsonio::geojson_json() %>% 
+  jsonlite::fromJSON(simplifyVector = FALSE)
 ```
 
 
@@ -290,6 +295,18 @@ save(df_data, df_metadata, geojson_districts,sf_districts,
      file = here("App/shiny/phl-council-health-app-v1/data/app_v1.RData"))
 ```
 
+Let's do a more RDS based export for porformance tweaking
+
+```{r}
+save(df_data, df_metadata,
+     file = here("App/shiny/phl-council-health-app-v1/data/app_v2.RData"))
+
+geojson_districts %>% 
+  write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts.rds"))
+
+geojson_districts_simp %>% 
+  write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts_simp.rds"))
+```
 
 # EDA
 
