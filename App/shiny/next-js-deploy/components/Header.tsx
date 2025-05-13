@@ -1,39 +1,43 @@
 import Image from "next/image";
-import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex justify-between items-center w-full bg-white shadow-sm p-4">
-      <div className="flex items-center gap-4">
-        <Image
-          src="/logo.png"
-          alt="Philadelphia Council Districts Logo"
-          width={200}
-          height={60}
-          priority
-        />
-        <h1 className="text-xl font-bold">Philadelphia Council Districts and Health</h1>
-      </div>
+    <header>
+      <div className="grid grid-cols-12 items-center p-[5px] md:p-[35px] md:pr-[55px]">
+        {/* Logo - takes 3 columns on mobile, 4 on medium screens */}
+        <a
+          href="https://drexel.edu/uhc/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="col-span-12 md:col-span-4"
+        >
+          <Image
+            src="/logo.png"
+            alt="Drexel UHC Logo"
+            width={400}
+            height={50}
+            className="w-[200px] sm:w-[400px] max-w-full"
+            priority
+          />
+        </a>
 
-      <nav>
-        <ul className="flex gap-6">
-          <li>
-            <Link href="#intro" className="hover:text-blue-600 transition-colors">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link href="#dashboard" className="hover:text-blue-600 transition-colors">
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link href="#about" className="hover:text-blue-600 transition-colors">
-              About
-            </Link>
-          </li>
-        </ul>
-      </nav>
+        {/* Middle spacer - takes 5 columns on mobile, 4 on medium screens */}
+        <div className="col-span-0 md:col-span-4"></div>
+
+        {/* Learn more section - takes 4 columns consistently */}
+        <div className="col-span-12 justify-self-start p-[23px]">
+          <span className="text-[11px] text-[#a7a8aa]">Learn more</span>
+          <br />
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[16px] font-[900] text-[#07294d] no-underline"
+            href="https://drexel.edu/uhc/"
+          >
+            https://drexel.edu/uhc/
+          </a>
+        </div>
+      </div>
     </header>
   );
 }
