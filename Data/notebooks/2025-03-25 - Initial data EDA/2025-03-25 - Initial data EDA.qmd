@@ -256,13 +256,16 @@ assertthat::assert_that(
 
 ```
 
-Let's add basic metadat to the data.
+Let's add basic metadata to the data.
 
 ```{r}
 library(scales)
-df_data = df_data_final %>% 
-  left_join(df_metadata %>% select(var_name, var_label, var_def, source, year, ylabs)) %>% 
+df_data = df_data_final%>% 
+  left_join(df_metadata) %>% 
   mutate(
+    district_int = as.integer(district),
+    source_year =  paste0("Source: ", source," (",
+                          year,")"),
     value_clean  = case_when(
       str_detect(var_def, "Percentage") ~ scales::percent(value/100, accuracy = 0.1),
       var_label %in% c('Median Age') ~ format(round(value, digits = 0), nsmall = 1),
@@ -272,13 +275,10 @@ df_data = df_data_final %>%
                      'Count of Licenses',
                      'Heat Vulnerability Index') ~ format(round(value, digits = 0), nsmall = 0) ,
       var_label %in% c('Median Household Income') ~  scales::dollar(value, accuracy = 1),
-
+      
       TRUE ~ "!!!!!!!!!!!!!!!!!!"
     ) %>% str_trim()
-  ) %>% 
-  group_by(var_name) %>% 
-  slice(1) %>% 
-  select(var_name, var_def, ylabs, value, value_clean)
+  ) 
 ```
 
 

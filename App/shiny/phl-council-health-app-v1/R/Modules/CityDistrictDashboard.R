@@ -42,7 +42,7 @@ CityDistrictDashboard_UI <- function(id, df_metadata) {
   )
 }
 
-CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_districts) {
+CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
   moduleServer(id, function(input, output, session) {
     
     
@@ -54,11 +54,7 @@ CityDistrictDashboard_Server <- function(id, df_data, df_metadata, geojson_distr
   
       # Filter data for selected metric
       df_data_filtered <- df_data |>
-        filter(var_name == input$healthMetric) %>% 
-        left_join(df_metadata) %>% 
-        mutate(district_int = as.integer(district),
-               source_year =  paste0("Source: ", source," (",
-                                     year,")")) %>% 
+        filter(var_name == input$healthMetric)  %>% 
         arrange(desc(value))  
       shiny::validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
