@@ -9,7 +9,7 @@
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
   source("R/Modules/OutroModule.R")
-  load("data/app_v1.RData") ; print("LOAD DATA IN GLOBAL!!!!")
+  load("data/app_v1.RData")
 
   ## Loader code: Global Scope
   loading_screen = div(
@@ -77,7 +77,7 @@ server <- function(input, output, session) {
   
   ## Loader code: Setup Server 
   library(dplyr)
-  load("data/app_v1.RData"); print("LOAD DATA IN SERVER!!!!")
+  load("data/app_v1.RData")
   waiter_hide()
 
   # Modules

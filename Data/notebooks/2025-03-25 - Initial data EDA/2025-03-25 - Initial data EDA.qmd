@@ -268,7 +268,7 @@ df_data = df_data_final%>%
                           year,")"),
     value_clean  = case_when(
       str_detect(var_def, "Percentage") ~ scales::percent(value/100, accuracy = 0.1),
-      var_label %in% c('Median Age') ~ format(round(value, digits = 0), nsmall = 1),
+      var_label %in% c('Median Age') ~ format(round(value, digits = 0), nsmall = 0),
       var_def %in% c('Total Number of Fatal Shootings per Council District',
                      'Total Number of Nonfatal Shootings per Council District',
                      'Count of crashes',

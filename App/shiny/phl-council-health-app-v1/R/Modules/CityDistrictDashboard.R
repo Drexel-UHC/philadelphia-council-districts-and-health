@@ -213,7 +213,9 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
             format = "{point.district}"
           ),
           tooltip = list(
-            pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value:.1f}%</span>'
+            useHTML = TRUE,
+            headerFormat = '',
+            pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value_clean}</span>'
           ),
           # Add event handlers for hover
           point = list(
@@ -241,11 +243,17 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
             list(1, "#000066")
           )
         ) %>%
+        hc_legend(
+          title = list(
+            text = unique(df_data_filtered$ylabs)
+          ),
+          valueDecimals = 1, 
+          valueSuffix = "%"
+        ) %>%
         hc_exporting(
           enabled = TRUE,
           filename = paste0("philly-council-map-", input$healthMetric)
-        )  %>%
-        hc_legend(valueDecimals = 1, valueSuffix = "%") %>%
+        ) %>%
         hc_mapNavigation(enabled = TRUE) %>%
         hc_add_theme(hc_theme_smpl())
     })
