@@ -161,6 +161,11 @@ library(jsonlite)
 geojson_districts <- sf_districts %>% 
   geojsonio::geojson_json() %>% 
   jsonlite::fromJSON(simplifyVector = FALSE)
+
+geojson_districts_simp <- sf_districts %>% 
+  rmapshaper::ms_simplify() %>%
+  geojsonio::geojson_json() %>% 
+  jsonlite::fromJSON(simplifyVector = FALSE)
 ```
 
 
@@ -232,7 +237,16 @@ df_metadata = df_metadata_raw %>%
       "Tree Canopy Coverage" = "cd_tree",
       "Heat Vulnerabillity Index" = "weighted_hvi",
       "Poverty" = "cd_pct_poverty"
-    )) %>% 
+    ),
+    ylabs = case_when(
+      str_detect(var_def, "Percentage") ~ paste(var_label, " (%)"),
+      var_label %in% c('Median Age') ~ "Age",
+      var_def %in% c('Total Number of Fatal Shootings per Council District') ~ "# of Fatal Shootings",
+      var_def %in% c('Total Number of Nonfatal Shootings per Council District') ~ "# of Nonfatal Shootings",
+      var_label %in% c('Median Household Income') ~ "Median Household Income ($)",
+      TRUE ~ var_def
+    )
+    ) %>% 
   filter(!var_name %in% c('cc_district_population'))
 
 ## Check metadata-data compatibility
@@ -247,11 +261,29 @@ assertthat::assert_that(
 
 ```
 
-Let's add basic metadat to the data.
+Let's add basic metadata to the data.
 
 ```{r}
-df_data = df_data_final %>% 
-  left_join(df_metadata %>% select(var_name, var_label, var_def, source, year))
+library(scales)
+df_data = df_data_final%>% 
+  left_join(df_metadata) %>% 
+  mutate(
+    district_int = as.integer(district),
+    source_year =  paste0("Source: ", source," (",
+                          year,")"),
+    value_clean  = case_when(
+      str_detect(var_def, "Percentage") ~ scales::percent(value/100, accuracy = 0.1),
+      var_label %in% c('Median Age') ~ format(round(value, digits = 0), nsmall = 0),
+      var_def %in% c('Total Number of Fatal Shootings per Council District',
+                     'Total Number of Nonfatal Shootings per Council District',
+                     'Count of crashes',
+                     'Count of Licenses') ~ format(round(value, digits = 0), nsmall = 0) ,
+      var_def %in% c('Heat Vulnerability Index') ~ format(round(value, digits = 2), nsmall = 2) ,
+      var_label %in% c('Median Household Income') ~  scales::dollar(value, accuracy = 1),
+      
+      TRUE ~ "!!!!!!!!!!!!!!!!!!"
+    ) %>% str_trim()
+  ) 
 ```
 
 
@@ -263,6 +295,18 @@ save(df_data, df_metadata, geojson_districts,sf_districts,
      file = here("App/shiny/phl-council-health-app-v1/data/app_v1.RData"))
 ```
 
+Let's do a more RDS based export for porformance tweaking
+
+```{r}
+save(df_data, df_metadata,
+     file = here("App/shiny/phl-council-health-app-v1/data/app_v2.RData"))
+
+geojson_districts %>% 
+  write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts.rds"))
+
+geojson_districts_simp %>% 
+  write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts_simp.rds"))
+```
 
 # EDA
 
@@ -310,7 +354,8 @@ pal <- colorNumeric(
 # Create the leaflet map
 
 sf_districts %>% 
-  left_join(df_data %>% filter(var_name == input$select_variable) )%>%
+  left_join(df_data %>% 
+              filter(var_name == input$select_variable) ) %>%
   leaflet() %>%
   addTiles() %>%
   addPolygons(

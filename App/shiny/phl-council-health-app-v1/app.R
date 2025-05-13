@@ -9,7 +9,7 @@
   source("R/Modules/IntroductionModule.R")
   source("R/Modules/CityDistrictDashboard.R")
   source("R/Modules/OutroModule.R")
-  load("data/app_v1.RData")
+  load("data/app_v2.RData")
 
   ## Loader code: Global Scope
   loading_screen = div(
@@ -77,12 +77,12 @@ server <- function(input, output, session) {
   
   ## Loader code: Setup Server 
   library(dplyr)
-  load("data/app_v1.RData") 
+  geojson_districts = readRDS("data/geojson_districts_simp.rds")
   waiter_hide()
 
   # Modules
   IntroductionModule_Server("Introduction")
-  CityDistrictDashboard_Server("Dashboard", df_data, df_metadata, geojson_districts)
+  CityDistrictDashboard_Server("Dashboard", df_data, geojson_districts)
   OutroModule_Server("Outro")
   
 }
