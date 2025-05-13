@@ -73,8 +73,20 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
+      var_name <- df_data_filtered$var_name[1]
       city_avg_tmp <- df_data_filtered$city_avg[1]
       source_year_tmp = df_data_filtered$source_year[1]
+
+      # Check if this is the weighted HVI variable
+      if (var_name == "weighted_hvi") {
+        # Return a simple message chart for HVI
+        return(
+          highchart() %>%
+            hc_title(text = var_label_tmp) %>%
+            hc_subtitle(text = "Heat Vulnerability Index is shown on map") %>%
+            hc_add_theme(hc_theme_smpl())
+        )
+      }
 
       # Create highcharter bar chart WITH city average line and custom formatted values
       highchart() %>%
@@ -196,9 +208,10 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
+      var_name <- df_data_filtered$var_name[1]
       
       ## Map
-      highchart() %>%
+      map_chart = highchart() %>%
         hc_title(text = var_label_tmp) %>%
         hc_subtitle(text = unique(df_data_filtered$var_def)) %>%
         hc_add_series_map(
@@ -215,48 +228,80 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
             useHTML = TRUE,
             headerFormat = '',
             pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value_clean}</span>'
-          ),
+          )#,
           # Add event handlers for hover
-          point = list(
-            events = list(
-              # When hovering over a district, update the reactive value
-              mouseOver = JS(paste0("function() {
-                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', {
-                  district: this.district,
-                  value: this.value
-                });
-              }")),
-              # When moving out of a district, clear the value
-              mouseOut = JS(paste0("function() {
-                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null, {priority: 'event'});
-              }"))
+          # point = list(
+          #   events = list(
+          #     # When hovering over a district, update the reactive value
+          #     mouseOver = JS(paste0("function() {
+          #       Shiny.setInputValue('", session$ns("hoveredDistrict"), "', {
+          #         district: this.district,
+          #         value: this.value
+          #       });
+          #     }")),
+          #     # When moving out of a district, clear the value
+          #     mouseOut = JS(paste0("function() {
+          #       Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null, {priority: 'event'});
+          #     }"))
+          #   )
+          # )
+        ) %>% 
+        hc_legend(
+          title = list(text = unique(df_data_filtered$ylabs)),
+          valueDecimals = 1, 
+          valueSuffix = "%"
+        )
+      
+      # Only add special legend formatting for weighted_hvi
+      if (var_name == "weighted_hvi") {
+        map_chart = map_chart %>%
+          hc_colorAxis(
+            min = min(df_data_filtered$value),
+            max = max(df_data_filtered$value),
+            stops = list(
+              list(0, "#EFEFFF"),
+              list(0.5, "#4444BB"),
+              list(1, "#000066")
+            ),
+            # Apply the labels directly in colorAxis instead of legend
+            labels = list(
+              formatter = JS("function() {
+                if (this.value === this.axis.min) {
+                  return 'Low';
+                } else if (this.value === this.axis.max) {
+                  return 'High';
+                } else {
+                  return '';  // Hide other labels
+                }
+              }"),
+              style = list(
+                fontSize = "12px",  # Increase font size slightly
+                textOverflow = "none"  # Prevent text truncation
+              ),
+              useHTML = TRUE  # Allow HTML in labels for better control
             )
-          )
-        ) %>%
-        hc_colorAxis(
+          ) 
+      } else {
+        # Regular legend for other variables
+        map_chart <- map_chart %>% 
+          hc_colorAxis(
           min = min(df_data_filtered$value),
           max = max(df_data_filtered$value),
           stops = list(
             list(0, "#EFEFFF"),
             list(0.5, "#4444BB"),
             list(1, "#000066")
+          )) %>% 
+          hc_legend(
+            title = list(text = unique(df_data_filtered$ylabs)),
+            valueDecimals = 1, 
+            valueSuffix = "%"
           )
-        ) %>%
-        hc_legend(
-          title = list(
-            text = unique(df_data_filtered$ylabs)
-          ),
-          valueDecimals = 1, 
-          valueSuffix = "%"
-        ) %>%
-        hc_credits(
-          enabled = TRUE,
-          text = unique(df_data_filtered$source_year)
-        ) %>%
-        hc_exporting(
-          enabled = TRUE,
-          filename = paste0("philly-council-map-", input$healthMetric)
-        ) %>%
+      }
+      
+      # Add the remaining common elements
+      map_chart %>%
+        hc_credits(enabled = TRUE, text = unique(df_data_filtered$source_year)) %>%
         hc_mapNavigation(enabled = TRUE) %>%
         hc_add_theme(hc_theme_smpl())
     })
