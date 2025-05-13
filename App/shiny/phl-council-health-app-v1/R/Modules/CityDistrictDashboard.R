@@ -88,7 +88,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
           title = list(text = "Council District")
         ) %>%
         hc_yAxis(
-          title = list(text = var_label_tmp),
+          title = list(text = unique(df_data_filtered$ylabs)),
           min = 0,
           plotLines = list(
             list(
