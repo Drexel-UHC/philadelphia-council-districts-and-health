@@ -50,7 +50,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
     ## Data  -----------------------------------------------------------
     # Create a reactive filtered dataset that updates when input changes
     df_data_filtered <- reactive({
-      req(input$healthMetric, df_data)
+      req(input$healthMetric, df_data) # input = lst();input$healthMetric = "total_active_licenses_norentals"
   
       # Filter data for selected metric
       df_data_filtered <- df_data |>
@@ -80,7 +80,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
-        hc_subtitle(text = paste("Source:", df_data_filtered$source[1])) %>%
+        hc_subtitle(text =  unique(df_data_filtered$var_def)) %>%
         hc_xAxis(
           categories = df_data_filtered$district,
           title = list(text = "Council District")
@@ -136,8 +136,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
         ) %>%
         hc_credits(
           enabled = TRUE,
-          text = "Urban Health Collaborative, Health of Philadelphia City Council Districts Dashboard, 2025",
-          href = "#"
+          text = unique(df_data_filtered$source_year)
         ) %>%
         hc_add_theme(hc_theme_smpl())
     })
@@ -201,7 +200,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
       ## Map
       highchart() %>%
         hc_title(text = var_label_tmp) %>%
-        hc_subtitle(text = paste("Source:", df_data_filtered$source[1])) %>%
+        hc_subtitle(text = unique(df_data_filtered$var_def)) %>%
         hc_add_series_map(
           map = geojson_districts,
           df = df_data_filtered,
@@ -249,6 +248,10 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
           ),
           valueDecimals = 1, 
           valueSuffix = "%"
+        ) %>%
+        hc_credits(
+          enabled = TRUE,
+          text = unique(df_data_filtered$source_year)
         ) %>%
         hc_exporting(
           enabled = TRUE,
