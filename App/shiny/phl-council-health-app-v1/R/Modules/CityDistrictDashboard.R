@@ -54,7 +54,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
   
       # Filter data for selected metric
       df_data_filtered <- df_data |>
-        filter(var_name == input$healthMetric)  %>% 
+        filter(var_name == input$healthMetric) %>% 
         arrange(desc(value))  
       shiny::validate(
         need(nrow(df_data_filtered) > 0, "No data available for selected metric")
@@ -73,16 +73,14 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
       # Get filtered data
       df_data_filtered <- df_data_filtered() 
       var_label_tmp <- df_data_filtered$var_label[1]
-      var_def_tmp = df_data_filtered$var_def[1]
       city_avg_tmp <- df_data_filtered$city_avg[1]
-      source_year_tmp =   df_data_filtered$source_year[1]
-      
+      source_year_tmp = df_data_filtered$source_year[1]
 
-      # Create highcharter bar chart WITH city average line
+      # Create highcharter bar chart WITH city average line and custom formatted values
       highchart() %>%
         hc_chart(type = "column") %>%
         hc_title(text = var_label_tmp) %>%
-        hc_subtitle(text = var_def_tmp) %>%
+        hc_subtitle(text = paste("Source:", df_data_filtered$source[1])) %>%
         hc_xAxis(
           categories = df_data_filtered$district,
           title = list(text = "Council District")
@@ -108,7 +106,8 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
         hc_add_series(
           data = lapply(1:nrow(df_data_filtered), function(i) {
             list(
-              y = df_data_filtered$value[i],
+              y = df_data_filtered$value[i],            # Original value for chart
+              valueFormatted = df_data_filtered$value_clean[i], # Formatted value for display
               district = df_data_filtered$district[i],
               color = "grey",  # Default color
               id = df_data_filtered$district[i]  # Use district as point ID for easier reference
@@ -121,7 +120,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
           column = list(
             dataLabels = list(
               enabled = TRUE,
-              format = "{point.y:.1f}"
+              format = "{point.valueFormatted}"  # Use formatted value in data labels
             ),
             borderWidth = 0,
             pointPadding = 0.1
@@ -129,7 +128,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
         ) %>%
         hc_tooltip(
           headerFormat = paste0("<span style='font-size:13px'><b>",var_label_tmp,"</b></span><br/>"),
-          pointFormat = '<span style="color:{point.color}">\u25CF</span>  <b>District {point.district}:</b>  {point.y:.1f}<br/>'
+          pointFormat = '<span style="color:{point.color}">\u25CF</span> <b>District {point.district}:</b> {point.valueFormatted}<br/>'
         ) %>%
         hc_exporting(
           enabled = TRUE,
@@ -137,8 +136,8 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
         ) %>%
         hc_credits(
           enabled = TRUE,
-          text = source_year_tmp
-          # href = "#"
+          text = "Urban Health Collaborative, Health of Philadelphia City Council Districts Dashboard, 2025",
+          href = "#"
         ) %>%
         hc_add_theme(hc_theme_smpl())
     })
