@@ -6,6 +6,7 @@ import * as Popover from "@radix-ui/react-popover";
 export function RadixPopoverDemo() {
   const [open, setOpen] = React.useState(false);
   const contentRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
   const [origin, setOrigin] = React.useState('');
 
   // Debug the transform origin
@@ -18,20 +19,35 @@ export function RadixPopoverDemo() {
   }, [open]);
 
   return (
-    <div className="relative ">
+    <div className="relative p-4">
+      <h3 className="mb-2">Radix UI Popover Test 2</h3>
+      
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
-          <button className="px-4 py-2 border rounded bg-white">
+          <button 
+            ref={triggerRef}
+            className="px-4 py-2 border rounded bg-white"
+          >
             Click me
           </button>
         </Popover.Trigger>
-        <Popover.Portal>
+        {/* Use forceMount to ensure the content is always rendered */}
+        <Popover.Portal forceMount>
           <Popover.Content 
             ref={contentRef}
-            className="bg-white p-4 rounded shadow-md w-64"
+            className="bg-white p-4 rounded shadow-md w-64 transition-none" 
             sideOffset={5}
-            style={{
-              transformOrigin: 'var(--radix-popover-content-transform-origin)'
+            side="bottom"
+            align="start"
+            style={{ 
+              // Disable transition
+              animation: 'none',
+              // Force transform origin
+              transformOrigin: 'var(--radix-popover-content-transform-origin)',
+              // Start with opacity 0 and fade in
+              opacity: open ? 1 : 0,
+              // Instant transition for position but fade in for opacity
+              transition: 'opacity 150ms ease-out'
             }}
           >
             <div>This is popover content</div>
