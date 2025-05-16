@@ -156,7 +156,7 @@ export function SelectMetric({ data }: SelectMetricProps = {}) {
         <Popover.Trigger asChild>
           <button 
             ref={triggerRef}
-            className="flex w-[300px] justify-between items-center px-4 py-2 border rounded bg-white"
+            className="flex w-[400px] justify-between items-center px-4 py-2 border rounded bg-white"
             aria-expanded={open}
             role="combobox"
             aria-controls={listId}
@@ -211,7 +211,7 @@ export function SelectMetric({ data }: SelectMetricProps = {}) {
                       />
                       <div>
                         <div className="font-medium">{metric.var_label}</div>
-                        <div className="text-xs text-gray-500">{metric.source} ({metric.year})</div>
+                        {/* <div className="text-xs text-gray-500">{metric.source} ({metric.year})</div> */}
                       </div>
                     </CommandItem>
                   ))}
