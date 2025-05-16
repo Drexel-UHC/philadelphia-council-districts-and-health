@@ -60,7 +60,7 @@ export const Map: React.FC<MapProps> = ({
     const loadMapData = async () => {
       try {
         // Fetch the GeoJSON file from public directory
-        const response = await fetch('/data/geojson_districts.json');
+        const response = await fetch('./data/geojson_districts.json');
         if (!response.ok) {
           throw new Error(`Error loading GeoJSON: ${response.status}`);
         }
