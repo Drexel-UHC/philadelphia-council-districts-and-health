@@ -121,6 +121,14 @@ export default function DashboardLayout() {
     <section id="dashboard" className="mb-12">
       {text}
       {selectionSection}
+      <div className="mt-8 grid grid-cols-12 gap-6">
+        <div className="col-span-7 bg-gray-100 rounded p-4 flex items-center justify-center min-h-[200px]">
+          <span className="text-gray-400">[Chart Placeholder]</span>
+        </div>
+        <div className="col-span-5 bg-gray-100 rounded p-4 flex items-center justify-center min-h-[200px]">
+          <span className="text-gray-400">[Map Placeholder]</span>
+        </div>
+      </div>
      
     </section>
   );
