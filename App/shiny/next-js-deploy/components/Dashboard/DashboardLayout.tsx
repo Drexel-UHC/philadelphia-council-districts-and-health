@@ -1,9 +1,39 @@
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
+
 export default function DashboardLayout() {
+
+  const select = (
+    <Select>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Select a fruit" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Fruits</SelectLabel>
+          <SelectItem value="apple">Apple</SelectItem>
+          <SelectItem value="banana">Banana</SelectItem>
+          <SelectItem value="blueberry">Blueberry</SelectItem>
+          <SelectItem value="grapes">Grapes</SelectItem>
+          <SelectItem value="pineapple">Pineapple</SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  )
   return (
     <section id="dashboard" className="mb-12">
       <h2 className="text-2xl font-bold mb-6">Interactive Dashboard</h2>
-
+      {select}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Map Panel */}
         <div className="md:col-span-2 bg-gray-100 rounded-lg p-4 min-h-[400px] shadow-md">
