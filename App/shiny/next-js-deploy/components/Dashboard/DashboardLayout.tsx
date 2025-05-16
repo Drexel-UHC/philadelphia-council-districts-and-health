@@ -21,8 +21,9 @@ export default function DashboardLayout() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/data/df_metadata.json');
+        const response = await fetch('./data/df_metadata.json');
         const data = await response.json();
+        console.log("Fetched data:", data);
         setHealthData(data);
       } catch (error) {
         console.error("Error loading data:", error);
