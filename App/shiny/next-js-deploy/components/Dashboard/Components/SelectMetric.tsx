@@ -13,7 +13,8 @@ const Command = ({
 }: {
   className?: string;
   children: React.ReactNode;
-  [key: string]: any;
+  // Replace [key: string]: any with a more specific type
+  [key: string]: unknown;
 }) => (
   <div 
     className={cn(
@@ -55,7 +56,6 @@ const CommandEmpty: React.FC<React.HTMLAttributes<HTMLDivElement> & { className?
   />
 );
 
-// For CommandGroup component
 const CommandGroup: React.FC<React.HTMLAttributes<HTMLDivElement> & { className?: string }> = ({ 
   className, 
   children, 
@@ -97,43 +97,74 @@ const CommandItem: React.FC<CommandItemProps> = ({
   </div>
 );
 
-const frameworks = [
-  { value: "next.js", label: "Next.js" },
-  { value: "sveltekit", label: "SvelteKit" },
-  { value: "nuxt.js", label: "Nuxt.js" },
-  { value: "remix", label: "Remix" },
-  { value: "astro", label: "Astro" }
+// Interface for metadata format
+interface MetricMetadata {
+  var_label: string;
+  var_def: string;
+  source: string;
+  year: string;
+  var_name: string;
+  ylabs: string;
+}
+
+interface SelectMetricProps {
+  data?: MetricMetadata[];
+}
+
+// Fallback data if none is provided
+const defaultMetrics = [
+  {
+    var_label: "Median Age",
+    var_def: "Median age of residents",
+    source: "ACS 5-year",
+    year: "2022",
+    var_name: "district_median_age_total",
+    ylabs: "Age"
+  },
+  {
+    var_label: "Active Business Licenses",
+    var_def: "Count of Licenses",
+    source: "Open Data Philly",
+    year: "2020-2024",
+    var_name: "total_active_licenses_norentals",
+    ylabs: "Count of Licenses"
+  }
 ];
 
-export function SelectMetric() {
+export function SelectMetric({ data }: SelectMetricProps = {}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
   const contentRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const listId = React.useId();
 
-  const filteredFrameworks = React.useMemo(() => {
-    if (!searchQuery) return frameworks;
+  // Use provided data or fall back to default metrics
+  const metrics = data || defaultMetrics;
+
+  const filteredMetrics = React.useMemo(() => {
+    if (!searchQuery) return metrics;
     
-    return frameworks.filter((framework) =>
-      framework.label.toLowerCase().includes(searchQuery.toLowerCase())
+    return metrics.filter((metric) =>
+      metric.var_label.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, metrics]);
 
   return (
     <div className="relative p-4">
-      
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
           <button 
             ref={triggerRef}
-            className="flex w-[200px] justify-between items-center px-4 py-2 border rounded bg-white"
+            className="flex w-[300px] justify-between items-center px-4 py-2 border rounded bg-white"
             aria-expanded={open}
             role="combobox"
+            aria-controls={listId}
+            aria-haspopup="listbox"
           >
             {value 
-              ? frameworks.find((framework) => framework.value === value)?.label
-              : "Select framework..."}
+              ? metrics.find((metric) => metric.var_name === value)?.var_label
+              : "Select health metric..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </button>
         </Popover.Trigger>
@@ -141,7 +172,7 @@ export function SelectMetric() {
         <Popover.Portal forceMount>
           <Popover.Content 
             ref={contentRef}
-            className="bg-white rounded shadow-md w-[200px] p-0 transition-none" 
+            className="bg-white rounded shadow-md w-[300px] p-0 transition-none" 
             sideOffset={5}
             side="bottom"
             align="start"
@@ -154,20 +185,20 @@ export function SelectMetric() {
           >
             <Command>
               <CommandInput 
-                placeholder="Search framework..."
+                placeholder="Search health metrics..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <CommandList>
-                {filteredFrameworks.length === 0 && (
-                  <CommandEmpty>No framework found.</CommandEmpty>
+              <CommandList id={listId}>
+                {filteredMetrics.length === 0 && (
+                  <CommandEmpty>No metrics found.</CommandEmpty>
                 )}
                 <CommandGroup>
-                  {filteredFrameworks.map((framework) => (
+                  {filteredMetrics.map((metric) => (
                     <CommandItem
-                      key={framework.value}
+                      key={metric.var_name}
                       onSelect={() => {
-                        setValue(framework.value === value ? "" : framework.value);
+                        setValue(metric.var_name === value ? "" : metric.var_name);
                         setOpen(false);
                         setSearchQuery("");
                       }}
@@ -175,10 +206,13 @@ export function SelectMetric() {
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          value === framework.value ? "opacity-100" : "opacity-0"
+                          value === metric.var_name ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {framework.label}
+                      <div>
+                        <div className="font-medium">{metric.var_label}</div>
+                        <div className="text-xs text-gray-500">{metric.source} ({metric.year})</div>
+                      </div>
                     </CommandItem>
                   ))}
                 </CommandGroup>

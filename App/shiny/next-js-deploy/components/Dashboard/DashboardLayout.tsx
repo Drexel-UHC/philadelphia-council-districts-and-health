@@ -3,9 +3,20 @@
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 
+// Define the type for our metadata
+interface MetricMetadata {
+  var_label: string;
+  var_def: string;
+  source: string;
+  year: string;
+  var_name: string;
+  ylabs: string;
+}
+
 export default function DashboardLayout() {
-  const [healthData, setHealthData] = useState([]);
+  const [healthData, setHealthData] = useState<MetricMetadata[]>([]);
   const [loading, setLoading] = useState(true);
+  // const [selectedMetric, setSelectedMetric] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -29,10 +40,14 @@ export default function DashboardLayout() {
       {loading ? (
         <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
       ) : (
-        <>
-          <SelectMetric />
-          {/* Other components using the data */}
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <SelectMetric data={healthData} />
+              
+       
+     
+          
+     
+        </div>
       )}
     </section>
   );
