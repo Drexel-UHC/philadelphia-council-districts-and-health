@@ -1,5 +1,4 @@
 import Image from "next/image";
-import logoImage from '../public/logo.png' 
 
 export default function Footer() {
   return (
@@ -9,7 +8,7 @@ export default function Footer() {
           <div className="absolute left-5">
             <a href="https://drexel.edu/uhc/" target="_blank" rel="noopener noreferrer">
               <Image
-                src={logoImage}
+                src="./logo.png"
                 alt="Drexel UHC Logo"
                 width={200}
                 height={80}

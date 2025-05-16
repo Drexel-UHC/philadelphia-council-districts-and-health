@@ -1,5 +1,4 @@
 import Image from "next/image";
-import logoImage from '../public/logo.png' 
 
 export default function Header() {
   // Constants for reuse
@@ -20,7 +19,7 @@ export default function Header() {
     <div className={`col-span-12 md:col-span-4 flex items-center justify-center h-full pt-4 ${debugBorder}`}>
       <a href={UHC_URL} target="_blank" rel="noopener noreferrer">
         <Image
-          src={logoImage}
+          src="./logo.png"
           alt="Drexel UHC Logo"
           width={400}
           height={50}
