@@ -20,7 +20,6 @@ interface GeoJsonFeature {
   type: string;
   properties: {
     district: string;
-    [key: string]: any;
   };
   geometry: {
     type: string;
@@ -52,8 +51,8 @@ export const Map: React.FC<MapProps> = ({
   // Create a reference to the chart component
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [geoJson, setGeoJson] = useState<GeoJsonCollection | null>(null);
-  const [healthData, setHealthData] = useState<DistrictData[]>([]);
+  // const [geoJson, setGeoJson] = useState<GeoJsonCollection | null>(null);
+  // const [healthData, setHealthData] = useState<DistrictData[]>([]);
   const [mapOptions, setMapOptions] = useState<Highcharts.Options | null>(null);
 
   // Load GeoJSON data and create map options
@@ -68,11 +67,11 @@ export const Map: React.FC<MapProps> = ({
         
         // Parse the GeoJSON data
         const data: GeoJsonCollection = await response.json();
-        setGeoJson(data);
+        // setGeoJson(data);
         
         // Generate random health data
         const districtData = generateRandomHealthData();
-        setHealthData(districtData);
+        // setHealthData(districtData);
         
         // Create map options
         const options: Highcharts.Options = {
