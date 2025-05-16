@@ -48,7 +48,7 @@ export function ComboboxDemo() {
 
   return (
     <div className="relative w-fit">
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} modal={true}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -56,18 +56,18 @@ export function ComboboxDemo() {
             aria-expanded={open}
             className="w-[200px] justify-between"
           >
-            {value
+            {value 
               ? frameworks.find((framework) => framework.value === value)?.label
               : "Select framework..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-[150px] p-0"
-          align="start"
+          className="w-[200px] p-0"
+          align="center"
           sideOffset={5}
           side="bottom"
-
+          avoidCollisions
         >
           <Command>
             <CommandInput placeholder="Search framework..." />

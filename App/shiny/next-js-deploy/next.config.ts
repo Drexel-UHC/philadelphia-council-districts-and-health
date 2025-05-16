@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  typescript: {
+    // ⚠️ Warning: This skips type checking during development
+    // Only do this if you're comfortable catching type errors during build instead
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;

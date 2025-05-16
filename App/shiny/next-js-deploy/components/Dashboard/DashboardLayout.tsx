@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/select"
 
 import { ComboboxDemo } from "@/components/Dashboard/Components/ComboBox"
+import { PopoverDemo } from "@/components/Dashboard/Components/PopoverDemo"
+import { RadixPopoverDemo } from "@/components/Dashboard/Components/RadixPopoiverDemo"
 
 export default function DashboardLayout() {
   // Updated select with proper positioning
@@ -62,8 +64,22 @@ export default function DashboardLayout() {
     <section id="dashboard" className="mb-12">
       <h2 className="text-2xl font-bold mb-6">Interactive Dashboard</h2>
 
+      <hr className="my-6" />
+      <h3>ShadcnUI Select</h3>
+      {select}
+
+
+      <hr className="my-6" />
+      <h3>ShadcnUI Combox</h3>
       <ComboboxDemo />
 
+      <hr className="my-6" />
+      <h3>ShadcnUI Popover</h3>
+      <PopoverDemo />
+
+      <hr className="my-6" />
+      <h3>Radix UI Popover Demo</h3>
+      <RadixPopoverDemo />
 
     </section>
   );
