@@ -7,6 +7,8 @@ format:
 execute: 
   message: false
   warning: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 This is loading the data to the Javascript port of this R applciaiton. 
@@ -15,11 +17,24 @@ This is loading the data to the Javascript port of this R applciaiton.
 ```{r}
 library(tidyverse)
 library(here)
+library(arrow)
+library(jsonlite)
 
 load(here("App/shiny/phl-council-health-app-v1/data/app_v2.RData"))
 geojson_districts = readRDS(here("App/shiny/phl-council-health-app-v1/data/geojson_districts_simp.rds"))
 
-
-
 ```
 
+
+## df-metadata
+
+
+```{r}
+
+df_metadata %>% 
+  select(-cleaning_notes,  -aggregation_notes) %>% 
+  write_json(here("App/shiny/next-js-deploy/public/data/df_metadata.json"), 
+             auto_unbox = TRUE, 
+             pretty = TRUE)
+  
+```
