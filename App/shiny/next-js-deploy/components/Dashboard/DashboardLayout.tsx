@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 // Import both Chart and ChartExample
-import Chart, { ChartExample } from "@/components/Dashboard/Components/Chart";
+import { ChartExample } from "@/components/Dashboard/Components/Chart";
 
 // Define the type for our metadata
 interface MetricMetadata {
