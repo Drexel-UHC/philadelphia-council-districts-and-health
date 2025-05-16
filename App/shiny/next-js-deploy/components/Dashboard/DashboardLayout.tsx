@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
+// Import both Chart and ChartExample
+import Chart, { ChartExample } from "@/components/Dashboard/Components/Chart";
 
 // Define the type for our metadata
 interface MetricMetadata {
@@ -101,7 +103,9 @@ export default function DashboardLayout() {
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                 <div><span className="font-medium">Source:</span> {selectedMetric.source}</div>
                 <div><span className="font-medium">Year:</span> {selectedMetric.year}</div>
-                <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
+                  <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
+                <div><span className="font-medium">City Average:</span> {filteredData.length > 0 ? filteredData[0].city_avg : "N/A"}</div>
+                
               </div>
             </div>
           </div>
@@ -122,8 +126,9 @@ export default function DashboardLayout() {
       {text}
       {selectionSection}
       <div className="mt-8 grid grid-cols-12 gap-6">
-        <div className="col-span-7 bg-gray-100 rounded p-4 flex items-center justify-center min-h-[200px]">
-          <span className="text-gray-400">[Chart Placeholder]</span>
+        <div className="col-span-7 bg-white rounded-md shadow-sm p-4">
+          {/* Use ChartExample directly instead of Chart with passed data */}
+          <ChartExample />
         </div>
         <div className="col-span-5 bg-gray-100 rounded p-4 flex items-center justify-center min-h-[200px]">
           <span className="text-gray-400">[Map Placeholder]</span>
