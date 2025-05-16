@@ -14,7 +14,7 @@ interface MetricMetadata {
 }
 
 export default function DashboardLayout() {
-  const [healthData, setHealthData] = useState<MetricMetadata[]>([]);
+  const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<MetricMetadata | null>(null);
 
@@ -22,9 +22,9 @@ export default function DashboardLayout() {
     async function fetchData() {
       try {
         const response = await fetch('./data/df_metadata.json');
-        const data = await response.json();
-        console.log("Fetched data:", data);
-        setHealthData(data);
+        const metadata = await response.json();
+        console.log("Fetched data:", metadata);
+        setMetadata(metadata);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -43,7 +43,7 @@ export default function DashboardLayout() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <SelectMetric 
-              data={healthData} 
+              data={metadata} 
               onSelectMetric={setSelectedMetric} 
             />
             <div>
