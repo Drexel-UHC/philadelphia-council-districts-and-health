@@ -12,10 +12,25 @@ interface MetricMetadata {
   var_name: string;
   ylabs: string;
 }
-
+interface MetricData {
+  district: string;           // Council district number as string (e.g., "1")
+  var_name: string;           // Variable name/identifier
+  value: number;              // Metric value (numeric)
+  city_avg: number;           // City average for this metric
+  var_label: string;          // Human-readable metric name
+  var_def: string;            // Definition of the metric
+  source: string;             // Data source
+  year: string;               // Year of the data
+  aggregation_notes: string;  // Notes about data aggregation
+  cleaning_notes: string | null; // Notes about data cleaning, can be null
+  ylabs: string;              // Y-axis label for charts
+  district_int: number;       // District number as integer
+  source_year: string;        // Combined source and year text
+  value_clean: string;        // Formatted/cleaned value as string
+}
 export default function DashboardLayout() {
   const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<MetricData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<MetricMetadata | null>(null);
 
