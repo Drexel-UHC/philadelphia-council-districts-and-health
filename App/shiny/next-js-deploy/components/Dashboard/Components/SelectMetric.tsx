@@ -6,7 +6,15 @@ import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Command components built directly with Radix UI
-const Command = ({ className, children, ...props }) => (
+const Command = ({
+  className,
+  children,
+  ...props
+}: {
+  className?: string;
+  children: React.ReactNode;
+  [key: string]: any;
+}) => (
   <div 
     className={cn(
       "flex flex-col overflow-hidden rounded-md bg-white text-gray-950", 
@@ -18,7 +26,7 @@ const Command = ({ className, children, ...props }) => (
   </div>
 );
 
-const CommandInput = ({ className, ...props }) => (
+const CommandInput: React.FC<React.InputHTMLAttributes<HTMLInputElement> & { className?: string }> = ({ className, ...props }) => (
   <div className="flex items-center border-b px-3">
     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
     <input
@@ -31,7 +39,7 @@ const CommandInput = ({ className, ...props }) => (
   </div>
 );
 
-const CommandList = ({ className, children, ...props }) => (
+const CommandList: React.FC<React.HTMLAttributes<HTMLDivElement> & { className?: string }> = ({ className, children, ...props }) => (
   <div
     className={cn("max-h-[300px] overflow-y-auto", className)}
     {...props}
@@ -40,14 +48,19 @@ const CommandList = ({ className, children, ...props }) => (
   </div>
 );
 
-const CommandEmpty = ({ className, ...props }) => (
+const CommandEmpty: React.FC<React.HTMLAttributes<HTMLDivElement> & { className?: string }> = ({ className, ...props }) => (
   <div
     className={cn("py-6 text-center text-sm text-gray-500", className)}
     {...props}
   />
 );
 
-const CommandGroup = ({ className, children, ...props }) => (
+// For CommandGroup component
+const CommandGroup: React.FC<React.HTMLAttributes<HTMLDivElement> & { className?: string }> = ({ 
+  className, 
+  children, 
+  ...props 
+}) => (
   <div
     className={cn(
       "overflow-hidden p-1",
@@ -59,7 +72,19 @@ const CommandGroup = ({ className, children, ...props }) => (
   </div>
 );
 
-const CommandItem = ({ className, onSelect, children, ...props }) => (
+// For CommandItem component
+interface CommandItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+  onSelect: () => void;
+  children: React.ReactNode;
+}
+
+const CommandItem: React.FC<CommandItemProps> = ({ 
+  className, 
+  onSelect, 
+  children, 
+  ...props 
+}) => (
   <div
     className={cn(
       "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-gray-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
@@ -97,7 +122,6 @@ export function SelectMetric() {
 
   return (
     <div className="relative p-4">
-      <h3 className="mb-2">Radix UI Combobox</h3>
       
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
