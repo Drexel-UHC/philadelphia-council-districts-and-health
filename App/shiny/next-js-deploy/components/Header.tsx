@@ -14,7 +14,6 @@ export default function Header() {
   
   // Debug border classes that only apply when isDev is true
   const debugBorder = isDev ? "border border-black" : "";
-  const debugHeaderBorder = isDev ? "border border-[#a71212]" : "";
 
   // abstract the logo part of the header to an object here
   const logo = (
