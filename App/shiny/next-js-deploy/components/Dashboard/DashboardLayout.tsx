@@ -15,16 +15,20 @@ interface MetricMetadata {
 
 export default function DashboardLayout() {
   const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<MetricMetadata | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('./data/df_metadata.json');
-        const metadata = await response.json();
-        console.log("Fetched data:", metadata);
+        const response_metadata = await fetch('./data/df_metadata.json');
+        const metadata = await response_metadata.json();
         setMetadata(metadata);
+        const response_data = await fetch('./data/df_data.json');
+        const data = await response_data.json();
+        console.log("Data loaded:", data);
+        setData(data);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {

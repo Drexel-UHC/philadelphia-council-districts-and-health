@@ -38,3 +38,13 @@ df_metadata %>%
              pretty = TRUE)
   
 ```
+
+
+## df-data
+
+```{r}
+df_data %>% 
+  # select(-cleaning_notes, -aggregation_notes) %>% 
+  write_json(here("App/shiny/next-js-deploy/public/data/df_data.json"), 
+             auto_unbox = TRUE)
+```
