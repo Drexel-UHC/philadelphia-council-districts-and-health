@@ -12,6 +12,7 @@ interface MetricMetadata {
   var_name: string;
   ylabs: string;
 }
+
 interface MetricData {
   district: string;           // Council district number as string (e.g., "1")
   var_name: string;           // Variable name/identifier
@@ -28,18 +29,22 @@ interface MetricData {
   source_year: string;        // Combined source and year text
   value_clean: string;        // Formatted/cleaned value as string
 }
+
 export default function DashboardLayout() {
   const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
   const [data, setData] = useState<MetricData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMetric, setSelectedMetric] = useState<MetricMetadata | null>(null);
+  const [filteredData, setFilteredData] = useState<MetricData[]>([]);
 
+  // Fetch initial data
   useEffect(() => {
     async function fetchData() {
       try {
         const response_metadata = await fetch('./data/df_metadata.json');
         const metadata = await response_metadata.json();
         setMetadata(metadata);
+        
         const response_data = await fetch('./data/df_data.json');
         const data = await response_data.json();
         console.log("Data loaded:", data);
@@ -54,6 +59,18 @@ export default function DashboardLayout() {
     fetchData();
   }, []);
 
+  // Filter data when selectedMetric changes (equivalent to R's filter function)
+  useEffect(() => {
+    if (selectedMetric && data.length > 0) {
+      // This is equivalent to: df_data |> filter(var_name == 'selectedVarName')
+      const filtered = data.filter(item => item.var_name === selectedMetric.var_name);
+      setFilteredData(filtered);
+      console.log("Filtered data:", filtered);
+    } else {
+      setFilteredData([]);
+    }
+  }, [selectedMetric, data]);
+
   return (
     <section id="dashboard" className="mb-12">
       <h2 className="text-2xl font-bold mb-6">Interactive Dashboard</h2>
@@ -61,21 +78,62 @@ export default function DashboardLayout() {
         <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Metric selection */}
+          <div className="bg-white p-4 rounded-md shadow-sm">
+            <h3 className="text-lg font-semibold mb-3">Select Health Metric</h3>
             <SelectMetric 
               data={metadata} 
               onSelectMetric={setSelectedMetric} 
             />
-            <div>
-              <div> 
-                {selectedMetric ? (
-                  <div className="p-4 bg-gray-100 rounded-md">
-                    {selectedMetric.var_label}
+          </div>
+          
+          {/* Selected metric details */}
+          <div className="md:col-span-2 bg-white p-4 rounded-md shadow-sm">
+            {selectedMetric ? (
+              <div>
+                <h3 className="text-xl font-bold mb-2">{selectedMetric.var_label}</h3>
+                <p className="text-gray-600 mb-4">{selectedMetric.var_def}</p>
+                <div className="bg-gray-50 p-3 rounded mb-4 text-sm">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    <div><span className="font-medium">Source:</span> {selectedMetric.source}</div>
+                    <div><span className="font-medium">Year:</span> {selectedMetric.year}</div>
+                    <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
                   </div>
-                ) : (
-                  <p className="text-gray-500">No metric selected</p>
+                </div>
+                
+                {/* Display filtered data */}
+                {filteredData.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold mb-2">District Data</h4>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">District</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City Average</th>
+                          </tr>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                          {filteredData.map((item, idx) => (
+                            <tr key={idx}>
+                              <td className="px-4 py-2 whitespace-nowrap">{item.district}</td>
+                              <td className="px-4 py-2 whitespace-nowrap">{item.value_clean}</td>
+                              <td className="px-4 py-2 whitespace-nowrap">{Number(item.city_avg).toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
+            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500">
+                <p>Please select a health metric to view details</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </section>
