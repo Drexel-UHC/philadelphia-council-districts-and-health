@@ -20,7 +20,6 @@ export function RadixPopoverDemo() {
 
   return (
     <div className="relative p-4">
-      <h3 className="mb-2">Radix UI Popover Test 2</h3>
       
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
@@ -28,7 +27,7 @@ export function RadixPopoverDemo() {
             ref={triggerRef}
             className="px-4 py-2 border rounded bg-white"
           >
-            Click me
+           Radix UI Popover Test 2
           </button>
         </Popover.Trigger>
         {/* Use forceMount to ensure the content is always rendered */}
