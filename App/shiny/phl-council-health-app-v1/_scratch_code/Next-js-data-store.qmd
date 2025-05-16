@@ -1,0 +1,25 @@
+---
+title: "Next-js-data-store"
+format: 
+  html:
+    toc: true
+    embed-resources: true
+execute: 
+  message: false
+  warning: false
+---
+
+This is loading the data to the Javascript port of this R applciaiton. 
+
+
+```{r}
+library(tidyverse)
+library(here)
+
+load(here("App/shiny/phl-council-health-app-v1/data/app_v2.RData"))
+geojson_districts = readRDS(here("App/shiny/phl-council-health-app-v1/data/geojson_districts_simp.rds"))
+
+
+
+```
+
