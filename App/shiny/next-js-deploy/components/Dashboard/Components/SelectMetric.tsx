@@ -173,7 +173,7 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
         <Popover.Trigger asChild>
           <button
             ref={triggerRef}
-            className="flex w-[300px] justify-between items-center px-4 py-2 border rounded bg-white"
+            className="flex w-[400px] justify-between items-center px-4 py-2 border rounded bg-white"
             aria-expanded={open}
             role="combobox"
             aria-controls={listId}

@@ -47,26 +47,10 @@ export default function DashboardLayout() {
               onSelectMetric={setSelectedMetric} 
             />
             <div>
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Selected Metric</h3>
+              <div> 
                 {selectedMetric ? (
                   <div className="p-4 bg-gray-100 rounded-md">
-                    <h4 className="font-medium text-lg">{selectedMetric.var_label}</h4>
-                    <p className="text-gray-600 mt-2">{selectedMetric.var_def}</p>
-                    <div className="mt-3 text-sm grid grid-cols-2 gap-2">
-                      <div>
-                        <span className="font-medium">Source:</span> {selectedMetric.source}
-                      </div>
-                      <div>
-                        <span className="font-medium">Year:</span> {selectedMetric.year}
-                      </div>
-                      <div>
-                        <span className="font-medium">Variable:</span> {selectedMetric.var_name}
-                      </div>
-                      <div>
-                        <span className="font-medium">Unit:</span> {selectedMetric.ylabs}
-                      </div>
-                    </div>
+                    {selectedMetric.var_label}
                   </div>
                 ) : (
                   <p className="text-gray-500">No metric selected</p>
