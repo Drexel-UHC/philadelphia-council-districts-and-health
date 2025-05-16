@@ -73,7 +73,10 @@ export default function DashboardLayout() {
 
   return (
     <section id="dashboard" className="mb-12">
-      <h2 className="text-2xl font-bold mb-6">Interactive Dashboard</h2>
+      <h1 className="text-3xl font-bold mb-4 pb-2 border-b-1 border-gray-300">How to Use:</h1>
+      <p>To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city.</p>
+
+      
       {loading ? (
         <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
       ) : (
