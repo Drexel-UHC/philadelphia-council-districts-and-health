@@ -48,3 +48,11 @@ df_data %>%
   write_json(here("App/shiny/next-js-deploy/public/data/df_data.json"), 
              auto_unbox = TRUE)
 ```
+
+## geojson-districts
+
+```{r}
+geojson_districts %>% 
+  write_json(here("App/shiny/next-js-deploy/public/data/geojson_districts.json"), 
+             auto_unbox = TRUE)
+```
