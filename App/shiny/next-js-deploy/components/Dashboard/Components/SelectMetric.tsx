@@ -109,6 +109,7 @@ interface MetricMetadata {
 
 interface SelectMetricProps {
   data?: MetricMetadata[];
+  onSelectMetric?: (metricData: MetricMetadata | null) => void;
 }
 
 // Fallback data if none is provided
@@ -131,7 +132,11 @@ const defaultMetrics = [
   }
 ];
 
-export function SelectMetric({ data }: SelectMetricProps = {}) {
+interface SelectMetricProps {
+  data?: MetricMetadata[];
+  onSelectMetric?: (metricData: MetricMetadata | null) => void;
+}
+export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -144,39 +149,51 @@ export function SelectMetric({ data }: SelectMetricProps = {}) {
 
   const filteredMetrics = React.useMemo(() => {
     if (!searchQuery) return metrics;
-    
+
     return metrics.filter((metric) =>
       metric.var_label.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery, metrics]);
 
+  // Effect to call onSelectMetric when value changes, passing the entire metadata object
+  React.useEffect(() => {
+    if (onSelectMetric) {
+      if (value) {
+        const selectedMetricData = metrics.find(metric => metric.var_name === value) || null;
+        onSelectMetric(selectedMetricData);
+      } else {
+        onSelectMetric(null);
+      }
+    }
+  }, [value, onSelectMetric, metrics]);
+
   return (
     <div className="relative p-4">
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger asChild>
-          <button 
+          <button
             ref={triggerRef}
-            className="flex w-[400px] justify-between items-center px-4 py-2 border rounded bg-white"
+            className="flex w-[300px] justify-between items-center px-4 py-2 border rounded bg-white"
             aria-expanded={open}
             role="combobox"
             aria-controls={listId}
             aria-haspopup="listbox"
           >
-            {value 
+            {value
               ? metrics.find((metric) => metric.var_name === value)?.var_label
               : "Select health metric..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </button>
         </Popover.Trigger>
-        
+
         <Popover.Portal forceMount>
-          <Popover.Content 
+          <Popover.Content
             ref={contentRef}
-            className="bg-white rounded shadow-md w-[300px] p-0 transition-none" 
+            className="bg-white rounded shadow-md w-[300px] p-0 transition-none"
             sideOffset={5}
             side="bottom"
             align="start"
-            style={{ 
+            style={{
               animation: 'none',
               transformOrigin: 'var(--radix-popover-content-transform-origin)',
               opacity: open ? 1 : 0,
@@ -184,7 +201,7 @@ export function SelectMetric({ data }: SelectMetricProps = {}) {
             }}
           >
             <Command>
-              <CommandInput 
+              <CommandInput
                 placeholder="Search health metrics..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -198,7 +215,8 @@ export function SelectMetric({ data }: SelectMetricProps = {}) {
                     <CommandItem
                       key={metric.var_name}
                       onSelect={() => {
-                        setValue(metric.var_name === value ? "" : metric.var_name);
+                        const newValue = metric.var_name === value ? "" : metric.var_name;
+                        setValue(newValue);
                         setOpen(false);
                         setSearchQuery("");
                       }}
@@ -211,7 +229,6 @@ export function SelectMetric({ data }: SelectMetricProps = {}) {
                       />
                       <div>
                         <div className="font-medium">{metric.var_label}</div>
-                        {/* <div className="text-xs text-gray-500">{metric.source} ({metric.year})</div> */}
                       </div>
                     </CommandItem>
                   ))}
