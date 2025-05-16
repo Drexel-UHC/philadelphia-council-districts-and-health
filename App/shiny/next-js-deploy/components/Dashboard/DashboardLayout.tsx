@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { ChartExample } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
-// import Map from "@/components/Dashboard/Components/LeafletMap"; // Use the LeafletMap component
 
 // Define the type for our metadata
 interface MetricMetadata {

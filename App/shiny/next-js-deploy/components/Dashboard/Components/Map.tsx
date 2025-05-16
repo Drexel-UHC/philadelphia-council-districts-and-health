@@ -5,284 +5,152 @@ import Highcharts from "highcharts/esm/highcharts.js";
 import HighchartsReact from 'highcharts-react-official';
 import "highcharts/esm/modules/map.js";
 
-// Define interfaces for map props
+// Define interfaces for map props and data
 interface MapProps {
   title?: string;
 }
 
-// Simplified mock GeoJSON data for Philadelphia districts
-const phillyDistrictsGeoJSON = {
-  "type": "FeatureCollection",
-  "features": [
-    // District 1
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "1"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.18, 39.92],
-          [-75.14, 39.92],
-          [-75.14, 39.95],
-          [-75.18, 39.95],
-          [-75.18, 39.92]
-        ]]
-      }
-    },
-    // District 2
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "2"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.22, 39.92],
-          [-75.18, 39.92],
-          [-75.18, 39.95],
-          [-75.22, 39.95],
-          [-75.22, 39.92]
-        ]]
-      }
-    },
-    // District 3
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "3"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.22, 39.95],
-          [-75.18, 39.95],
-          [-75.18, 39.98],
-          [-75.22, 39.98],
-          [-75.22, 39.95]
-        ]]
-      }
-    },
-    // District 4
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "4"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.18, 39.95],
-          [-75.14, 39.95],
-          [-75.14, 39.98],
-          [-75.18, 39.98],
-          [-75.18, 39.95]
-        ]]
-      }
-    },
-    // District 5
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "5"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.14, 39.95],
-          [-75.10, 39.95],
-          [-75.10, 39.98],
-          [-75.14, 39.98],
-          [-75.14, 39.95]
-        ]]
-      }
-    },
-    // District 6
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "6"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.14, 39.92],
-          [-75.10, 39.92],
-          [-75.10, 39.95],
-          [-75.14, 39.95],
-          [-75.14, 39.92]
-        ]]
-      }
-    },
-    // District 7
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "7"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.10, 39.92],
-          [-75.06, 39.92],
-          [-75.06, 39.95],
-          [-75.10, 39.95],
-          [-75.10, 39.92]
-        ]]
-      }
-    },
-    // District 8
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "8"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.10, 39.95],
-          [-75.06, 39.95],
-          [-75.06, 39.98],
-          [-75.10, 39.98],
-          [-75.10, 39.95]
-        ]]
-      }
-    },
-    // District 9
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "9"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.22, 39.98],
-          [-75.18, 39.98],
-          [-75.18, 40.01],
-          [-75.22, 40.01],
-          [-75.22, 39.98]
-        ]]
-      }
-    },
-    // District 10
-    {
-      "type": "Feature",
-      "properties": {
-        "district": "10"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [-75.18, 39.98],
-          [-75.14, 39.98],
-          [-75.14, 40.01],
-          [-75.18, 40.01],
-          [-75.18, 39.98]
-        ]]
-      }
-    }
-  ]
-};
+interface DistrictData {
+  district: string;
+  value: number;
+  value_clean: string;
+}
 
-// Generate random data for the 10 districts
-const generateRandomData = () => {
-  const data = [];
-  for (let i = 1; i <= 10; i++) {
-    data.push({
-      district: i.toString(),
-      value: Math.round(Math.random() * 100 * 10) / 10,
-      value_clean: `${Math.round(Math.random() * 100 * 10) / 10}%`
-    });
-  }
-  return data;
-};
+interface GeoJsonFeature {
+  type: string;
+  properties: {
+    district: string;
+    [key: string]: any;
+  };
+  geometry: {
+    type: string;
+    coordinates: number[][][];
+  };
+}
 
-const mockData = generateRandomData();
+interface GeoJsonCollection {
+  type: string;
+  features: GeoJsonFeature[];
+}
+
+// Generate random data for the districts
+const generateRandomHealthData = (): DistrictData[] => {
+  const districts = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+  return districts.map(district => {
+    const value = Math.round(Math.random() * 100 * 10) / 10;
+    return {
+      district,
+      value,
+      value_clean: `${value}%`
+    };
+  });
+};
 
 export const Map: React.FC<MapProps> = ({ 
-  title = "Philadelphia Districts Health Metrics"
+  title = "Philadelphia Health Index by District"
 }) => {
   // Create a reference to the chart component
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
-  
-  // Set up the chart options
-  const [mapOptions, setMapOptions] = useState<Highcharts.Options>({
-    chart: {
-      map: phillyDistrictsGeoJSON,
-      height: 400
-    },
-    title: {
-      text: title
-    },
-    subtitle: {
-      text: 'Health metrics across Philadelphia council districts'
-    },
-    credits: {
-      enabled: true,
-      text: 'Source: Simulated data (2025)'
-    },
-    mapNavigation: {
-      enabled: true,
-      buttonOptions: {
-        verticalAlign: 'bottom'
-      }
-    },
-    colorAxis: {
-      min: 0,
-      max: 100,
-      stops: [
-        [0, '#EFEFFF'],
-        [0.5, '#4444BB'],
-        [1, '#000066']
-      ]
-    },
-    legend: {
-      title: {
-        text: 'Health Index (%)'
-      },
-      valueDecimals: 1,
-      valueSuffix: '%'
-    },
-    series: [{
-      type: 'map',
-      name: 'Health Index',
-      data: mockData.map(d => ({
-        district: d.district,
-        value: d.value,
-        value_clean: d.value_clean
-      })),
-      joinBy: ['district', 'district'],
-      states: {
-        hover: {
-          color: '#a4edba'
-        }
-      },
-      dataLabels: {
-        enabled: true,
-        format: '{point.district}'
-      }//,
-      // tooltip: {
-      //   useHTML: true,
-      //   headerFormat: '',
-      //   pointFormat: '<span style="font-size:13px"><b>District {point.district}</b>: {point.value_clean}</span>'
-      // }
-    }] as Highcharts.SeriesOptionsType[]
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [geoJson, setGeoJson] = useState<GeoJsonCollection | null>(null);
+  const [healthData, setHealthData] = useState<DistrictData[]>([]);
+  const [mapOptions, setMapOptions] = useState<Highcharts.Options | null>(null);
 
+  // Load GeoJSON data and create map options
   useEffect(() => {
-    // Simply mark as loaded since we're importing the map module directly
-    setMapLoaded(true);
-  }, []);
+    const loadMapData = async () => {
+      try {
+        // Fetch the GeoJSON file from public directory
+        const response = await fetch('/data/geojson_districts.json');
+        if (!response.ok) {
+          throw new Error(`Error loading GeoJSON: ${response.status}`);
+        }
+        
+        // Parse the GeoJSON data
+        const data: GeoJsonCollection = await response.json();
+        setGeoJson(data);
+        
+        // Generate random health data
+        const districtData = generateRandomHealthData();
+        setHealthData(districtData);
+        
+        // Create map options
+        const options: Highcharts.Options = {
+          chart: {
+            map: data,
+            height: 500
+          },
+          title: {
+            text: title
+          },
+          subtitle: {
+            text: 'Health metrics across Philadelphia council districts'
+          },
+          credits: {
+            enabled: true,
+            text: 'Source: Simulated data (2025)'
+          },
+          mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+              verticalAlign: 'bottom'
+            }
+          },
+          colorAxis: {
+            min: 0,
+            max: 100,
+            stops: [
+              [0, '#EFEFFF'],
+              [0.5, '#4444BB'],
+              [1, '#000066']
+            ]
+          },
+          legend: {
+            title: {
+              text: 'Health Index (%)'
+            },
+            valueDecimals: 1,
+            valueSuffix: '%'
+          },
+          series: [{
+            type: 'map',
+            name: 'Health Index',
+            data: districtData.map(d => ({
+              district: d.district,
+              value: d.value,
+              value_clean: d.value_clean
+            })),
+            joinBy: ['district', 'district'],
+            states: {
+              hover: {
+                color: '#a4edba'
+              }
+            },
+            dataLabels: {
+              enabled: true,
+              format: '{point.district}'
+            } 
+          }] as Highcharts.SeriesOptionsType[]
+        };
+        
+        setMapOptions(options);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error loading map data:", error);
+      }
+    };
 
-  // Show loading indicator until map is ready
-  if (!mapLoaded) {
+    loadMapData();
+  }, [title]);
+
+  // Show loading indicator until map data is ready
+  if (isLoading || !mapOptions) {
     return (
-      <div className="flex items-center justify-center h-[400px] bg-gray-100">
-        <p>Loading map...</p>
+      <div className="flex items-center justify-center h-[500px] bg-gray-100 rounded-md">
+        <div className="text-center">
+          <p className="text-lg font-medium text-gray-600">Loading map data...</p>
+          <p className="text-sm text-gray-500 mt-2">Preparing Philadelphia district boundaries</p>
+        </div>
       </div>
     );
   }
@@ -299,10 +167,10 @@ export const Map: React.FC<MapProps> = ({
   );
 };
 
-// Example map component with minimal configuration
+// Example map component for easy usage
 export const MapExample: React.FC = () => {
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
+    <div className="p-4 bg-white rounded-md shadow-md">
       <Map title="Philadelphia Health Index by District" />
     </div>
   );
