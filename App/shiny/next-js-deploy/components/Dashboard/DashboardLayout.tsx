@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
-// Import both Chart and ChartExample
 import { ChartExample } from "@/components/Dashboard/Components/Chart";
+import { Map } from "@/components/Dashboard/Components/Map";
+// import Map from "@/components/Dashboard/Components/LeafletMap"; // Use the LeafletMap component
 
 // Define the type for our metadata
 interface MetricMetadata {
@@ -131,7 +132,7 @@ export default function DashboardLayout() {
           <ChartExample />
         </div>
         <div className="col-span-5 bg-gray-100 rounded p-4 flex items-center justify-center min-h-[200px]">
-          <span className="text-gray-400">[Map Placeholder]</span>
+          <Map/>
         </div>
       </div>
      
