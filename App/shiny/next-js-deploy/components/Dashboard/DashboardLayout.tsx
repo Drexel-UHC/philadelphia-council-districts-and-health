@@ -77,64 +77,29 @@ export default function DashboardLayout() {
       {loading ? (
         <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Metric selection */}
-          <div className="bg-white p-4 rounded-md shadow-sm">
-            <h3 className="text-lg font-semibold mb-3">Select Health Metric</h3>
-            <SelectMetric 
-              data={metadata} 
-              onSelectMetric={setSelectedMetric} 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <SelectMetric
+              data={metadata}
+              onSelectMetric={setSelectedMetric}
             />
-          </div>
-          
-          {/* Selected metric details */}
-          <div className="md:col-span-2 bg-white p-4 rounded-md shadow-sm">
+        
             {selectedMetric ? (
-              <div>
-                <h3 className="text-xl font-bold mb-2">{selectedMetric.var_label}</h3>
-                <p className="text-gray-600 mb-4">{selectedMetric.var_def}</p>
-                <div className="bg-gray-50 p-3 rounded mb-4 text-sm">
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                    <div><span className="font-medium">Source:</span> {selectedMetric.source}</div>
-                    <div><span className="font-medium">Year:</span> {selectedMetric.year}</div>
-                    <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
-                  </div>
-                </div>
-                
-                {/* Display filtered data */}
-                {filteredData.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold mb-2">District Data</h4>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full">
-                        <thead className="bg-gray-50">
-                          <tr>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">District</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
-                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City Average</th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {filteredData.map((item, idx) => (
-                            <tr key={idx}>
-                              <td className="px-4 py-2 whitespace-nowrap">{item.district}</td>
-                              <td className="px-4 py-2 whitespace-nowrap">{item.value_clean}</td>
-                              <td className="px-4 py-2 whitespace-nowrap">{Number(item.city_avg).toLocaleString()}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <div>{selectedMetric.var_label}</div>
             ) : (
               <div className="h-full flex items-center justify-center text-gray-500">
                 <p>Please select a health metric to view details</p>
               </div>
             )}
+            {filteredData ? (
+                <div>
+                {filteredData.map(item => `${item.district}: ${item.value}`).join(", ")}
+                </div>
+            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500">
+                <p>No filtered Data</p>
+              </div>
+            )}
           </div>
-        </div>
       )}
     </section>
   );
