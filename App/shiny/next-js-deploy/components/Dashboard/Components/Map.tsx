@@ -5,6 +5,7 @@ import Highcharts from "highcharts/esm/highcharts.js";
 import HighchartsReact from 'highcharts-react-official';
 import "highcharts/esm/modules/map.js";
 import { MetricData } from '@/components/Dashboard/types/dashboard_types';
+import styles from './map-styles.module.css';
 
 // Define interfaces for map props and data
 interface MapProps {
@@ -70,14 +71,25 @@ export const Map: React.FC<MapProps> = ({
     const values = data.map(d => d.value);
     const min = Math.min(...values);
     const max = Math.max(...values);
+
+    // Apply global animation settings
+    Highcharts.setOptions({
+      plotOptions: {
+        series: {
+          animation: false
+        }
+      }
+    });
     
     // Create map options with all animations disabled
     const options: Highcharts.Options = {
       chart: {
         map: geoJson,
-        // height: 500,
-        animation: false
-        // Disable all animations at the chart level
+        height: 500,
+        animation: false,
+        style: {
+          transition: 'none'
+        }
       },
       title: {
         text: selectedMetric?.var_label || title
@@ -143,15 +155,7 @@ export const Map: React.FC<MapProps> = ({
         // Disable legend animations
         navigation: {
           animation: false
-        },
-        // Additional animation disabling for legend
-        itemStyle: {
-          // animation: false // 'animation' is not a valid property for itemStyle
-        },
-        itemHoverStyle: {
-          // animation: false // 'animation' is not a valid property for itemHoverStyle
         }
-        // Removed invalid 'animation' property from legend options
       },
       series: [{
         type: 'map',
@@ -187,24 +191,17 @@ export const Map: React.FC<MapProps> = ({
           // Disable animation for data labels
           animation: false,
           defer: false,
-          format: '{point.district}'
-        } 
+          allowOverlap: true, // Prevent positioning animations
+          format: '{point.district}',
+          style: {
+            transition: 'none' // Override Tailwind's transitions
+          }
+        }
       }] as Highcharts.SeriesOptionsType[]
     };
     
-    // Apply global animation settings
-    Highcharts.setOptions({
-      plotOptions: {
-        series: {
-          animation: false
-        }
-      }
-    });
-    
     setMapOptions(options);
   }, [geoJson, data, title]);
- 
- 
   
   // Show "Select Metric" message if no data or options
   if (!mapOptions || data.length === 0) {
@@ -220,6 +217,12 @@ export const Map: React.FC<MapProps> = ({
 
   return (
     <div className="map-container">
+      <style jsx>{`
+        :global(.map-container *) {
+          transition: none !important;
+          animation: none !important;
+        }
+      `}</style>
       <HighchartsReact
         highcharts={Highcharts}
         options={mapOptions}
