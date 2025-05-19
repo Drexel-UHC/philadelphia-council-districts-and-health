@@ -97,7 +97,7 @@ export const Map: React.FC<MapProps> = ({
     const options: Highcharts.Options = {
       chart: {
         map: geoJson,
-        height: 500,
+        height: 400,
         animation: false,
         style: {
           transition: 'none'

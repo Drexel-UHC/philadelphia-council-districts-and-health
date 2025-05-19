@@ -139,6 +139,7 @@ export const Chart: React.FC<ChartProps> = ({
       const options: Highcharts.Options = {
         chart: {
           type: "column",
+          height: 400,
           style: {
             transition: 'none'
           }
