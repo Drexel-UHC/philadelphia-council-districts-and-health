@@ -87,17 +87,17 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
     <div className="p-4 ">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
+            <Button
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[400px] justify-between bg-white border-gray-200 text-left font-normal"
-          >
+            className="w-full lg:w-[400px] justify-between bg-white border-gray-200 text-left font-normal"
+            >
             {value
               ? metrics.find((metric) => metric.var_name === value)?.var_label
               : "Select health metric..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
+            </Button>
         </PopoverTrigger>
         <PopoverContent
           className="PopoverContent w-[400px] "
