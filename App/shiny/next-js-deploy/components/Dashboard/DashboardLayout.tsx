@@ -69,7 +69,7 @@ export default function DashboardLayout() {
   const text = (
     <div className="mb-8">
       <AnchorHeading 
-        id="how-to-use" 
+        id="dashboard" 
         className="text-3xl font-bold mb-4 pb-2 border-b border-gray-300"
       >
         How to Use:
