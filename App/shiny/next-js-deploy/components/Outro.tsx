@@ -1,9 +1,16 @@
+import { AnchorHeading } from "@/components/ui/anchor-heading";
+
 export default function Outro() {
   return (
     <section id="about" className="mb-12 pt-10">
       {/* Acknowledgements section */}
       <div className="section mb-8">
-        <h3 className="text-xl font-bold mb-3 pb-2 border-b-1 border-gray-300">Acknowledgements</h3>
+        <AnchorHeading 
+          id="acknowledgements" 
+          className="text-xl font-bold mb-3 pb-2 border-b border-gray-300"
+        >
+          Acknowledgements
+        </AnchorHeading>
         <p className="text-lg text-gray-700 mb-6">
           This dashboard was developed through collaborative effort and supported by the IDEA Fellowship.
         </p>
@@ -11,16 +18,22 @@ export default function Outro() {
       
       {/* Authors and sponsor section */}
       <div className="section mb-8">
-        <h4 className="text-lg font-bold mb-2">Authors</h4>
+        <h4 className="text-lg font-bold mb-2">
+          Authors
+        </h4>
         <p className="mb-4">Amber Bolli, Tamara Rushovich, Ran Li, Stephanie Hernandez, Alina Schnake-Mahl</p>
         
-        <h4 className="text-lg font-bold mb-2">Sponsor</h4>
+        <h4 className="text-lg font-bold mb-2">
+          Sponsor
+        </h4>
         <p className="mb-4">IDEA Fellowship</p>
       </div>
       
       {/* Links to related work section */}
       <div className="section mb-8">
-        <h4 className="text-lg font-bold mb-2">Links to Related Work</h4>
+        <h4 className="text-lg font-bold mb-2">
+          Links to Related Work
+        </h4>
         <ul className="list-disc pl-5 mb-4 space-y-1">
           <li>
             <a 
@@ -87,7 +100,9 @@ export default function Outro() {
       
       {/* Citation section */}
       <div className="section mb-8">
-        <h4 className="text-lg font-bold mb-2">Citation</h4>
+        <h4 className="text-lg font-bold mb-2">
+          Citation
+        </h4>
         <div className="bg-gray-100 p-4 rounded font-mono text-sm">
           Urban Health Collaborative, <em>Health of Philadelphia City Council Districts Dashboard</em>, 2025
         </div>
@@ -95,7 +110,9 @@ export default function Outro() {
       
       {/* Contact section */}
       <div className="section mb-8">
-        <h4 className="text-lg font-bold mb-2">Contact Us</h4>
+        <h4 className="text-lg font-bold mb-2">
+          Contact Us
+        </h4>
         <p>
           Please reach out to{" "}
           <a 

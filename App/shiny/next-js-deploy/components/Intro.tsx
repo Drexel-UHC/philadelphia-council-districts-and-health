@@ -1,9 +1,16 @@
+import { AnchorHeading } from "@/components/ui/anchor-heading";
+
 export default function Intro() {
   return (
     <section id="intro" className="mb-12 pt-10">
       {/* Main heading section */}
       <div className="section mb-8">
-        <h1 className="text-3xl font-bold mb-4 pb-2 border-b-1 border-gray-300">Health of Philadelphia City Council Districts</h1>
+        <AnchorHeading 
+          id="health-of-philadelphia-city-council-districts" 
+          className="text-3xl font-bold mb-4 pb-2 border-b-1 border-gray-300"
+        >
+          Health of Philadelphia City Council Districts
+        </AnchorHeading>
         <p className="text-lg text-gray-700 mb-6">
           This dashboard leverages publicly available data from the US Census Bureau and Open Data Philly to examine important public health indicators for Philadelphia&apos;s 10 City Council Districts. The project aims to offer actionable knowledge that empowers city leaders and communities to address health inequities in their communities.
         </p>
@@ -11,7 +18,13 @@ export default function Intro() {
 
       {/* Introduction section */}
       <div className="section mb-8">
-        <h2 className="text-2xl font-bold mb-4 pb-2 border-b-1 border-gray-300">Introduction</h2>
+        <AnchorHeading
+          id="intro"
+          className="text-2xl font-bold mb-4 pb-2 border-b-1 border-gray-300"
+          as="h2"
+        >
+        Introduction
+        </AnchorHeading>
         <p className="mb-4">
           The health of Philadelphia residents varies drastically across the city – differences that reflect broader disparities in income, opportunity, and access to essential resources. These are not just personal choices made by the city&apos;s residents – they are shaped by federal, state and local laws and policies.
         </p>

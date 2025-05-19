@@ -5,6 +5,7 @@ import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
 import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
+import { AnchorHeading } from "@/components/ui/anchor-heading";
 
 // Define the interface for the hovered district state
 interface HoveredDistrictState {
@@ -67,7 +68,12 @@ export default function DashboardLayout() {
   // Text section as a JSX element
   const text = (
     <div className="mb-8">
-      <h1 className="text-3xl font-bold mb-4 pb-2 border-b border-gray-300">How to Use:</h1>
+      <AnchorHeading 
+        id="how-to-use" 
+        className="text-3xl font-bold mb-4 pb-2 border-b border-gray-300"
+      >
+        How to Use:
+      </AnchorHeading>
       <p>To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city.</p>
     </div>
   );

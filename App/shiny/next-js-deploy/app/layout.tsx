@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";  // Changed from Inter to Lato
+import { Lato } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 // Use Lato font with Latin subset
 const lato = Lato({
@@ -28,6 +29,8 @@ export default function RootLayout({
             {children}
           </div>
         </div>
+        {/* Add Sonner Toaster component */}
+        <Toaster />
       </body>
     </html>
   );

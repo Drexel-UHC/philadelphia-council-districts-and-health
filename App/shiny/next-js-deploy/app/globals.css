@@ -63,7 +63,7 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --link: #07294D; /* Add a custom link color variable - deep navy blue */
+  --link: #07294D; /* Navy blue for links */
   --color-chart-1: oklch(0.646 0.222 41.116);
   --color-chart-2: oklch(0.6 0.118 184.704);
   --color-chart-3: oklch(0.398 0.07 227.392);
@@ -113,6 +113,16 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Scroll margin for anchor headings to account for fixed headers */
+:target {
+  scroll-margin-top: 100px;
+}
+
+/* Make sure anchor links use the link color */
+a[href^="#"] {
+  color: var(--link);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -121,6 +131,8 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Add styling for links */
   a {
     color: var(--link);
     text-decoration: none;
@@ -133,5 +145,10 @@
   a:focus-visible {
     outline: 2px solid var(--link);
     outline-offset: 2px;
+  }
+  
+  /* Add scroll margin for anchor targets */
+  :target {
+    scroll-margin-top: 100px;
   }
 }
