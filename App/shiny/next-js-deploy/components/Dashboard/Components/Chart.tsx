@@ -130,7 +130,11 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
         },
         tooltip: {
           headerFormat: '',
-          pointFormat: '<span style="color:{point.color}">\u25CF</span> <b>District {point.district}:</b> {point.valueFormatted}<br/>'
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> <b>District {point.district}:</b> {point.valueFormatted}<br/>',
+          hideDelay: 0,     // Remove delay when hiding tooltip 
+          animation: false,  // Disable tooltip animation
+          // followPointer: true, // Make tooltip follow the pointer more closely
+          snap: 0           // Remove sn
         },
         exporting: {
           enabled: true,
