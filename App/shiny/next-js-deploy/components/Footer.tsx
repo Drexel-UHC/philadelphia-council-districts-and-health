@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function Footer() {
   return (
@@ -23,7 +22,7 @@ export default function Footer() {
           
           {/* Social links on the right */}
           <div className="text-center md:text-right">
-            <p className="text-sm font-medium mb-2">Follow UHC:</p>
+            <p className="text-sm font-bold mb-2">Follow UHC:</p>
             <ul className="flex space-x-4 items-center">
               <li>                    
                 <a 
@@ -31,13 +30,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="block"
+                  className="flex items-center justify-center w-8 h-8 rounded-full bg-[#07294D] hover:opacity-90 transition-opacity"
                 >
-                  <Avatar className="h-8 w-8 bg-[#07294D] hover:opacity-90 transition-opacity">
-                    <AvatarFallback className="text-white">
-                      <Facebook size={16} className="text-white" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <Facebook size={16} className="text-white" />
                   <span className="sr-only">Facebook</span>
                 </a>
               </li>
@@ -48,13 +43,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="block"
+                  className="flex items-center justify-center w-8 h-8 rounded-full bg-[#07294D] hover:opacity-90 transition-opacity"
                 >
-                  <Avatar className="h-8 w-8 bg-[#07294D] hover:opacity-90 transition-opacity">
-                    <AvatarFallback className="text-white">
-                      <Instagram size={16} className="text-white" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <Instagram size={16} className="text-white" />
                   <span className="sr-only">Instagram</span>
                 </a>
               </li>
@@ -65,13 +56,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="YouTube"
-                  className="block"
+                  className="flex items-center justify-center w-8 h-8 rounded-full bg-[#07294D] hover:opacity-90 transition-opacity"
                 >
-                  <Avatar className="h-8 w-8 bg-[#07294D] hover:opacity-90 transition-opacity">
-                    <AvatarFallback className="text-white">
-                      <Youtube size={16} className="text-white" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <Youtube size={16} className="text-white" />
                   <span className="sr-only">YouTube</span>
                 </a>
               </li>
@@ -82,13 +69,9 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"
-                  className="block"
+                  className="flex items-center justify-center w-8 h-8 rounded-full bg-[#07294D] hover:opacity-90 transition-opacity"
                 >
-                  <Avatar className="h-8 w-8 bg-[#07294D] hover:opacity-90 transition-opacity">
-                    <AvatarFallback className="text-white">
-                      <Linkedin size={16} className="text-red" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <Linkedin size={16} className="text-white" />
                   <span className="sr-only">LinkedIn</span>
                 </a>
               </li>
