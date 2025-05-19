@@ -100,17 +100,9 @@ export default function DashboardLayout() {
       {text}
       {selectionSection}
       <div className="mt-8 grid grid-cols-12 gap-6">
-        <div className="col-span-7 bg-white rounded-md shadow-sm p-4">
-          {/* Pass filteredData directly to Chart component */}
-          {filteredData.length > 0 ? (
-            <Chart data={filteredData} />
-          ) : (
-            <div className="h-[400px] flex items-center justify-center text-gray-500">
-              <p>Select a health metric to view chart data</p>
-            </div>
-          )}
+        <div className="col-span-12 md:col-span-7 bg-white rounded-md shadow-sm p-4">
+          <Chart data={filteredData} />
         </div>
-        {/* Uncomment the Map component if needed */}
         {/* <div className="col-span-5 bg-white rounded-md shadow-sm p-4">
           <Map title={selectedMetric?.var_label || "Philadelphia Districts"} />
         </div> */}
