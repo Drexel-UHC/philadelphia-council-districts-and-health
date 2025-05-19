@@ -4,34 +4,9 @@ import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
+import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
 
-// Define the type for our metadata
-interface MetricMetadata {
-  var_label: string;
-  var_def: string;
-  source: string;
-  year: string;
-  var_name: string;
-  ylabs: string;
-}
-
-interface MetricData {
-  district: string;           // Council district number as string (e.g., "1")
-  var_name: string;           // Variable name/identifier
-  value: number;              // Metric value (numeric)
-  city_avg: number;           // City average for this metric
-  var_label: string;          // Human-readable metric name
-  var_def: string;            // Definition of the metric
-  source: string;             // Data source
-  year: string;               // Year of the data
-  aggregation_notes: string;  // Notes about data aggregation
-  cleaning_notes: string | null; // Notes about data cleaning, can be null
-  ylabs: string;              // Y-axis label for charts
-  district_int: number;       // District number as integer
-  source_year: string;        // Combined source and year text
-  value_clean: string;        // Formatted/cleaned value as string
-}
-
+ 
 export default function DashboardLayout() {
   const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
   const [data, setData] = useState<MetricData[]>([]);
@@ -74,69 +49,6 @@ export default function DashboardLayout() {
       setFilteredData([]);
     }
   }, [selectedMetric, data]);
-
-  // Prepare chart data based on filtered data
-  const prepareChartData = () => {
-    if (filteredData.length === 0) return null;
-    
-    const varLabel = filteredData[0].var_label;
-    const varName = filteredData[0].var_name;
-    const cityAvg = filteredData[0].city_avg;
-    const sourceYear = filteredData[0].source_year;
-    const yAxisTitle = filteredData[0].ylabs;
-    const subtitle = filteredData[0].var_def;
-    
-    // Format data for highcharts series
-    const chartData = [{
-      name: varLabel,
-      type: "column" as
-        | "column"
-        | "area"
-        | "line"
-        | "polygon"
-        | "bar"
-        | "pie"
-        | "scatter"
-        | "spline"
-        | "areaspline"
-        | "arearange"
-        | "columnrange"
-        | "gauge"
-        | "boxplot"
-        | "bubble"
-        | "waterfall"
-        | "funnel"
-        | "pyramid"
-        | "errorbar"
-        | "treemap"
-        | "heatmap"
-        | "packedbubble"
-        | "xrange"
-        | undefined,
-      showInLegend: false,
-      data: filteredData.map(item => ({
-        y: item.value,
-        valueFormatted: item.value_clean,
-        district: item.district,
-        color: "grey",
-        id: item.district
-      }))
-    }];
-    
-    const categories = filteredData.map(item => item.district);
-    
-    return {
-      title: varLabel,
-      subtitle: subtitle,
-      data: chartData,
-      categories: categories,
-      yAxisTitle: yAxisTitle,
-      cityAverage: cityAvg,
-      sourceYear: sourceYear,
-      filename: `philly-council-chart-${varName}`,
-      varName: varName
-    };
-  };
 
   // Text section as a JSX element
   const text = (
@@ -181,9 +93,6 @@ export default function DashboardLayout() {
       </div>
     </div>
   );
-
-  // Get chart props from filtered data
-  const chartProps = prepareChartData();
   
   // Clean return statement with abstracted sections
   return (
@@ -192,15 +101,16 @@ export default function DashboardLayout() {
       {selectionSection}
       <div className="mt-8 grid grid-cols-12 gap-6">
         <div className="col-span-7 bg-white rounded-md shadow-sm p-4">
-          {/* Conditionally render either the data-driven chart or the example chart */}
-          {chartProps ? (
-            <Chart {...chartProps} />
+          {/* Pass filteredData directly to Chart component */}
+          {filteredData.length > 0 ? (
+            <Chart data={filteredData} />
           ) : (
             <div className="h-[400px] flex items-center justify-center text-gray-500">
               <p>Select a health metric to view chart data</p>
             </div>
           )}
         </div>
+        {/* Uncomment the Map component if needed */}
         {/* <div className="col-span-5 bg-white rounded-md shadow-sm p-4">
           <Map title={selectedMetric?.var_label || "Philadelphia Districts"} />
         </div> */}

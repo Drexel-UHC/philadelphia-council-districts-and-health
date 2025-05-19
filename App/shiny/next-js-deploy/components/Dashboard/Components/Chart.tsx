@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { MetricData } from '@/components/Dashboard/types/dashboard_types';
 
 // Enhanced interface for chart data points
 interface DataPoint {
@@ -13,53 +14,40 @@ interface DataPoint {
   id: string;
 }
 
-// Define interfaces for chart props and series
-interface ChartSeries {
-  name?: string;
-  data: number[] | DataPoint[];
-  type?: "line" | "column" | "bar" | "area" | "pie" | "scatter" | "spline" | "areaspline" | "arearange" | "columnrange" | "gauge" | "boxplot" | "bubble" | "waterfall" | "polygon" | "funnel" | "pyramid" | "errorbar" | "variwide" | "treemap" | "heatmap" | "packedbubble" | "xrange" | "timeline";
-  showInLegend?: boolean;
-}
-
+// Define interfaces for chart props
 interface ChartProps {
-  title?: string;
-  subtitle?: string;
-  data?: ChartSeries[];
-  categories?: string[];
-  yAxisTitle?: string;
-  cityAverage?: number;
-  sourceYear?: string;
-  filename?: string;
-  varName?: string;
+  data: MetricData[];
 }
 
-export const Chart: React.FC<ChartProps> = ({ 
-  title = "Sample Chart",
-  subtitle = "",
-  data = [{ data: [1, 2, 3, 4, 5], type: "line" }],
-  categories = ["A", "B", "C", "D", "E"],
-  yAxisTitle = "Value",
-  cityAverage,
-  sourceYear = "",
-  filename = "chart-export",
-  varName = ""
-}) => {
+export const Chart: React.FC<ChartProps> = ({ data }) => {
   // Create a reference to the chart component
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  
-  // Check if it's the weighted_hvi variable
-  const isHeatVulnerabilityIndex = varName === "weighted_hvi";
   
   // Set up the chart options
   const [chartOptions, setChartOptions] = useState<Highcharts.Options>({});
 
-  // Update chart when props change
+  // Process data and update chart options when data changes
   useEffect(() => {
+    if (data.length === 0) return;
+    
+    // Extract common properties from first data item
+    const firstItem = data[0];
+    const varLabel = firstItem.var_label;
+    const varName = firstItem.var_name;
+    const cityAvg = firstItem.city_avg;
+    const sourceYear = firstItem.source_year;
+    const yAxisTitle = firstItem.ylabs;
+    const subtitle = firstItem.var_def;
+    const categories = data.map(item => item.district);
+    
+    // Check if it's the weighted_hvi variable
+    const isHeatVulnerabilityIndex = varName === "weighted_hvi";
+    
     if (isHeatVulnerabilityIndex) {
       // Simple message chart for HVI
       setChartOptions({
         title: {
-          text: title
+          text: varLabel
         },
         subtitle: {
           text: "Heat Vulnerability Index is shown on map"
@@ -71,13 +59,22 @@ export const Chart: React.FC<ChartProps> = ({
         series: []
       });
     } else {
-      // Full chart with data
-      const chartOptions: Highcharts.Options = {
+      // Transform data into Highcharts format
+      const chartData: DataPoint[] = data.map(item => ({
+        y: item.value,
+        valueFormatted: item.value_clean,
+        district: item.district,
+        color: "grey",
+        id: item.district
+      }));
+      
+      // Create complete chart options
+      const options: Highcharts.Options = {
         chart: {
           type: "column"
         },
         title: {
-          text: title
+          text: varLabel
         },
         subtitle: {
           text: subtitle
@@ -93,20 +90,20 @@ export const Chart: React.FC<ChartProps> = ({
             text: yAxisTitle
           },
           min: 0,
-          plotLines: cityAverage ? [{
-            value: cityAverage,
+          plotLines: [{
+            value: cityAvg,
             color: "#707070",
             dashStyle: "ShortDash",
             width: 2,
             label: {
-              text: `City Average: ${cityAverage.toFixed(1)}`,
+              text: `City Average: ${cityAvg.toFixed(1)}`,
               align: "right",
               style: {
                 color: "#707070"
               }
             },
             zIndex: 5
-          }] : []
+          }]
         },
         plotOptions: {
           column: {
@@ -124,30 +121,32 @@ export const Chart: React.FC<ChartProps> = ({
         },
         exporting: {
           enabled: true,
-          filename: filename
+          filename: `philly-council-chart-${varName}`
         },
         credits: {
           enabled: true,
           text: sourceYear
         },
-        series: data.map(series => ({
-          ...series,
-          // If data is array of DataPoint, convert to Highcharts point objects
-          data: Array.isArray(series.data) && typeof series.data[0] === "object"
-            ? (series.data as DataPoint[]).map(point => ({
-                y: point.y,
-                color: point.color,
-                district: point.district,
-                valueFormatted: point.valueFormatted,
-                id: point.id
-              }))
-            : series.data
-        })) as Highcharts.SeriesOptionsType[]
+        series: [{
+          name: varLabel,
+          type: "column",
+          showInLegend: false,
+          data: chartData
+        }] as Highcharts.SeriesOptionsType[]
       };
       
-      setChartOptions(chartOptions);
+      setChartOptions(options);
     }
-  }, [title, subtitle, data, categories, yAxisTitle, cityAverage, sourceYear, filename, isHeatVulnerabilityIndex, varName]);
+  }, [data]);
+
+  // If no data or options not yet set, show placeholder
+  if (data.length === 0 || Object.keys(chartOptions).length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[400px] bg-gray-100">
+        <p>No chart data available</p>
+      </div>
+    );
+  }
 
   return (
     <div className="chart-container">
@@ -158,4 +157,6 @@ export const Chart: React.FC<ChartProps> = ({
       />
     </div>
   );
-}; 
+};
+
+export default Chart;
