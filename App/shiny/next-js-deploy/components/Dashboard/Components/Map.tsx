@@ -11,6 +11,7 @@ interface MapProps {
   title?: string;
   data?: MetricData[]; // Match Chart component prop name
   onHover?: (district: string | null) => void; // Add the onHover callback prop
+  highlightedDistrict?: string | null; // Add prop to receive highlighted district
 }
 
 interface GeoJsonFeature {
@@ -33,7 +34,8 @@ interface GeoJsonCollection {
 export const Map: React.FC<MapProps> = ({ 
   title = "Philadelphia Health Index by District",
   data = [],
-  onHover
+  onHover,
+  highlightedDistrict = null
 }) => {
   // Create a reference to the chart component
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
@@ -278,6 +280,32 @@ export const Map: React.FC<MapProps> = ({
     
     setMapOptions(options);
   }, [geoJson, data, title]); // Remove onHover from dependencies
+  
+  // Update highlighted district when changes without re-rendering the entire map
+  useEffect(() => {
+    // Only run this if chart is already rendered and data exists
+    if (chartComponentRef.current && chartComponentRef.current.chart && data.length > 0) {
+      const chart = chartComponentRef.current.chart;
+      
+      // Update each point's color based on highlighted district
+      if (chart.series[0] && chart.series[0].points) {
+        chart.series[0].points.forEach((point) => {
+          // @ts-ignore - district property exists on map points
+          const district = point.district || point.properties?.district;
+          
+          if (district) {
+            if (highlightedDistrict === district) {
+              // Highlight this district
+              point.setState('hover');
+            } else {
+              // Reset this district
+              point.setState('');
+            }
+          }
+        });
+      }
+    }
+  }, [highlightedDistrict, data]);
   
   // Show "Select Metric" message if no data or options
   if (!mapOptions || data.length === 0) {

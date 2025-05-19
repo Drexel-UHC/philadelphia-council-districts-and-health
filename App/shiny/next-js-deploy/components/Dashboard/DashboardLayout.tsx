@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
@@ -24,6 +24,9 @@ export default function DashboardLayout() {
     district: null,
     activeComponent: null
   });
+
+  // Create a ref to hold the Chart component's highlight function
+  const chartHighlightRef = useRef<((district: string | null) => void) | null>(null);
 
   // Fetch initial data
   useEffect(() => {
@@ -111,29 +114,41 @@ export default function DashboardLayout() {
   
   // Create a memoized hover handler for the Map to prevent re-renders
   const mapHoverHandler = React.useCallback((district: string | null) => {
+    // Update the hoveredDistrict state
     setHoveredDistrict({ 
       district, 
       activeComponent: district ? "map" : null 
     });
+    
+    // Directly call the chart highlight function if available
+    if (chartHighlightRef.current) {
+      chartHighlightRef.current(district);
+    }
   }, []);
+  
+  // Extract just the district id for highlighting
+  const highlightedDistrictId = hoveredDistrict?.district || null;
   
   // Clean return statement with abstracted sections
   return (
     <section id="dashboard" className="mb-12">
       {text}
-      {selectionSection}
-      {hoveredDistrictInfo} {/* Add the hoveredDistrict info section */}
+      {selectionSection} 
       <div className="mt-8 grid grid-cols-12 gap-6">
         <div className="col-span-12 md:col-span-7 bg-white rounded-md shadow-sm p-4">
           <Chart 
             data={filteredData} 
             onHover={chartHoverHandler}
+            registerHighlightFunction={(fn) => {
+              chartHighlightRef.current = fn;
+            }}
           />
         </div>
         <div className="col-span-12 md:col-span-5 bg-white rounded-md shadow-sm p-4">
           <Map 
             data={filteredData} 
             onHover={mapHoverHandler}
+            highlightedDistrict={hoveredDistrict.activeComponent === "chart" ? highlightedDistrictId : null}
           />
         </div>
       </div>
