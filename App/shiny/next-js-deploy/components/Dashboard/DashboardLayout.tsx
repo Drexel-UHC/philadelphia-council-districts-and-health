@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
-import { ChartExample } from "@/components/Dashboard/Components/Chart";
+import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
 
 // Define the type for our metadata
@@ -73,6 +73,69 @@ export default function DashboardLayout() {
     }
   }, [selectedMetric, data]);
 
+  // Prepare chart data based on filtered data
+  const prepareChartData = () => {
+    if (filteredData.length === 0) return null;
+    
+    const varLabel = filteredData[0].var_label;
+    const varName = filteredData[0].var_name;
+    const cityAvg = filteredData[0].city_avg;
+    const sourceYear = filteredData[0].source_year;
+    const yAxisTitle = filteredData[0].ylabs;
+    const subtitle = filteredData[0].var_def;
+    
+    // Format data for highcharts series
+    const chartData = [{
+      name: varLabel,
+      type: "column" as
+        | "column"
+        | "area"
+        | "line"
+        | "polygon"
+        | "bar"
+        | "pie"
+        | "scatter"
+        | "spline"
+        | "areaspline"
+        | "arearange"
+        | "columnrange"
+        | "gauge"
+        | "boxplot"
+        | "bubble"
+        | "waterfall"
+        | "funnel"
+        | "pyramid"
+        | "errorbar"
+        | "treemap"
+        | "heatmap"
+        | "packedbubble"
+        | "xrange"
+        | undefined,
+      showInLegend: false,
+      data: filteredData.map(item => ({
+        y: item.value,
+        valueFormatted: item.value_clean,
+        district: item.district,
+        color: "grey",
+        id: item.district
+      }))
+    }];
+    
+    const categories = filteredData.map(item => item.district);
+    
+    return {
+      title: varLabel,
+      subtitle: subtitle,
+      data: chartData,
+      categories: categories,
+      yAxisTitle: yAxisTitle,
+      cityAverage: cityAvg,
+      sourceYear: sourceYear,
+      filename: `philly-council-chart-${varName}`,
+      varName: varName
+    };
+  };
+
   // Text section as a JSX element
   const text = (
     <div className="mb-8">
@@ -103,9 +166,8 @@ export default function DashboardLayout() {
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                 <div><span className="font-medium">Source:</span> {selectedMetric.source}</div>
                 <div><span className="font-medium">Year:</span> {selectedMetric.year}</div>
-                  <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
+                <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
                 <div><span className="font-medium">City Average:</span> {filteredData.length > 0 ? filteredData[0].city_avg : "N/A"}</div>
-                
               </div>
             </div>
           </div>
@@ -117,9 +179,10 @@ export default function DashboardLayout() {
       </div>
     </div>
   );
-  
- 
 
+  // Get chart props from filtered data
+  const chartProps = prepareChartData();
+  
   // Clean return statement with abstracted sections
   return (
     <section id="dashboard" className="mb-12">
@@ -127,14 +190,19 @@ export default function DashboardLayout() {
       {selectionSection}
       <div className="mt-8 grid grid-cols-12 gap-6">
         <div className="col-span-7 bg-white rounded-md shadow-sm p-4">
-          {/* Use ChartExample directly instead of Chart with passed data */}
-          <ChartExample />
+          {/* Conditionally render either the data-driven chart or the example chart */}
+          {chartProps ? (
+            <Chart {...chartProps} />
+          ) : (
+            <div className="h-[400px] flex items-center justify-center text-gray-500">
+              <p>Select a health metric to view chart data</p>
+            </div>
+          )}
         </div>
-        <div className="col-span-5 bg-gray-100 rounded p-4 flex items-center justify-center min-h-[200px]">
-          <Map/>
-        </div>
+        {/* <div className="col-span-5 bg-white rounded-md shadow-sm p-4">
+          <Map title={selectedMetric?.var_label || "Philadelphia Districts"} />
+        </div> */}
       </div>
-     
     </section>
   );
 }
