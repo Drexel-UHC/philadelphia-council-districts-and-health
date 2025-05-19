@@ -20,9 +20,6 @@ interface ChartProps {
 }
 
 export const Chart: React.FC<ChartProps> = ({ data }) => {
-  // Use a key value to force complete re-render when data changes
-  const [key, setKey] = useState<number>(0);
-  
   // Create a reference to the chart component
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   
@@ -34,6 +31,7 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
     if (data.length === 0) return;
     
     // Sort the data by value in descending order
+    // This emulates the R Shiny behavior: arrange(desc(value))
     const sortedData = [...data].sort((a, b) => b.value - a.value);
     
     // Extract common properties from first data item
@@ -67,7 +65,7 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
         series: []
       });
     } else {
-      // Transform data into Highcharts format
+      // Transform data into Highcharts format, maintaining the sorted order
       const chartData: DataPoint[] = sortedData.map(item => ({
         y: item.value,
         valueFormatted: item.value_clean,
@@ -76,10 +74,17 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
         id: item.district
       }));
       
-      // Create chart options
+      // Create complete chart options
       const options: Highcharts.Options = {
         chart: {
-          type: "column"
+          type: "column",
+          animation: true, // Enable animations for smoother updates
+          events: {
+            // This ensures proper redraw when data changes
+            load: function() {
+              this.redraw(true);
+            }
+          }
         },
         title: {
           text: varLabel
@@ -120,7 +125,10 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
               format: "{point.valueFormatted}"
             },
             borderWidth: 0,
-            pointPadding: 0.1
+            pointPadding: 0.1,
+            animation: {
+              duration: 500 // Faster animations for better responsiveness
+            }
           }
         },
         tooltip: {
@@ -145,12 +153,9 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
       
       setChartOptions(options);
     }
-    
-    // Increment key to force a complete re-render of the chart component
-    setKey(prevKey => prevKey + 1);
-    
   }, [data]);
 
+   
   // If no data or options not yet set, show placeholder
   if (data.length === 0 || Object.keys(chartOptions).length === 0) {
     return (
@@ -163,7 +168,6 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
   return (
     <div className="chart-container">
       <HighchartsReact
-        key={key} // This is the key change - forces a full re-render
         highcharts={Highcharts}
         options={chartOptions}
         ref={chartComponentRef}
