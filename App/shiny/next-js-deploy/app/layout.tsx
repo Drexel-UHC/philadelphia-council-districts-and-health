@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`${lato.className} bg-background transition-colors duration-300`}>
         <div className="flex flex-col min-h-screen">
           {/* Main content container with responsive padding and smooth transitions */}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 flex-grow transition-all duration-300">
+          <div className="container mx-auto px-8 sm:px-12 lg:px-16 py-4 sm:py-6 lg:py-8 flex-grow transition-all duration-300">
             {children}
           </div>
         </div>
