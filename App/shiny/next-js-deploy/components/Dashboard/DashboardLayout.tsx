@@ -80,7 +80,7 @@ export default function DashboardLayout() {
           <Chart data={filteredData} />
         </div>
         <div className="col-span-12 md:col-span-5 bg-white rounded-md shadow-sm p-4">
-          <Map title={selectedMetric?.var_label || "Philadelphia Districts"} />
+          <Map data={filteredData} />
         </div>
       </div>
     </section>
