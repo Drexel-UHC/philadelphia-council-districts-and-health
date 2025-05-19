@@ -65,6 +65,7 @@ export const Map: React.FC<MapProps> = ({
     
     // Get first item to extract metadata
     const selectedMetric = data[0];
+    const varName = selectedMetric.var_name;
     
     // Calculate min and max values for color axis
     const values = data.map(d => d.value);
@@ -109,15 +110,6 @@ export const Map: React.FC<MapProps> = ({
         enableDoubleClickZoom: false,
         enableButtons: false
       },
-      colorAxis: {
-        min: min || 0,
-        max: max || 100,
-        stops: [
-          [0, '#EFEFFF'],
-          [0.5, '#4444BB'],
-          [1, '#000066']
-        ]
-      },
       plotOptions: {
         series: {
           animation: false
@@ -144,17 +136,10 @@ export const Map: React.FC<MapProps> = ({
           }
         }
       },
-      legend: {
-        enabled: true,
-        title: {
-          text: selectedMetric?.ylabs || 'Health Index'
-        },
-        valueDecimals: 1,
-        valueSuffix: selectedMetric?.ylabs ? ` ${selectedMetric.ylabs}` : '%',
-        // Disable legend animations
-        navigation: {
-          animation: false
-        }
+      tooltip: {
+        useHTML: true,
+        headerFormat: '',
+        pointFormat: '<span style="font-size:13px"><b>District {point.district}</b>: {point.value_clean}</span>'
       },
       series: [{
         type: 'map',
@@ -198,6 +183,71 @@ export const Map: React.FC<MapProps> = ({
         }
       }] as Highcharts.SeriesOptionsType[]
     };
+    
+    // Special case for Heat Vulnerability Index
+    if (varName === "weighted_hvi") {
+      // Custom colorAxis with special labels for HVI
+      options.colorAxis = {
+        min: min,
+        max: max,
+        stops: [
+          [0, '#EFEFFF'],
+          [0.5, '#4444BB'],
+          [1, '#000066']
+        ],
+        labels: {
+          formatter: function() {
+            // @ts-ignore - 'this' context in Highcharts formatter
+            if (this.value === this.axis.min) {
+              return 'Low';
+            } else if (this.value === this.axis.max) {
+              return 'High';
+            } else {
+              return '';  // Hide other labels
+            }
+          },
+          style: {
+            fontSize: '12px',
+            textOverflow: 'none'
+          },
+          useHTML: true
+        }
+      };
+      
+      // For HVI, set proper legend title to show "Heat Vulnerability Index"
+      options.legend = {
+        enabled: true,
+        title: {
+          text: 'Heat Vulnerability Index' // Explicitly set the correct title for HVI
+        },
+        navigation: {
+          animation: false
+        }
+      };
+    } else {
+      // Regular colorAxis and legend for other variables
+      options.colorAxis = {
+        min: min,
+        max: max,
+        stops: [
+          [0, '#EFEFFF'],
+          [0.5, '#4444BB'],
+          [1, '#000066']
+        ]
+      };
+      
+      options.legend = {
+        enabled: true,
+        title: {
+          text: selectedMetric?.ylabs || 'Health Index'
+        },
+        valueDecimals: 1,
+        valueSuffix: selectedMetric?.ylabs ? ` ${selectedMetric.ylabs}` : '%',
+        navigation: {
+          animation: false
+        }
+      };
+    }
     
     setMapOptions(options);
   }, [geoJson, data, title]);
