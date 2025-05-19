@@ -65,7 +65,9 @@ export default function DashboardLayout() {
   useEffect(() => {
     if (selectedMetric && data.length > 0) {
       // This is equivalent to: df_data |> filter(var_name == 'selectedVarName')
-      const filtered = data.filter(item => item.var_name === selectedMetric.var_name);
+      const filtered = data
+        .filter(item => item.var_name === selectedMetric.var_name)
+        .sort((a, b) => b.value - a.value);
       setFilteredData(filtered);
       console.log("Filtered data:", filtered);
     } else {
