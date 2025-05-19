@@ -45,7 +45,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: $fff;  /* Very light grey with slight blue tint */
+  --background: #fff;  /* Fix the typo: $fff -> #fff */
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -63,11 +63,12 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --link: #07294D; /* Add a custom link color variable - deep navy blue */
+  --color-chart-1: oklch(0.646 0.222 41.116);
+  --color-chart-2: oklch(0.6 0.118 184.704);
+  --color-chart-3: oklch(0.398 0.07 227.392);
+  --color-chart-4: oklch(0.828 0.189 84.429);
+  --color-chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -119,5 +120,18 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  a {
+    color: var(--link);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out, text-decoration 0.2s ease-in-out;
+  }
+  a:hover {
+    text-decoration: underline;
+    opacity: 0.9;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
   }
 }

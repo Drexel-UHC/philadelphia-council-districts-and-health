@@ -27,7 +27,7 @@ export default function Outro() {
               href="https://www.congressionaldistricthealthdashboard.org" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
             >
               Congressional District Health Dashboard
             </a>
@@ -37,7 +37,7 @@ export default function Outro() {
               href="https://pubmed.ncbi.nlm.nih.gov/39190647/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
             >
               Rushovich T, Nethery RC, White A, Krieger N. Gerrymandering and the Packing and Cracking of Medical Uninsurance Rates in the United States. J Public Health Manag Pract. 2024
             </a>
@@ -47,7 +47,7 @@ export default function Outro() {
               href="https://pubmed.ncbi.nlm.nih.gov/38412272/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
             >
               Schnake-Mahl A, Anfuso G, Goldstein ND, et al. Measuring variation in infant mortality and deaths of despair by US congressional district in Pennsylvania: a methodological case study. Am J Epidemiol. 2024
             </a>
@@ -57,7 +57,7 @@ export default function Outro() {
               href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11921522/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
             >
               Schnake-Mahl A, Anfuso G, Bilal U, et al. Court-mandated redistricting and disparities in infant mortality and deaths of despair. BMC Public Health. 2025
             </a>
@@ -67,7 +67,7 @@ export default function Outro() {
               href="https://pubmed.ncbi.nlm.nih.gov/39329432/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
             >
               Schnake-Mahl A, Anfuso G, Hernandez SM, Bilal U. Geospatial Data Aggregation Methods for Novel Geographies: Validating Congressional District Life Expectancy Estimates. Epidemiology. 2025
             </a>
@@ -77,7 +77,7 @@ export default function Outro() {
               href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10498302/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="hover:underline"
             >
               Spoer BR, Chen AS, Lampe TM, et al. Validation of a geospatial aggregation method for congressional districts and other US administrative geographies. SSM Popul Health. 2023
             </a>
@@ -100,7 +100,7 @@ export default function Outro() {
           Please reach out to{" "}
           <a 
             href="mailto:UHC@drexel.edu" 
-            className="text-blue-600 hover:underline"
+            className="hover:underline"
           >
             UHC@drexel.edu
           </a>
