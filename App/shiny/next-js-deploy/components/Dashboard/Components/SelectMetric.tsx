@@ -137,8 +137,21 @@ interface SelectMetricProps {
   onSelectMetric?: (metricData: MetricMetadata | null) => void;
 }
 export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
+  // Find the college graduate metric if it exists in the data
+  const collegeGradMetric = React.useMemo(() => {
+    const metrics = data || defaultMetrics;
+    return metrics.find(metric => 
+      metric.var_label.toLowerCase().includes("college graduate") || 
+      metric.var_name.toLowerCase().includes("college") || 
+      metric.var_name.toLowerCase().includes("grad")
+    );
+  }, [data]);
+
+  // Set default value to college graduate metric if found, otherwise empty string
+  const defaultValue = collegeGradMetric?.var_name || "";
+  
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(defaultValue);
   const [searchQuery, setSearchQuery] = React.useState("");
   const contentRef = React.useRef<HTMLDivElement>(null);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
@@ -155,7 +168,7 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
     );
   }, [searchQuery, metrics]);
 
-  // Effect to call onSelectMetric when value changes, passing the entire metadata object
+  // Effect to call onSelectMetric when component mounts or value changes
   React.useEffect(() => {
     if (onSelectMetric) {
       if (value) {
@@ -166,6 +179,16 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
       }
     }
   }, [value, onSelectMetric, metrics]);
+
+  // Set default selection on initial load
+  React.useEffect(() => {
+    if (defaultValue && onSelectMetric) {
+      const initialMetric = metrics.find(metric => metric.var_name === defaultValue) || null;
+      if (initialMetric) {
+        onSelectMetric(initialMetric);
+      }
+    }
+  }, []);  // Empty dependency array ensures this only runs once on mount
 
   return (
     <div className="relative p-4">
