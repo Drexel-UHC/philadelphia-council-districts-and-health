@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
-// import { Map } from "@/components/Dashboard/Components/Map";
+import { Map } from "@/components/Dashboard/Components/Map";
 import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
 
  
@@ -103,9 +103,9 @@ export default function DashboardLayout() {
         <div className="col-span-12 md:col-span-7 bg-white rounded-md shadow-sm p-4">
           <Chart data={filteredData} />
         </div>
-        {/* <div className="col-span-5 bg-white rounded-md shadow-sm p-4">
+        <div className="col-span-12 md:col-span-5 bg-white rounded-md shadow-sm p-4">
           <Map title={selectedMetric?.var_label || "Philadelphia Districts"} />
-        </div> */}
+        </div>
       </div>
     </section>
   );
