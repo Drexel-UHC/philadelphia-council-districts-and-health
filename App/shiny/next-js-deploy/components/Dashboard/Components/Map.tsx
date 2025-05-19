@@ -10,6 +10,7 @@ import { MetricData } from '@/components/Dashboard/types/dashboard_types';
 interface MapProps {
   title?: string;
   data?: MetricData[]; // Match Chart component prop name
+  onHover?: (district: string | null) => void; // Add the onHover callback prop
 }
 
 interface GeoJsonFeature {
@@ -31,7 +32,8 @@ interface GeoJsonCollection {
 
 export const Map: React.FC<MapProps> = ({ 
   title = "Philadelphia Health Index by District",
-  data = []
+  data = [],
+  onHover
 }) => {
   // Create a reference to the chart component
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
@@ -59,6 +61,14 @@ export const Map: React.FC<MapProps> = ({
     loadGeoJson();
   }, []);
 
+  // Create a ref to store the onHover callback
+  const onHoverRef = React.useRef(onHover);
+  
+  // Update the ref when onHover changes, without causing re-renders
+  React.useEffect(() => {
+    onHoverRef.current = onHover;
+  }, [onHover]);
+  
   // Update map options when data or geoJson changes
   useEffect(() => {
     if (!geoJson || data.length === 0) return;
@@ -112,7 +122,24 @@ export const Map: React.FC<MapProps> = ({
       },
       plotOptions: {
         series: {
-          animation: false
+          animation: false,
+          point: {
+            events: {
+              // Handle mouseOver event using the ref to avoid re-renders
+              mouseOver: function() {
+                if (onHoverRef.current) {
+                  // @ts-ignore - Highcharts typing issue with 'this'
+                  onHoverRef.current(this.district);
+                }
+              },
+              // Handle mouseOut event using the ref to avoid re-renders
+              mouseOut: function() {
+                if (onHoverRef.current) {
+                  onHoverRef.current(null);
+                }
+              }
+            }
+          }
         },
         map: {
           animation: false,
@@ -250,7 +277,7 @@ export const Map: React.FC<MapProps> = ({
     }
     
     setMapOptions(options);
-  }, [geoJson, data, title]);
+  }, [geoJson, data, title]); // Remove onHover from dependencies
   
   // Show "Select Metric" message if no data or options
   if (!mapOptions || data.length === 0) {

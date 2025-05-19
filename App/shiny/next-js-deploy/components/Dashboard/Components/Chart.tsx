@@ -17,9 +17,10 @@ interface DataPoint {
 // Define interfaces for chart props
 interface ChartProps {
   data: MetricData[];
+  onHover?: (district: string | null) => void; // Add the onHover callback prop
 }
 
-export const Chart: React.FC<ChartProps> = ({ data }) => {
+export const Chart: React.FC<ChartProps> = ({ data, onHover }) => {
   // Use a key value to force complete re-render when data changes
   const [key, setKey] = useState<number>(0);
   
@@ -28,6 +29,14 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
   
   // Set up the chart options
   const [chartOptions, setChartOptions] = useState<Highcharts.Options>({});
+
+  // Create a ref to store the onHover callback
+  const onHoverRef = React.useRef(onHover);
+  
+  // Update the ref when onHover changes, without causing re-renders
+  React.useEffect(() => {
+    onHoverRef.current = onHover;
+  }, [onHover]);
 
   // Process data and update chart options when data changes
   useEffect(() => {
@@ -132,6 +141,25 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
               duration: 150,
               // Use a linear easing function for constant animation speed
               easing: 'linear'
+            },
+            
+            // Add point events for hover tracking
+            point: {
+              events: {
+                // Handle mouseOver event using the ref to avoid re-renders
+                mouseOver: function() {
+                  if (onHoverRef.current) {
+                    // @ts-ignore - Highcharts typing issue with 'this'
+                    onHoverRef.current(this.district);
+                  }
+                },
+                // Handle mouseOut event using the ref to avoid re-renders
+                mouseOut: function() {
+                  if (onHoverRef.current) {
+                    onHoverRef.current(null);
+                  }
+                }
+              }
             }
           }
         },
@@ -165,7 +193,7 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
     // Increment key to force a complete re-render of the chart component
     setKey(prevKey => prevKey + 1);
     
-  }, [data]);
+  }, [data]); // Remove onHover from dependencies
 
   // If no data or options not yet set, show placeholder
   if (data.length === 0 || Object.keys(chartOptions).length === 0) {
