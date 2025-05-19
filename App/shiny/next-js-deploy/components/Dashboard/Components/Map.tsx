@@ -90,10 +90,11 @@ export const Map: React.FC<MapProps> = ({
             text: 'Source: Simulated data (2025)'
           },
           mapNavigation: {
-            enabled: true,
-            buttonOptions: {
-              verticalAlign: 'bottom'
-            }
+            enabled: false, // Disable all map navigation including zoom buttons
+            enableMouseWheelZoom: false, // Explicitly disable mouse wheel zoom
+            enableTouchZoom: false, // Disable touch zoom for mobile devices
+            enableDoubleClickZoom: false, // Disable double click zoom
+            enableButtons: false // Disable zoom buttons
           },
           colorAxis: {
             min: 0,
