@@ -1,0 +1,34 @@
+.PopoverContent {
+  /* transform-origin: var(--radix-popover-content-transform-origin); */
+  transform-origin: center top;
+  animation: scaleIn 2s ease;
+  position: relative; /* Ensure position is set */
+}
+
+/* Add a visual marker for the transform origin */
+.PopoverContent::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  z-index: 9999;
+  pointer-events: none;
+  
+  /* Position at the transform origin point */
+  left: calc(var(--radix-popover-content-transform-origin-x, 0%));
+  top: calc(var(--radix-popover-content-transform-origin-y, 0%));
+  transform: translate(-50%, -50%);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 1;
+    /* transform: scale(0.5); Add some scaling for better visualization */
+  }
+  to {
+    opacity: 1;
+    /* transform: scale(1); */
+  }
+}

@@ -48,19 +48,19 @@ const defaultMetrics = [
 export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
   // Use provided data or fall back to default metrics
   const metrics = data || defaultMetrics;
-  
+
   // Find the college graduate metric if it exists in the data
   const collegeGradMetric = React.useMemo(() => {
-    return metrics.find(metric => 
-      metric.var_label.toLowerCase().includes("college graduate") || 
-      metric.var_name.toLowerCase().includes("college") || 
+    return metrics.find(metric =>
+      metric.var_label.toLowerCase().includes("college graduate") ||
+      metric.var_name.toLowerCase().includes("college") ||
       metric.var_name.toLowerCase().includes("grad")
     );
   }, [metrics]);
 
   // Default value to college graduate metric if found
   const defaultValue = collegeGradMetric?.var_name || "";
-  
+
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState(defaultValue)
 
@@ -98,8 +98,8 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent  
-          className="PopoverContent " 
+        <PopoverContent
+          className="PopoverContent "
           align="start"
           sideOffset={0}
           alignOffset={0}
