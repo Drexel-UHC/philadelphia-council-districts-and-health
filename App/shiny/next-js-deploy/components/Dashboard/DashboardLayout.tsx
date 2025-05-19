@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
-import { Map } from "@/components/Dashboard/Components/Map";
+// import { Map } from "@/components/Dashboard/Components/Map";
 import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
 
  
