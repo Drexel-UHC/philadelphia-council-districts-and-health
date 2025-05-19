@@ -6,7 +6,6 @@ import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
 import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
 
- 
 export default function DashboardLayout() {
   const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
   const [data, setData] = useState<MetricData[]>([]);
@@ -66,32 +65,8 @@ export default function DashboardLayout() {
         <SelectMetric
           data={metadata}
           onSelectMetric={setSelectedMetric}
-        />
-      {/* <div className="bg-white p-4 rounded-md shadow-sm">
-        <h3 className="text-lg font-semibold mb-3">Select Health Metric</h3>
-       
-      </div> */}
-
-      {/* <div className="md:col-span-2 bg-white p-4 rounded-md shadow-sm">
-        {selectedMetric ? (
-          <div>
-            <h3 className="text-xl font-bold mb-2">{selectedMetric.var_label}</h3>
-            <p className="text-gray-600 mb-4">{selectedMetric.var_def}</p>
-            <div className="bg-gray-50 p-3 rounded mb-4 text-sm">
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                <div><span className="font-medium">Source:</span> {selectedMetric.source}</div>
-                <div><span className="font-medium">Year:</span> {selectedMetric.year}</div>
-                <div><span className="font-medium">Unit:</span> {selectedMetric.ylabs}</div>
-                <div><span className="font-medium">City Average:</span> {filteredData.length > 0 ? filteredData[0].city_avg : "N/A"}</div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="h-full flex items-center justify-center text-gray-500">
-            <p>Please select a health metric to view details</p>
-          </div>
-        )}
-      </div> */}
+        /> 
+     
     </div>
   );
   
