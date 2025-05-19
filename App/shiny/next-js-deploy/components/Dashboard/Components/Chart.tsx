@@ -79,7 +79,10 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
       // Create chart options
       const options: Highcharts.Options = {
         chart: {
-          type: "column"
+          type: "column",
+          style: {
+            transition: 'none'
+          }
         },
         title: {
           text: varLabel
@@ -95,8 +98,12 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
         },
         yAxis: {
           title: {
-            text: yAxisTitle
+            text: yAxisTitle,
+            style: {
+              transition: 'none'
+            }
           },
+          
           min: 0,
           plotLines: [{
             value: cityAvg,

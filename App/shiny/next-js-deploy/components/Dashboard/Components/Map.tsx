@@ -5,7 +5,6 @@ import Highcharts from "highcharts/esm/highcharts.js";
 import HighchartsReact from 'highcharts-react-official';
 import "highcharts/esm/modules/map.js";
 import { MetricData } from '@/components/Dashboard/types/dashboard_types';
-import styles from './map-styles.module.css';
 
 // Define interfaces for map props and data
 interface MapProps {
@@ -17,7 +16,7 @@ interface GeoJsonFeature {
   type: string;
   properties: {
     district: string;
-    [key: string]: any; // Allow for additional properties
+    [key: string]: string | number | boolean | object | null | undefined; // Allow for additional properties
   };
   geometry: {
     type: string;
