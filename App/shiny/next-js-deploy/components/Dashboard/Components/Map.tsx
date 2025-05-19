@@ -130,7 +130,7 @@ export const Map: React.FC<MapProps> = ({
               // Handle mouseOver event using the ref to avoid re-renders
               mouseOver: function() {
                 if (onHoverRef.current) {
-                  // @ts-ignore - Highcharts typing issue with 'this'
+                  // @ts-expect-error - Highcharts typing issue with 'this'
                   onHoverRef.current(this.district);
                 }
               },
@@ -226,7 +226,6 @@ export const Map: React.FC<MapProps> = ({
         ],
         labels: {
           formatter: function() {
-            // @ts-ignore - 'this' context in Highcharts formatter
             if (this.value === this.axis.min) {
               return 'Low';
             } else if (this.value === this.axis.max) {
@@ -290,7 +289,7 @@ export const Map: React.FC<MapProps> = ({
       // Update each point's color based on highlighted district
       if (chart.series[0] && chart.series[0].points) {
         chart.series[0].points.forEach((point) => {
-          // @ts-ignore - district property exists on map points
+          // @ts-expect-error - district property exists on map points
           const district = point.district || point.properties?.district;
           
           if (district) {

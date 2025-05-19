@@ -199,7 +199,7 @@ export const Chart: React.FC<ChartProps> = ({
                 // Handle mouseOver event using the ref to avoid re-renders
                 mouseOver: function() {
                   if (onHoverRef.current) {
-                    // @ts-ignore - Highcharts typing issue with 'this'
+                    // @ts-expect-error - Highcharts typing issue with 'this'
                     onHoverRef.current(this.district);
                   }
                 },

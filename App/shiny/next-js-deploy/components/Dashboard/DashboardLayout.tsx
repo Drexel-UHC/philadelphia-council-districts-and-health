@@ -85,24 +85,6 @@ export default function DashboardLayout() {
     </div>
   );
   
-  // Text section showing the hovered district information
-  const hoveredDistrictInfo = (
-    <div className="mt-4 p-3 bg-blue-50 rounded-md border border-blue-200">
-      <h3 className="text-lg font-medium mb-1">Currently Hovering:</h3>
-      {hoveredDistrict.district ? (
-        <p>
-          District <span className="font-bold">{hoveredDistrict.district}</span> 
-          {hoveredDistrict.activeComponent && (
-            <span className="ml-2 text-gray-600">
-              (via {hoveredDistrict.activeComponent === "chart" ? "Chart" : "Map"})
-            </span>
-          )}
-        </p>
-      ) : (
-        <p className="text-gray-500">Hover over a district on the map or chart to see details</p>
-      )}
-    </div>
-  );
   
   // Create a memoized hover handler for the Chart to prevent re-renders
   const chartHoverHandler = React.useCallback((district: string | null) => {
