@@ -120,7 +120,12 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
               format: "{point.valueFormatted}"
             },
             borderWidth: 0,
-            pointPadding: 0.1
+            pointPadding: 0.1,
+            animation: {
+              duration: 150,
+              // Use a linear easing function for constant animation speed
+              easing: 'linear'
+            }
           }
         },
         tooltip: {
