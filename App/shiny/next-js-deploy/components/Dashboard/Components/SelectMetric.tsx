@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover"
 import { MetricMetadata } from '@/components/Dashboard/types/dashboard_types'
 import "./styles.css";
+
 // Interface for component props
 interface SelectMetricProps {
   data?: MetricMetadata[];
@@ -103,7 +104,7 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
           align="start"
           sideOffset={0}
           alignOffset={0}
-          side="bottom"  // Add this line to ensure proper positioning behavior
+          side="bottom"
           avoidCollisions={true}
         >
           <Command>
@@ -111,24 +112,27 @@ export function SelectMetric({ data, onSelectMetric }: SelectMetricProps = {}) {
             <CommandList>
               <CommandEmpty>No metrics found.</CommandEmpty>
               <CommandGroup>
-                {metrics.map((metric) => (
-                  <CommandItem
-                    key={metric.var_name}
-                    value={metric.var_name}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue)
-                      setOpen(false)
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === metric.var_name ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {metric.var_label}
-                  </CommandItem>
-                ))}
+                {[...metrics]
+                  .sort((a, b) => a.var_label.localeCompare(b.var_label))
+                  .map((metric) => (
+                    <CommandItem
+                      key={metric.var_name}
+                      value={metric.var_label} // Use var_label for searching/filtering
+                      onSelect={() => {
+                        // When selected, use var_name for state
+                        setValue(metric.var_name)
+                        setOpen(false)
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          value === metric.var_name ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {metric.var_label}
+                    </CommandItem>
+                  ))}
               </CommandGroup>
             </CommandList>
           </Command>
