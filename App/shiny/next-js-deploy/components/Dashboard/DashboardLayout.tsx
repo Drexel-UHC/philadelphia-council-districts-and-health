@@ -134,17 +134,23 @@ export default function DashboardLayout() {
   const selectionSection = loading ? (
     <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
   ) : (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-      <div className="col-span-2">
-        <SelectMetric
-          data={metadata}
-          onSelectMetric={handleMetricSelect}
-          selectedMetric={selectedMetric}
-        />
-      </div>
-      <div className="flex justify-end">
-        <ShareButton selectedMetric={selectedMetric} />
-      </div>
+      <div>
+        <p className="pb-1 font-bold">Select a health metric:</p>
+        <div className="grid grid-cols-12 gap-6 items-center">
+
+          <div className="col-span-12 sm:col-span-8 ">
+            <SelectMetric
+              data={metadata}
+              onSelectMetric={handleMetricSelect}
+              selectedMetric={selectedMetric}
+            />
+          </div>
+
+            <div className="hidden sm:col-span-2 md:col-start-11 md:flex justify-center md:justify-end">
+            <ShareButton selectedMetric={selectedMetric} />
+            </div>
+
+        </div>
     </div>
   );
   

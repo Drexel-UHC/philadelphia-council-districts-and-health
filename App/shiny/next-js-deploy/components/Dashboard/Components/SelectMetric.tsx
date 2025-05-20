@@ -61,11 +61,8 @@ export const SelectMetric: React.FC<SelectMetricProps> = ({
   };
 
   return (
-    <div className="space-y-2">
-      <label htmlFor="metric-select" className="text-sm font-medium block">
-        Select a Health Metric:
-      </label>
-      <Popover open={open} onOpenChange={setOpen}>
+    <div className="space-y-2 max-w-[300px] md:max-w-[400px] max-h-[300px]">
+      <Popover open={open} onOpenChange={setOpen} >
         <PopoverTrigger asChild>
           <Button
             id="metric-select"
@@ -81,7 +78,7 @@ export const SelectMetric: React.FC<SelectMetricProps> = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-full max-w-[400px]"
+          className="w-[300px]  md:w-[400px]"
           align="start"
           sideOffset={0}
           alignOffset={0}

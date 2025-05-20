@@ -47,7 +47,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       variant="outline" 
       size="sm"
       onClick={copyShareableLink}
-      className="flex items-center gap-2"
+      className="flex items-center gap-2  "
     >
       {copied ? (
         <>
@@ -57,7 +57,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       ) : (
         <>
           <Copy className="h-4 w-4" />
-          <span>Share Link</span>
+          <span>Share</span>
         </>
       )}
     </Button>
