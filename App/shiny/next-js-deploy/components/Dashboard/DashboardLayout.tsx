@@ -74,27 +74,65 @@ function DashboardContent() {
 
   // Modified function to handle metric selection and update URL
   const handleMetricSelect = (metric: MetricMetadata | null) => {
-    
     // Update the local state with the new metric
     setSelectedMetric(metric);
     
-    // Update URL with the selected metric
+    // Update URL with the selected metric, but use a different approach for GitHub Pages
     if (metric) {
-      // Create new URLSearchParams with current parameters
+      // Instead of using router.replace which can cause full page reloads on GitHub Pages,
+      // use browser's history API directly
       const params = new URLSearchParams(searchParams.toString());
       params.set('metric', metric.var_name);
       
-      // Update the URL without refreshing the page
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      // Use history.pushState to update URL without causing page reload
+      window.history.pushState(
+        { metric: metric.var_name },
+        '',
+        `${pathname}?${params.toString()}`
+      );
     } else {
       // Remove the metric parameter if no metric is selected
       const params = new URLSearchParams(searchParams.toString());
       params.delete('metric');
       
-      // Update the URL without the metric parameter
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      // Use history.pushState to update URL without causing page reload
+      window.history.pushState(
+        { metric: null },
+        '',
+        `${pathname}?${params.toString()}`
+      );
     }
   };
+  
+  // Listen for popstate events (when user navigates with browser back/forward buttons)
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      // Check URL parameters after navigation
+      const params = new URLSearchParams(window.location.search);
+      const metricParam = params.get('metric');
+      
+      if (metricParam && metadata.length > 0) {
+        const metricFromUrl = metadata.find(m => m.var_name === metricParam);
+        if (metricFromUrl) {
+          setSelectedMetric(metricFromUrl);
+        }
+      } else if (metadata.length > 0) {
+        // Set default if no metric in URL after navigation
+        const defaultMetric = metadata.find(m => m.var_name === 'hs_grad_pct');
+        if (defaultMetric) {
+          setSelectedMetric(defaultMetric);
+        }
+      }
+    };
+
+    // Add event listener for browser navigation
+    window.addEventListener('popstate', handlePopState);
+    
+    // Remove event listener on cleanup
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [metadata]);
   
   // Effect to initialize state from URL parameters or set default
   useEffect(() => {
@@ -120,13 +158,17 @@ function DashboardContent() {
         // Set the default metric
         setSelectedMetric(defaultMetric);
         
-        // Optionally update the URL to reflect the default (comment this out if you don't want the URL to change)
+        // Update URL using history API instead of router.replace
         const params = new URLSearchParams(searchParams.toString());
         params.set('metric', defaultMetric.var_name);
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+        window.history.replaceState(
+          { metric: defaultMetric.var_name },
+          '',
+          `${pathname}?${params.toString()}`
+        );
       }
     }
-  }, [searchParams, metadata, selectedMetric, router, pathname]);
+  }, [searchParams, metadata, selectedMetric, pathname]);
 
   // Text section as a JSX element
   const text = (

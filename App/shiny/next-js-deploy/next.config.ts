@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  trailingSlash: false,
   // typescript: {
   //   // ⚠️ Warning: This skips type checking during development
   //   // Only do this if you're comfortable catching type errors during build instead
