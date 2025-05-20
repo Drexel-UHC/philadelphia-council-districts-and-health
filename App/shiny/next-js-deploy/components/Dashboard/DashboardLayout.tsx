@@ -96,7 +96,7 @@ function DashboardContent() {
     }
   };
   
-  // Effect to initialize state from URL parameters
+  // Effect to initialize state from URL parameters or set default
   useEffect(() => {
     // Only run after metadata is loaded
     if (metadata.length === 0) return;
@@ -105,15 +105,28 @@ function DashboardContent() {
     const metricParam = searchParams.get('metric');
     
     if (metricParam) {
-      // Find the corresponding metric metadata
+      // Find the corresponding metric metadata from URL
       const metricFromUrl = metadata.find(m => m.var_name === metricParam);
       
       if (metricFromUrl && (!selectedMetric || selectedMetric.var_name !== metricParam)) {
         // Set the selected metric based on URL
         setSelectedMetric(metricFromUrl);
       }
+    } else if (!selectedMetric) {
+      // If no metric parameter and no metric selected yet, set the default (hs_grad_pct)
+      const defaultMetric = metadata.find(m => m.var_name === 'hs_grad_pct');
+      
+      if (defaultMetric) {
+        // Set the default metric
+        setSelectedMetric(defaultMetric);
+        
+        // Optionally update the URL to reflect the default (comment this out if you don't want the URL to change)
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('metric', defaultMetric.var_name);
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+      }
     }
-  }, [searchParams, metadata, selectedMetric]);
+  }, [searchParams, metadata, selectedMetric, router, pathname]);
 
   // Text section as a JSX element
   const text = (
