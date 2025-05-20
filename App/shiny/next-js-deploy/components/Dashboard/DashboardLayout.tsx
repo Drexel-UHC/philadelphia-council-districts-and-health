@@ -88,14 +88,14 @@ export default function DashboardLayout() {
       params.set('metric', metric.var_name);
       
       // Update the URL without refreshing the page
-      router.replace(`${pathname}?${params.toString()}#dashboard`, { scroll: false });
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     } else {
       // Remove the metric parameter if no metric is selected
       const params = new URLSearchParams(searchParams.toString());
       params.delete('metric');
       
       // Update the URL without the metric parameter
-      router.replace(`${pathname}?${params.toString()}#dashboard`, { scroll: false });
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
     }
   };
   
@@ -116,10 +116,10 @@ export default function DashboardLayout() {
         setSelectedMetric(metricFromUrl);
         
         // Scroll to dashboard section
-        const dashboardElement = document.getElementById('dashboard');
-        if (dashboardElement) {
-          dashboardElement.scrollIntoView({ behavior: 'smooth' });
-        }
+        // const dashboardElement = document.getElementById('dashboard');
+        // if (dashboardElement) {
+        //   dashboardElement.scrollIntoView({ behavior: 'smooth' });
+        // }
       }
     }
   }, [searchParams, metadata, selectedMetric]);
@@ -138,7 +138,7 @@ export default function DashboardLayout() {
     
     // Show success message
     toast.success("Link copied to clipboard", {
-      description: "Share this link to show this specific metric.",
+      description: url.toString(),
       position: "bottom-right",
       duration: 3000,
     });
