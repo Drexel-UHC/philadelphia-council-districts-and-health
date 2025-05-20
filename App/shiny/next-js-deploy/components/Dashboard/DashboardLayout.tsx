@@ -49,7 +49,7 @@ export default function DashboardLayout() {
         
         const response_data = await fetch('./data/df_data.json');
         const data = await response_data.json();
-        console.log("Data loaded:", data);
+
         setData(data);
       } catch (error) {
         console.error("Error loading data:", error);
@@ -69,7 +69,6 @@ export default function DashboardLayout() {
         .filter(item => item.var_name === selectedMetric.var_name)
         .sort((a, b) => b.value - a.value);
       setFilteredData(filtered);
-      console.log("Filtered data:", filtered);
     } else {
       setFilteredData([]);
     }
@@ -77,7 +76,6 @@ export default function DashboardLayout() {
 
   // Modified function to handle metric selection and update URL
   const handleMetricSelect = (metric: MetricMetadata | null) => {
-    console.log("Metric selected:", metric); // Add logging for debugging
     
     // Update the local state with the new metric
     setSelectedMetric(metric);
@@ -115,12 +113,6 @@ export default function DashboardLayout() {
       if (metricFromUrl && (!selectedMetric || selectedMetric.var_name !== metricParam)) {
         // Set the selected metric based on URL
         setSelectedMetric(metricFromUrl);
-        
-        // Scroll to dashboard section
-        // const dashboardElement = document.getElementById('dashboard');
-        // if (dashboardElement) {
-        //   dashboardElement.scrollIntoView({ behavior: 'smooth' });
-        // }
       }
     }
   }, [searchParams, metadata, selectedMetric]);
