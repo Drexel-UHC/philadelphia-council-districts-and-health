@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
 import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
 import { AnchorHeading } from "@/components/ui/anchor-heading";
-import { Button } from "@/components/ui/button"; 
-import { Copy, Check } from "lucide-react";
-import { toast } from "sonner";
 import { ShareButton } from "@/components/Dashboard/Components/ShareButton";
 
 // Define the interface for the hovered district state
@@ -18,7 +15,8 @@ interface HoveredDistrictState {
   activeComponent: "chart" | "map" | null;
 }
 
-export default function DashboardLayout() {
+// Create a client component that uses the search params
+function DashboardContent() {
   const [metadata, setMetadata] = useState<MetricMetadata[]>([]);
   const [data, setData] = useState<MetricData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -147,7 +145,7 @@ export default function DashboardLayout() {
           </div>
 
             <div className="hidden sm:col-span-2 md:col-start-11 md:flex justify-center md:justify-end">
-            <ShareButton selectedMetric={selectedMetric} />
+              <ShareButton selectedMetric={selectedMetric} />
             </div>
 
         </div>
@@ -179,9 +177,9 @@ export default function DashboardLayout() {
   // Extract just the district id for highlighting
   const highlightedDistrictId = hoveredDistrict?.district || null;
   
-  // Clean return statement with abstracted sections
+  // Return the dashboard content
   return (
-    <section id="dashboard" className="mb-12">
+    <>
       {text}
       {selectionSection} 
       <div className="mt-8 grid grid-cols-12 gap-6">
@@ -202,6 +200,24 @@ export default function DashboardLayout() {
           />
         </div>
       </div>
+    </>
+  );
+}
+
+// Main dashboard component with Suspense boundary
+export default function DashboardLayout() {
+  return (
+    <section id="dashboard" className="mb-12">
+      <Suspense fallback={
+        <div className="flex items-center justify-center h-[400px]">
+          <div className="text-center">
+            <p className="text-lg font-medium">Loading dashboard...</p>
+            <p className="text-sm text-gray-500 mt-2">Please wait while we prepare the data</p>
+          </div>
+        </div>
+      }>
+        <DashboardContent />
+      </Suspense>
     </section>
   );
 }
