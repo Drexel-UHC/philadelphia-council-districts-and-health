@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
 import { MetricData, MetricMetadata } from '@/components/Dashboard/types/dashboard_types';
 import { AnchorHeading } from "@/components/ui/anchor-heading";
+import { Button } from "@/components/ui/button"; 
+import { Copy, Check } from "lucide-react";
+import { toast } from "sonner";
 
 // Define the interface for the hovered district state
 interface HoveredDistrictState {
@@ -29,6 +33,11 @@ export default function DashboardLayout() {
   // Create a ref to hold the Chart component's highlight function
   const chartHighlightRef = useRef<((district: string | null) => void) | null>(null);
 
+  // Access search params and router for URL manipulation
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  
   // Fetch initial data
   useEffect(() => {
     async function fetchData() {
@@ -65,6 +74,110 @@ export default function DashboardLayout() {
     }
   }, [selectedMetric, data]);
 
+  // Modified function to handle metric selection and update URL
+  const handleMetricSelect = (metric: MetricMetadata | null) => {
+    console.log("Metric selected:", metric); // Add logging for debugging
+    
+    // Update the local state with the new metric
+    setSelectedMetric(metric);
+    
+    // Update URL with the selected metric
+    if (metric) {
+      // Create new URLSearchParams with current parameters
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('metric', metric.var_name);
+      
+      // Update the URL without refreshing the page
+      router.replace(`${pathname}?${params.toString()}#dashboard`, { scroll: false });
+    } else {
+      // Remove the metric parameter if no metric is selected
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('metric');
+      
+      // Update the URL without the metric parameter
+      router.replace(`${pathname}?${params.toString()}#dashboard`, { scroll: false });
+    }
+  };
+  
+  // Effect to initialize state from URL parameters
+  useEffect(() => {
+    // Only run after metadata is loaded
+    if (metadata.length === 0) return;
+    
+    // Get the metric from URL parameters
+    const metricParam = searchParams.get('metric');
+    
+    if (metricParam) {
+      // Find the corresponding metric metadata
+      const metricFromUrl = metadata.find(m => m.var_name === metricParam);
+      
+      if (metricFromUrl && (!selectedMetric || selectedMetric.var_name !== metricParam)) {
+        // Set the selected metric based on URL
+        setSelectedMetric(metricFromUrl);
+        
+        // Scroll to dashboard section
+        const dashboardElement = document.getElementById('dashboard');
+        if (dashboardElement) {
+          dashboardElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+  }, [searchParams, metadata, selectedMetric]);
+  
+  // Function to generate and copy a shareable link with the current metric
+  const copyShareableLink = () => {
+    if (!selectedMetric) return;
+    
+    // Construct the full URL with the current metric
+    const url = new URL(window.location.href);
+    url.searchParams.set('metric', selectedMetric.var_name);
+    url.hash = 'dashboard';
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(url.toString());
+    
+    // Show success message
+    toast.success("Link copied to clipboard", {
+      description: "Share this link to show this specific metric.",
+      position: "bottom-right",
+      duration: 3000,
+    });
+  };
+
+  // Share button component
+  const ShareButton = () => {
+    const [copied, setCopied] = useState(false);
+    
+    const handleCopy = () => {
+      copyShareableLink();
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
+    
+    if (!selectedMetric) return null;
+    
+    return (
+      <Button 
+        variant="outline" 
+        size="sm"
+        onClick={handleCopy}
+        className="flex items-center gap-2"
+      >
+        {copied ? (
+          <>
+            <Check className="h-4 w-4" />
+            <span>Copied!</span>
+          </>
+        ) : (
+          <>
+            <Copy className="h-4 w-4" />
+            <span>Share Link</span>
+          </>
+        )}
+      </Button>
+    );
+  };
+  
   // Text section as a JSX element
   const text = (
     <div className="mb-8">
@@ -78,16 +191,21 @@ export default function DashboardLayout() {
     </div>
   );
 
-  // Selection section as a JSX element
+  // Modified selection section with share button and explicit selectedMetric prop
   const selectionSection = loading ? (
     <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
   ) : (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div className="col-span-2">
         <SelectMetric
           data={metadata}
-          onSelectMetric={setSelectedMetric}
-        /> 
-     
+          onSelectMetric={handleMetricSelect}
+          selectedMetric={selectedMetric} // Explicitly pass the current selectedMetric
+        />
+      </div>
+      <div className="flex justify-end">
+        <ShareButton />
+      </div>
     </div>
   );
   
