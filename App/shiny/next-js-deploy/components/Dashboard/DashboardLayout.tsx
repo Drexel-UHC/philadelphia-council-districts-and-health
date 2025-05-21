@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, Suspense } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { SelectMetric } from "@/components/Dashboard/Components/SelectMetric";
 import { Chart } from "@/components/Dashboard/Components/Chart";
 import { Map } from "@/components/Dashboard/Components/Map";
@@ -34,7 +34,7 @@ function DashboardContent() {
 
   // Access search params and router for URL manipulation
   const searchParams = useSearchParams();
-  const router = useRouter();
+  // const router = useRouter();
   const pathname = usePathname();
   
   // Fetch initial data
@@ -106,7 +106,7 @@ function DashboardContent() {
   
   // Listen for popstate events (when user navigates with browser back/forward buttons)
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
+    const handlePopState = () => {
       // Check URL parameters after navigation
       const params = new URLSearchParams(window.location.search);
       const metricParam = params.get('metric');
@@ -174,7 +174,7 @@ function DashboardContent() {
   const text = (
     <div className="mb-8">
       <AnchorHeading
-        id="dashboard"
+        id="dashboard-intro"
         className="text-3xl font-bold mb-4 pb-2 border-b border-gray-300"
       >
         How to Use:
@@ -262,7 +262,7 @@ function DashboardContent() {
 // Main dashboard component with Suspense boundary
 export default function DashboardLayout() {
   return (
-    <section id="dashboard" className="mb-12">
+    <section id="how-to-use" className="mb-12">
       <Suspense fallback={
         <div className="flex items-center justify-center h-[400px]">
           <div className="text-center">
