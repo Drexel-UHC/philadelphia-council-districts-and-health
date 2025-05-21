@@ -72,34 +72,56 @@ function DashboardContent() {
     }
   }, [selectedMetric, data]);
 
+  // Add a new function to get the correct base URL for both local and GitHub Pages environments
+  const getBaseUrl = () => {
+    // Check if we're running in a browser environment
+    if (typeof window === 'undefined') return '';
+    
+    // For GitHub Pages, we need to include the repository name in the path
+    // Look for "philadelphia-council-districts-and-health" in the current location
+    const url = window.location.href;
+    const repoName = '/philadelphia-council-districts-and-health/';
+    
+    if (url.includes('github.io') && url.includes(repoName)) {
+      // We're on GitHub Pages, return the full base path
+      const ghPagesBase = url.substring(0, url.indexOf(repoName) + repoName.length);
+      return ghPagesBase;
+    }
+    
+    // Default to the current path for local development
+    return window.location.pathname;
+  };
+
   // Modified function to handle metric selection and update URL
   const handleMetricSelect = (metric: MetricMetadata | null) => {
     // Update the local state with the new metric
     setSelectedMetric(metric);
     
-    // Update URL with the selected metric, but use a different approach for GitHub Pages
+    // Get the appropriate base URL
+    const baseUrl = getBaseUrl();
+    
+    // Update URL with the selected metric, but use browser history API for GitHub Pages
     if (metric) {
-      // Instead of using router.replace which can cause full page reloads on GitHub Pages,
-      // use browser's history API directly
+      // Instead of using router.replace which can cause page reloads
       const params = new URLSearchParams(searchParams.toString());
       params.set('metric', metric.var_name);
       
-      // Use history.pushState to update URL without causing page reload
+      // Use history.pushState with the right base URL
       window.history.pushState(
         { metric: metric.var_name },
         '',
-        `${pathname}?${params.toString()}`
+        `${baseUrl}?${params.toString()}`
       );
     } else {
       // Remove the metric parameter if no metric is selected
       const params = new URLSearchParams(searchParams.toString());
       params.delete('metric');
       
-      // Use history.pushState to update URL without causing page reload
+      // Use history.pushState with the right base URL
       window.history.pushState(
         { metric: null },
         '',
-        `${pathname}?${params.toString()}`
+        `${baseUrl}?${params.toString()}`
       );
     }
   };
@@ -158,18 +180,21 @@ function DashboardContent() {
         // Set the default metric
         setSelectedMetric(defaultMetric);
         
+        // Get the appropriate base URL
+        const baseUrl = getBaseUrl();
+        
         // Update URL using history API instead of router.replace
         const params = new URLSearchParams(searchParams.toString());
         params.set('metric', defaultMetric.var_name);
         window.history.replaceState(
           { metric: defaultMetric.var_name },
           '',
-          `${pathname}?${params.toString()}`
+          `${baseUrl}?${params.toString()}`
         );
       }
     }
   }, [searchParams, metadata, selectedMetric, pathname]);
-
+  
   // Text section as a JSX element
   const text = (
     <div className="mb-8">
