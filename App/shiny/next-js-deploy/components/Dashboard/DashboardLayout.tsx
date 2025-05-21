@@ -204,7 +204,7 @@ function DashboardContent() {
       >
         How to Use:
       </AnchorHeading>
-      <p>To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city.</p>
+      <p id='dashboard'>To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city.</p>
     </div>
   );
 
@@ -212,7 +212,7 @@ function DashboardContent() {
   const selectionSection = loading ? (
     <div className="p-4 bg-gray-100 rounded">Loading dashboard data...</div>
   ) : (
-      <div>
+      <div >
         <p className="pb-1 font-bold">Select a health metric:</p>
         <div className="grid grid-cols-12 gap-6 items-center">
 
