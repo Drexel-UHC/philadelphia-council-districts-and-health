@@ -72,6 +72,23 @@ function DashboardContent() {
     }
   }, [selectedMetric, data]);
 
+  // Add a function to scroll to the dashboard section
+  const scrollToDashboard = React.useCallback(() => {
+    // Check if there's a hash in the URL
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.substring(1); // remove the # character
+      
+      // Find the element with that ID
+      const element = document.getElementById(hash);
+      if (element) {
+        // Use a slight delay to ensure the dashboard is fully rendered
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: "start", inline: "nearest" });
+        }, 100);
+      }
+    }
+  }, []);
+  
   // Add a new function to get the correct base URL for both local and GitHub Pages environments
   const getBaseUrl = () => {
     // Check if we're running in a browser environment
@@ -171,6 +188,9 @@ function DashboardContent() {
       if (metricFromUrl && (!selectedMetric || selectedMetric.var_name !== metricParam)) {
         // Set the selected metric based on URL
         setSelectedMetric(metricFromUrl);
+        
+        // Scroll to dashboard section after state update
+        scrollToDashboard();
       }
     } else if (!selectedMetric) {
       // If no metric parameter and no metric selected yet, set the default (hs_grad_pct)
@@ -193,7 +213,15 @@ function DashboardContent() {
         );
       }
     }
-  }, [searchParams, metadata, selectedMetric, pathname]);
+  }, [searchParams, metadata, selectedMetric, pathname, scrollToDashboard]);
+  
+  // Add an effect that runs once when the component is mounted to handle hash navigation
+  useEffect(() => {
+    if (!loading && data.length > 0 && selectedMetric) {
+      // Once the data is loaded and we have a metric selected, scroll to the dashboard
+      scrollToDashboard();
+    }
+  }, [loading, data.length, selectedMetric, scrollToDashboard]);
   
   // Text section as a JSX element
   const text = (
@@ -204,7 +232,7 @@ function DashboardContent() {
       >
         How to Use:
       </AnchorHeading>
-      <p id='dashboard'>To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city.</p>
+      <p>To explore the data, use the drop-down menu provided below to select the health outcome that interests you. Once selected, the dashboard will display a bar graph comparing all 10 City Council Districts, along with a spatial map that visualizes how this outcome varies across the city.</p>
     </div>
   );
 
@@ -259,7 +287,7 @@ function DashboardContent() {
   
   // Return the dashboard content
   return (
-    <>
+    <div id="dashboard">
       {text}
       {selectionSection} 
       <div className="mt-8 grid grid-cols-12 gap-6">
@@ -280,14 +308,14 @@ function DashboardContent() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 // Main dashboard component with Suspense boundary
 export default function DashboardLayout() {
   return (
-    <section id="how-to-use" className="mb-12">
+    <section className="mb-12">
       <Suspense fallback={
         <div className="flex items-center justify-center h-[400px]">
           <div className="text-center">
