@@ -1,0 +1,16 @@
+.PopoverContent { 
+  transform-origin: var(--radix-popover-content-transform-origin); 
+  animation: contentShow 400ms ease-out;
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 1;
+    transform: scale(-1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+  

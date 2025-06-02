@@ -133,7 +133,7 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
           )
         ) %>%
         hc_tooltip(
-          headerFormat = paste0("<span style='font-size:13px'><b>",var_label_tmp,"</b></span><br/>"),
+          headerFormat = paste0(""),
           pointFormat = '<span style="color:{point.color}">\u25CF</span> <b>District {point.district}:</b> {point.valueFormatted}<br/>'
         ) %>%
         hc_exporting(
@@ -222,23 +222,23 @@ CityDistrictDashboard_Server <- function(id, df_data, geojson_districts) {
             useHTML = TRUE,
             headerFormat = '',
             pointFormat = '<span style="font-size:13px"><b>District {point.district}</b>: {point.value_clean}</span>'
-          )#,
+          ),
           # Add event handlers for hover
-          # point = list(
-          #   events = list(
-          #     # When hovering over a district, update the reactive value
-          #     mouseOver = JS(paste0("function() {
-          #       Shiny.setInputValue('", session$ns("hoveredDistrict"), "', {
-          #         district: this.district,
-          #         value: this.value
-          #       });
-          #     }")),
-          #     # When moving out of a district, clear the value
-          #     mouseOut = JS(paste0("function() {
-          #       Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null, {priority: 'event'});
-          #     }"))
-          #   )
-          # )
+          point = list(
+            events = list(
+              # When hovering over a district, update the reactive value
+              mouseOver = JS(paste0("function() {
+                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', {
+                  district: this.district,
+                  value: this.value
+                });
+              }")),
+              # When moving out of a district, clear the value
+              mouseOut = JS(paste0("function() {
+                Shiny.setInputValue('", session$ns("hoveredDistrict"), "', null, {priority: 'event'});
+              }"))
+            )
+          )
         ) %>% 
         hc_legend(
           title = list(text = unique(df_data_filtered$ylabs)),

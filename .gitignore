@@ -6,3 +6,5 @@ Data/Raw/VIOLATIONS.csv
 *.badhistory
 **/.vscode/
 .Rproj.user
+/App/shiny/shiny-live-v1/shinylive/webr/webR
+/App/shiny/shiny-live-v1/shinylive/webr
