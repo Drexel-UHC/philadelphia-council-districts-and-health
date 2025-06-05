@@ -104,7 +104,7 @@ export default function Outro() {
           Citation
         </h4>
         <div className="bg-gray-100 p-4 rounded font-mono text-sm">
-          Urban Health Collaborative, <em>Health of Philadelphia City Council Districts Dashboard</em>, 2025
+          Urban Health Collaborative, <em>Philadelphia Council District Health Dashboard Dashboard</em>, 2025
         </div>
       </div>
       

@@ -9,7 +9,7 @@ export default function Intro() {
           id="health-of-philadelphia-city-council-districts" 
           className="text-2xl font-bold mb-4 pb-2 border-b-1 border-gray-300"
         >
-          Health of Philadelphia City Council Districts
+          Philadelphia Council District Health Dashboard
         </AnchorHeading>
         <p className="text-lg text-gray-700 mb-6">
           This dashboard leverages publicly available data from the US Census Bureau and Open Data Philly to examine important public health indicators for Philadelphia&apos;s 10 City Council Districts. The project aims to offer actionable knowledge that empowers city leaders and communities to address health inequities in their communities.
