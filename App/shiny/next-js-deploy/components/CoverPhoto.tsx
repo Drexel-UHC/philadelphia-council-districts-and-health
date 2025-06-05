@@ -5,7 +5,7 @@ const CoverPhoto = () => {
   return (
     <section className="relative w-full h-[260px] mt-5 ">
       <Image
-        src="/cover_photo.jpg"
+        src="./cover_photo.jpg"
         alt="Philadelphia Skyline"
         fill
         className="object-cover brightness-70 z-0"
