@@ -7,7 +7,7 @@ export default function Intro() {
       <div className="section mb-8">
         <AnchorHeading 
           id="health-of-philadelphia-city-council-districts" 
-          className="text-3xl font-bold mb-4 pb-2 border-b-1 border-gray-300"
+          className="text-2xl font-bold mb-4 pb-2 border-b-1 border-gray-300"
         >
           Health of Philadelphia City Council Districts
         </AnchorHeading>

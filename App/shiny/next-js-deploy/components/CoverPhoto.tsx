@@ -3,45 +3,17 @@ import Image from "next/image";
 
 const CoverPhoto = () => {
   return (
-    <section style={{ position: "relative", width: "100%", height: "260px", marginBottom: "2rem" }}>
+    <section className="relative w-full h-[260px] mt-5 ">
       <Image
         src="/cover_photo.jpg"
         alt="Philadelphia Skyline"
         fill
-        style={{
-          objectFit: "cover",
-          filter: "brightness(0.7)",
-          zIndex: 0,
-        }}
+        className="object-cover brightness-70 z-0"
         priority
         sizes="100vw"
       />
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1,
-        }}
-      >
-        <h1
-          style={{
-            color: "#fff",
-            fontSize: "2.2rem",
-            fontWeight: 600,
-            textAlign: "center",
-            textShadow: "0 2px 12px rgba(0,0,0,0.5)",
-            background: "rgba(0,0,0,0.15)",
-            padding: "0.5rem 1.5rem",
-            borderRadius: "0.5rem",
-            maxWidth: "90%",
-          }}
-        >
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <h1 className="text-white text-[2.2rem] font-semibold text-center shadow-lg bg-black/15 px-6 py-2 rounded-lg max-w-[90%]">
           Health of Philadelphia City Council Districts
         </h1>
       </div>
