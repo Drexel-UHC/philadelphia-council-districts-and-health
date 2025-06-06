@@ -56,7 +56,7 @@ export const Chart: React.FC<ChartProps> = ({ data }) => {
           text: varLabel
         },
         subtitle: {
-          text: "Heat Vulnerability Index is shown on map"
+          text: "The Heat Vulnerability Index (HVI) is a composite measure that summarizes key indicators associated with negative health outcomes due to extreme heat exposure. The HVI scale ranges from negative to positive values, which represent areas of very low to very high vulnerability. Because of this range, a choropleth map, rather than a bar graph, is best suited to effectively convey patterns of heat-related health risk across geographic areas"
         },
         credits: {
           enabled: true,
