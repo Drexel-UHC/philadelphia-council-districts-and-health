@@ -108,7 +108,15 @@ export const Chart: React.FC<ChartProps> = ({
     
     // Check if it's the weighted_hvi variable
     const isHeatVulnerabilityIndex = varName === "weighted_hvi";
-    
+
+    // Edge case y-axis max overrides
+    let yAxisMax: number | undefined = undefined;
+    if (["district_lack_kitch_pct", "district_lack_plumb_pct"].includes(varName)) {
+      yAxisMax = 10;
+    } else if (["pct_native", "pct_pi"].includes(varName)) {
+      yAxisMax = 1;
+    }
+
     if (isHeatVulnerabilityIndex) {
       // Simple message chart for HVI
       setChartOptions({
@@ -134,7 +142,6 @@ export const Chart: React.FC<ChartProps> = ({
         color: "#CCCCCC",
         id: item.district
       }));
-      
       // Create chart options
       const options: Highcharts.Options = {
         chart: {
@@ -163,8 +170,8 @@ export const Chart: React.FC<ChartProps> = ({
               transition: 'none'
             }
           },
-          
           min: 0,
+          max: yAxisMax,
           plotLines: [{
             value: cityAvg,
             color: "#707070",
