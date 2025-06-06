@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import Script from 'next/script';
 
 // Use Lato font with Latin subset
 const lato = Lato({
@@ -31,6 +32,20 @@ export default function RootLayout({
         </div>
         {/* Add Sonner Toaster component */}
         <Toaster />
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=G-CL437HPC84`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-CL437HPC84');
+            `}
+          </Script>
+        </>
       </body>
     </html>
   );
