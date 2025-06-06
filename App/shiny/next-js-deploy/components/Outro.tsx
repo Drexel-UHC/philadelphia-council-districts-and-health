@@ -24,6 +24,10 @@ export default function Outro() {
             data archive and documentation page
           </a>.
         </p>
+        <p className="text-lg text-gray-700 mb-6">
+
+          This dashboard is a work in progress. The last update took place on June 6, 2025.
+        </p>
       </div>
       
       {/* Acknowledgements section */}
@@ -49,7 +53,7 @@ export default function Outro() {
         <h4 className="text-lg font-bold mb-2">
           Sponsor
         </h4>
-        <p className="mb-4">IDEA Fellowship</p>
+        <p className="mb-4">This project received funding from the Transform Academia for Equity grant from Robert Wood Johnson Foundation</p>
       </div>
       
       {/* Links to related work section */}
