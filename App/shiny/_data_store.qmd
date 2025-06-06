@@ -1,0 +1,393 @@
+---
+title: "Data Store for Applicaiton"
+subtitle: "Compiles data and metadata"
+format: 
+  html:
+    embed-resources: true
+    toc: true
+editor: source
+execute:
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| code-summary: "Setup"
+#| code-fold: true
+
+## instal pacman if required
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(
+  tidyverse, arrow, here,
+  reactable,
+  sf, rmapshaper, leaflet,
+  bslib, shiny
+) 
+setwd(here("App/shiny"))
+
+```
+
+Here we just do a initial EDA on the data before we do any shiny apps. It would also be very helpful if Tamara/Amber created notebooks with the visualizations they want to turn into a Shiny app. 
+
+
+
+# Import 
+
+So got an message that the final datasets are in `/clean datasets/council_measures_reduc.RData`; let's take a look!
+
+## Data 
+
+### Districts
+
+```{r}
+load(here("Data/clean datasets/council_measures_reduc.RData"))
+df_data_raw = council_measures_reduc %>% 
+  janitor::clean_names()
+df_data_raw %>% glimpse()
+```
+
+Looks okay. Note that there is another data object that contains intermediate variables as well. Which can be loaded below.  For Now let's focus on the curated object.
+
+```{{r}}
+load(here("Data/clean datasets/council_measures_reduc_geom.RData"))
+df_intermediate = council_measures_reduc_geom %>% 
+  janitor::clean_names()
+df_intermediate %>% glimpse()
+```
+
+Let's tidy
+
+```{r}
+df_data_int = df_data_raw %>% 
+  sf::st_drop_geometry() %>% 
+  pivot_longer(-district, names_to = 'var_name')
+
+
+```
+
+### City
+
+The original data is not able to be mapped to the data we ahve. 
+
+```{{r}}
+load(here("Data/clean datasets/City_average.RData"))
+df_city = City_average %>% 
+  janitor::clean_names() %>% 
+  mutate(id = 'city_avg') %>% 
+  pivot_longer(-id, names_to = 'var_name') %>%
+  rename(var_name_city_raw = var_name)
+df_city %>%  count(var_name_city_raw)
+```
+
+Let's just do our own 
+
+```{r}
+df_pop_district = df_data_int %>% 
+  filter(var_name == 'cc_district_population') %>% 
+  select(district, pop_district = value)
+
+df_city_avg = df_data_int %>% 
+  filter(var_name != 'cc_district_population') %>%
+  left_join(df_pop_district) %>% 
+  summarise(city_avg = weighted.mean(value, pop_district),
+            .by = 'var_name')
+```
+
+Let's append this to df_data and quarentine some variables from city average that doesn't make sense. 
+
+
+```{r}
+vec__remove_city_average = c(
+  ''
+)
+
+df_data_final = df_data_int %>% 
+  filter(var_name != 'cc_district_population') %>%
+  left_join(df_city_avg) %>% 
+  mutate(city_avg = ifelse(var_name  %in% vec__remove_city_average, NA, city_avg)) 
+```
+
+## Boundaries
+
+Boundaries to City Districts are found in the original Rdata files processed by Amber. Let's just extract that and do a quicks sanity check. 
+
+```{r}
+path_amber_rdata_1 = list.files(path = here("Data/clean datasets"), 
+           pattern = "\\Active_licenses.Rdata$", 
+           full.names = TRUE)
+
+load(path_amber_rdata_1)
+
+sf_districts = Active_licenses %>% 
+  janitor::clean_names() %>% 
+  select(district)
+glimpse(sf_districts)
+  
+```
+
+Let's take a quick look.
+
+```{r}
+sf_districts %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor = "red", 
+    weight = 1, 
+    fillOpacity = 0.2,
+    # Add these lines for hover functionality
+    highlightOptions = highlightOptions(
+      weight = 3,
+      color = "#666",
+      fillOpacity = 0.7,
+      bringToFront = TRUE
+    ),
+    # Create labels from your data
+    label = ~paste("District:",  district),
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto"
+    )
+  )
+```
+
+Let's append the data and save it for the app. 
+
+```{r}
+
+library(geojsonio)
+library(jsonlite)
+
+geojson_districts <- sf_districts %>% 
+  geojsonio::geojson_json() %>% 
+  jsonlite::fromJSON(simplifyVector = FALSE)
+
+geojson_districts_simp <- sf_districts %>% 
+  rmapshaper::ms_simplify() %>%
+  geojsonio::geojson_json() %>% 
+  jsonlite::fromJSON(simplifyVector = FALSE)
+```
+
+
+## Metadata
+
+Here we import the documentation specifically the `Docuemntaiton for Dashbaord` sheet from the documentation excel sheet.
+
+
+- [ ] Update with next metadata
+- [ ] Harmonize data and metadata
+
+```{r}
+#| code-summary: "Shiny App UI"
+
+library(readxl)
+library(janitor)
+
+df_metadata_raw = df_metadata = read_excel(
+  here("Data/data documentation/Data documentation for council variables.xlsx"),
+  sheet = "Documentation for Dashboard") %>% 
+  janitor::clean_names() 
+df_metadata = df_metadata_raw %>% 
+  rename(year_raw = year_s) %>% 
+  rowwise() %>% 
+  mutate(
+    var_label = metric_name,
+    year = case_when(
+      data_source == 'ACS 5-year' & year_raw == "2018-2022" ~ "2022",
+      data_source == 'Open Data Philly' & year_raw == "2020 - Oct 2024" ~ "2020-2024",
+      data_source == 'Open Data Philly' & year_raw == "2019 - July 2024" ~ "2019-2024",
+      data_source == 'Open Data Philly' & year_raw == "2015 - Present" ~ "2015-2024",
+      data_source == 'Open Data Philly' & year_raw == "2019 - Present" ~ "2019-2024",
+      TRUE ~ year_raw
+    )
+  ) %>% 
+  ungroup() %>% 
+  select(
+    metric_name,
+    var_label,
+    var_def = metric_description_say_whether_it_is_a_percent_rate_count_etc,
+    source = data_source,
+    year,
+    aggregation_notes = geography_of_original_estimate_and_aggregation_technique,
+    cleaning_notes = notes
+  )  %>% 
+  mutate(
+    var_name = recode(
+      var_label,
+      "Median Age" = "district_median_age_total",
+      "Total population" = "cc_district_population",
+      "Active Business Licenses No Rentals" = "total_active_licenses_norentals",
+      "Active Business Licenses Rentals Only" = "total_active_licenses_rentalsonly",
+      "Fatal Crashes" = "count_crashes",
+      "Less Than High School" = "less_than_hs_pct",
+      "High School Graduate" = "hs_grad_pct",
+      "Some College" = "some_college_pct",
+      "College Graduate" = "college_grad_pct",
+      "Code Violations" = "pct_violations",
+      "Lack Complete Kitchen" = "district_lack_kitch_pct",
+      "Lack Complete Plumbing" = "district_lack_plumb_pct",
+      "Median Household Income" = "median_hh_income_district",
+      "Owners" = "pct_owner",
+      "Renters" = "pct_renter",
+      "White" = "pct_white",
+      "Black" = "pct_black",
+      "Native American" = "pct_native",
+      "Asian" = "pct_asian",
+      "Pacific Islander" = "pct_pi",
+      "Other Race" = "pct_other",
+      "Two or More Races" = "pct_two_more",
+      "Hispanic" = "pct_hispanic",
+      "Fatal Shootings" = "count_fatal",
+      "Nonfatal Shootings" = "count_non_fatal",
+      "Uninsured" = "percentage_uninsured",
+      "Tree Canopy Coverage" = "cd_tree",
+      "Heat Vulnerabillity Index" = "weighted_hvi",
+      "Poverty" = "cd_pct_poverty"
+    ),
+    ylabs = case_when(
+      str_detect(var_def, "Percentage") ~ paste(var_label, " (%)"),
+      var_label %in% c('Median Age') ~ "Age",
+      var_def %in% c('Total Number of Fatal Shootings per Council District') ~ "# of Fatal Shootings",
+      var_def %in% c('Total Number of Nonfatal Shootings per Council District') ~ "# of Nonfatal Shootings",
+      var_label %in% c('Median Household Income') ~ "Median Household Income ($)",
+      TRUE ~ var_def
+    )
+    ) %>% 
+  filter(!var_name %in% c('cc_district_population'))
+
+
+
+## Check metadata-data compatibility
+assertthat::assert_that(
+  all(df_metadata$var_name %in% df_data_final$var_name),
+  msg = "Metadata variable names do not match data variable names"
+)
+assertthat::assert_that(
+  all(df_data_final$var_name %>% discard(~.x%in%c("district","geometry"))  %in% df_metadata$var_name),
+  msg = "Metadata variable names do not match data variable names"
+)
+
+```
+
+Let's add basic metadata to the data.
+
+```{r}
+library(scales)
+df_data = df_data_final%>% 
+  left_join(df_metadata) %>% 
+  mutate(
+    district_int = as.integer(district),
+    source_year =  paste0("Source: ", source," (",
+                          year,")"),
+    value_clean  = case_when(
+      str_detect(var_def, "Percentage") ~ scales::percent(value/100, accuracy = 0.1),
+      var_label %in% c('Median Age') ~ format(round(value, digits = 0), nsmall = 0),
+      var_def %in% c('Total Number of Fatal Shootings per Council District',
+                     'Total Number of Nonfatal Shootings per Council District',
+                     'Count of crashes',
+                     'Count of Licenses') ~ format(round(value, digits = 0), nsmall = 0) ,
+      var_def %in% c('Heat Vulnerability Index') ~ format(round(value, digits = 2), nsmall = 2) ,
+      var_label %in% c('Median Household Income') ~  scales::dollar(value, accuracy = 1),
+      
+      TRUE ~ "!!!!!!!!!!!!!!!!!!"
+    ) %>% str_trim()
+  ) 
+```
+
+
+# Export
+
+## Final Bundle
+
+Connect to excell sheet.
+
+```{r}
+
+## Metadata
+df_metadata_final = df_metadata %>% 
+  left_join(df_metadata_raw)
+df_metadata_final %>% 
+  write_csv(here("Data/data documentation/download_bundles/v1/codebook_v1.csv"))
+
+df_data_final = df_data %>% 
+  left_join(df_metadata_complete %>% 
+              select(var_name, metric_name)) %>% 
+  select(district, metric_name, value)
+df_data_final %>% 
+  write_csv(here("Data/data documentation/download_bundles/v1/data_v1.csv"))
+
+```
+
+## RData
+
+```{r}
+save(df_data, df_metadata, geojson_districts,sf_districts,
+     file = here("App/shiny/phl-council-health-app-v1/data/app_v1.RData"))
+```
+
+Let's do a more RDS based export for porformance tweaking
+
+```{r}
+save(df_data, df_metadata,
+     file = here("App/shiny/phl-council-health-app-v1/data/app_v2.RData"))
+
+geojson_districts %>% 
+  write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts.rds"))
+
+geojson_districts_simp %>% 
+  write_rds(here("App/shiny/phl-council-health-app-v1/data/geojson_districts_simp.rds"))
+```
+
+
+
+# JSON
+
+
+This is loading the data to the Javascript port of this R applciaiton. 
+
+
+```{r}
+library(tidyverse)
+library(here)
+library(arrow)
+library(jsonlite)
+
+load(here("App/shiny/phl-council-health-app-v1/data/app_v2.RData"))
+geojson_districts = readRDS(here("App/shiny/phl-council-health-app-v1/data/geojson_districts_simp.rds"))
+
+```
+
+
+## df-metadata
+
+
+```{r}
+
+df_metadata %>% 
+  select(-cleaning_notes,  -aggregation_notes) %>% 
+  write_json(here("App/shiny/next-js-deploy/public/data/df_metadata.json"), 
+             auto_unbox = TRUE, 
+             pretty = TRUE)
+  
+```
+
+
+## df-data
+
+```{r}
+df_data %>% 
+  # select(-cleaning_notes, -aggregation_notes) %>% 
+  write_json(here("App/shiny/next-js-deploy/public/data/df_data.json"), 
+             auto_unbox = TRUE)
+```
+
+## geojson-districts
+
+```{r}
+geojson_districts %>% 
+  write_json(here("App/shiny/next-js-deploy/public/data/geojson_districts.json"), 
+             auto_unbox = TRUE)
+```
