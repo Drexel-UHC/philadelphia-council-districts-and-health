@@ -190,7 +190,23 @@ df_metadata = df_metadata_raw %>%
   rename(year_raw = year_s) %>% 
   rowwise() %>% 
   mutate(
-    var_label = metric_name,
+       var_label = recode(
+        metric_name,
+        "Owners" = "Homeowners",
+        "Uninsured" = "Without Health Insurance",
+        "Black" = "Race and Ethnicity: Black",
+        "White" = "Race and Ethnicity: non-Hispanic White",
+        "Native American" = "Race and Ethnicity: Native American",
+        "Asian" = "Race and Ethnicity: Asian",
+        "Pacific Islander" = "Race and Ethnicity: Pacific Islander",
+        "Other Race" = "Race and Ethnicity: Some other Race alone",
+        "Two or More Races" = "Race and Ethnicity: Two or More Races",
+        "Hispanic" = "Race and Ethnicity: Hispanic",
+        "Less than High School" = "Education: Less than High School",
+        "High School Graduate" = "Education: High School Graduate",
+        "Some College" = "Education: Some College",
+        "College Graduate" = "Education: College Graduate"
+      ),
     year = case_when(
       data_source == 'ACS 5-year' & year_raw == "2018-2022" ~ "2022",
       data_source == 'Open Data Philly' & year_raw == "2020 - Oct 2024" ~ "2020-2024",
@@ -209,10 +225,12 @@ df_metadata = df_metadata_raw %>%
     year,
     aggregation_notes = geography_of_original_estimate_and_aggregation_technique,
     cleaning_notes = notes
-  )  %>% 
+  ) %>% 
   mutate(
+    var_def = recode(var_def,
+                     "Percentage of people Uninsured" ="Percentage of people uninsured"),
     var_name = recode(
-      var_label,
+      metric_name,
       "Median Age" = "district_median_age_total",
       "Total population" = "cc_district_population",
       "Active Business Licenses No Rentals" = "total_active_licenses_norentals",
@@ -305,13 +323,22 @@ Connect to excell sheet.
 ## Metadata
 df_metadata_final = df_metadata %>% 
   left_join(df_metadata_raw)
-df_metadata_final %>% 
-  write_csv(here("Data/data documentation/download_bundles/v1/codebook_v1.csv"))
 
 df_data_final = df_data %>% 
   left_join(df_metadata_final %>% 
               select(var_name, metric_name)) %>% 
   select(district, metric_name, value)
+
+```
+
+
+Let's export
+
+```{r}
+
+df_metadata_final %>% 
+  write_csv(here("Data/data documentation/download_bundles/v1/codebook_v1.csv"))
+
 df_data_final %>% 
   write_csv(here("Data/data documentation/download_bundles/v1/data_v1.csv"))
 

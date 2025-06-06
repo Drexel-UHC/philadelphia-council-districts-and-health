@@ -38,28 +38,28 @@ Less Than High School,Less Than High School,Percentage of residents over the age
 #""B15003_015"" = 11th
 #""B15003_016"" = 12th no diploma 
 "
-High School Graduate,High School Graduate,Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+High School Graduate,Education: High School Graduate,Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #""B15003_001"" = total pop over 25,
 #""B15003_017"" HS grad, 
-#""B15003_018"" = GED or equivalent",hs_grad_pct,High School Graduate  (%),Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#""B15003_018"" = GED or equivalent",hs_grad_pct,Education: High School Graduate  (%),Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #""B15003_001"" = total pop over 25,
 #""B15003_017"" HS grad, 
 #""B15003_018"" = GED or equivalent"
-Some College,Some College,Percentage of residents over the age of 25 with some college for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Some College,Education: Some College,Percentage of residents over the age of 25 with some college for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #""B15003_001"" = total pop over 25,
 #""B15003_019"" = some college less than 1 yr
 #""B15003_020""= some college 1 yr or more no degree
-#""B15003_021""= Associates",some_college_pct,Some College  (%),Percentage of residents over the age of 25 with some college for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#""B15003_021""= Associates",some_college_pct,Education: Some College  (%),Percentage of residents over the age of 25 with some college for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #""B15003_001"" = total pop over 25,
 #""B15003_019"" = some college less than 1 yr
 #""B15003_020""= some college 1 yr or more no degree
 #""B15003_021""= Associates"
-College Graduate,College Graduate,Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+College Graduate,Education: College Graduate,Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
 #""B15003_001"" = total pop over 25,
 #""B15003_022""= Bachelors 
 #""B15003_023""= Masters 
 #""B15003_024""= Professional school 
-#""B15003_025"" = Doctorate",college_grad_pct,College Graduate  (%),Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+#""B15003_025"" = Doctorate",college_grad_pct,Education: College Graduate  (%),Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
 #""B15003_001"" = total pop over 25,
 #""B15003_022""= Bachelors 
 #""B15003_023""= Masters 
@@ -81,9 +81,9 @@ Median Household Income,Median Household Income,Median Household Income,ACS 5-ye
 ",median_hh_income_district,Median Household Income ($),Median Household Income,NA,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
 #B19013_001 - Estimate!!Median household income in the past 12 months (in 2022 inflation-adjusted dollars)
 "
-Owners,Owners,Percentage of Households that Own their home,ACS 5-year,2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+Owners,Homeowners,Percentage of Households that Own their home,ACS 5-year,2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
 #B25003_001 --> Estimate!!Total: block group
-#B25003_002 --> Estimate!!Total:!!Owner occupied block group",pct_owner,Owners  (%),Percentage of Households that Own their home,Total Number of Households,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B25003_002 --> Estimate!!Total:!!Owner occupied block group",pct_owner,Homeowners  (%),Percentage of Households that Own their home,Total Number of Households,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
 #B25003_001 --> Estimate!!Total: block group
 #B25003_002 --> Estimate!!Total:!!Owner occupied block group"
 Renters,Renters,Percentage of Households that Rent their home,ACS 5-year,2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
@@ -91,49 +91,49 @@ Renters,Renters,Percentage of Households that Rent their home,ACS 5-year,2022,Ce
 #B25003_003 --> Estimate!!Total:!!Renter occupied block group",pct_renter,Renters  (%),Percentage of Households that Rent their home,Total Number of Households,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
 #B25003_001 --> Estimate!!Total: block group
 #B25003_003 --> Estimate!!Total:!!Renter occupied block group"
-White,White,"Percentage of residents who are White, Non-hispanic",ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+White,Race and Ethnicity: non-Hispanic White,"Percentage of residents who are White, Non-hispanic",ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop
-#B03002_003 White Not hispanic or Latino",pct_white,White  (%),"Percentage of residents who are White, Non-hispanic",Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B03002_003 White Not hispanic or Latino",pct_white,Race and Ethnicity: non-Hispanic White  (%),"Percentage of residents who are White, Non-hispanic",Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop
 #B03002_003 White Not hispanic or Latino"
-Black,Black,Percentage of residents who are Black,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Black,Race and Ethnicity: Black,Percentage of residents who are Black,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
-#B02001_003 Black",pct_black,Black  (%),Percentage of residents who are Black,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_003 Black",pct_black,Race and Ethnicity: Black  (%),Percentage of residents who are Black,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
 #B02001_003 Black"
-Native American,Native American,Percentage of residents who are Native Indian/Alaska Native,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Native American,Race and Ethnicity: Native American,Percentage of residents who are Native Indian/Alaska Native,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
-#B02001_004 American Indian/Alaska Native",pct_native,Native American  (%),Percentage of residents who are Native Indian/Alaska Native,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_004 American Indian/Alaska Native",pct_native,Race and Ethnicity: Native American  (%),Percentage of residents who are Native Indian/Alaska Native,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
 #B02001_004 American Indian/Alaska Native"
-Asian,Asian,Percentage of residents who are Asian,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Asian,Race and Ethnicity: Asian,Percentage of residents who are Asian,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
-#B02001_005 Asian",pct_asian,Asian  (%),Percentage of residents who are Asian,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_005 Asian",pct_asian,Race and Ethnicity: Asian  (%),Percentage of residents who are Asian,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
 #B02001_005 Asian"
-Pacific Islander,Pacific Islander,Percentage of residents who are Pacific Islander/Native Hawaiian,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Pacific Islander,Race and Ethnicity: Pacific Islander,Percentage of residents who are Pacific Islander/Native Hawaiian,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
-#B02001_006 Native Hawaiian/Pacific Islander",pct_pi,Pacific Islander  (%),Percentage of residents who are Pacific Islander/Native Hawaiian,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_006 Native Hawaiian/Pacific Islander",pct_pi,Race and Ethnicity: Pacific Islander  (%),Percentage of residents who are Pacific Islander/Native Hawaiian,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
 #B02001_006 Native Hawaiian/Pacific Islander"
-Other Race,Other Race,Percentage of residents who are other race,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Other Race,Race and Ethnicity: Some other Race alone,Percentage of residents who are other race,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
-#B02001_007 Some other race",pct_other,Other Race  (%),Percentage of residents who are other race,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_007 Some other race",pct_other,Race and Ethnicity: Some other Race alone  (%),Percentage of residents who are other race,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
 #B02001_007 Some other race"
-Two or More Races,Two or More Races,Percentage of residents who are two or more races,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Two or More Races,Race and Ethnicity: Two or More Races,Percentage of residents who are two or more races,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
-#B02001_008 Two or more races",pct_two_more,Two or More Races  (%),Percentage of residents who are two or more races,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_008 Two or more races",pct_two_more,Race and Ethnicity: Two or More Races  (%),Percentage of residents who are two or more races,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B02001_001 Total pop,
 #B02001_008 Two or more races"
-Hispanic,Hispanic,Percentage of residents who are Hispanic,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+Hispanic,Race and Ethnicity: Hispanic,Percentage of residents who are Hispanic,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B03001_001 Total pop,
-#B03002_012 Hispanic/Latino",pct_hispanic,Hispanic  (%),Percentage of residents who are Hispanic,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B03002_012 Hispanic/Latino",pct_hispanic,Race and Ethnicity: Hispanic  (%),Percentage of residents who are Hispanic,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
 #B03001_001 Total pop,
 #B03002_012 Hispanic/Latino"
 Fatal Shootings,Fatal Shootings,Total Number of Fatal Shootings per Council District,Open Data Philly,2015-2024,Counts were summarized per council district using a spatial join,NA,count_fatal,# of Fatal Shootings,Total Number of Fatal Shootings per Council District,NA,Open Data Philly,2015 - Present,Counts were summarized per council district using a spatial join,NA
 Nonfatal Shootings,Nonfatal Shootings,Total Number of Nonfatal Shootings per Council District,Open Data Philly,2015-2024,Counts were summarized per council district using a spatial join,NA,count_non_fatal,# of Nonfatal Shootings,Total Number of Nonfatal Shootings per Council District,NA,Open Data Philly,2015 - Present,Counts were summarized per council district using a spatial join,NA
-Uninsured,Uninsured,Percentage of people Uninsured,ACS 5-year,2022,Block Group variables were aggregated up to the council district level using Block population as the weights,"Variables Used:
+Uninsured,Without Health Insurance,Percentage of people uninsured,ACS 5-year,2022,Block Group variables were aggregated up to the council district level using Block population as the weights,"Variables Used:
 #B18135_007 -- Estimate!!Total:!!Under 19 years:!!With a disability:!!No health insurance coverage
 #B18135_012 -- Estimate!!Total:!!Under 19 years:!!No disability:!!No health insurance coverage
 
@@ -141,7 +141,7 @@ Uninsured,Uninsured,Percentage of people Uninsured,ACS 5-year,2022,Block Group v
 #B18135_023 -- Estimate!!Total:!!19 to 64 years:!!No disability:!!No health insurance coverage
 
 #B18135_029 -- Estimate!!Total:!!65 years and over:!!With a disability:!!No health insurance coverage
-#B18135_034 -- Estimate!!Total:!!65 years and over:!!No disability:!!No health insurance coverage",percentage_uninsured,Uninsured  (%),Percentage of people Uninsured,Total Number of People,ACS 5-year,2018-2022,Block Group variables were aggregated up to the council district level using Block population as the weights,"Variables Used:
+#B18135_034 -- Estimate!!Total:!!65 years and over:!!No disability:!!No health insurance coverage",percentage_uninsured,Without Health Insurance  (%),Percentage of people Uninsured,Total Number of People,ACS 5-year,2018-2022,Block Group variables were aggregated up to the council district level using Block population as the weights,"Variables Used:
 #B18135_007 -- Estimate!!Total:!!Under 19 years:!!With a disability:!!No health insurance coverage
 #B18135_012 -- Estimate!!Total:!!Under 19 years:!!No disability:!!No health insurance coverage
 

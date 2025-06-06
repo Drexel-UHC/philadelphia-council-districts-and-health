@@ -46,30 +46,30 @@
   },
   {
     "metric_name": "High School Graduate",
-    "var_label": "High School Graduate",
+    "var_label": "Education: High School Graduate",
     "var_def": "Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "hs_grad_pct",
-    "ylabs": "High School Graduate  (%)"
+    "ylabs": "Education: High School Graduate  (%)"
   },
   {
     "metric_name": "Some College",
-    "var_label": "Some College",
+    "var_label": "Education: Some College",
     "var_def": "Percentage of residents over the age of 25 with some college for highest educational attainment",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "some_college_pct",
-    "ylabs": "Some College  (%)"
+    "ylabs": "Education: Some College  (%)"
   },
   {
     "metric_name": "College Graduate",
-    "var_label": "College Graduate",
+    "var_label": "Education: College Graduate",
     "var_def": "Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "college_grad_pct",
-    "ylabs": "College Graduate  (%)"
+    "ylabs": "Education: College Graduate  (%)"
   },
   {
     "metric_name": "Code Violations",
@@ -109,12 +109,12 @@
   },
   {
     "metric_name": "Owners",
-    "var_label": "Owners",
+    "var_label": "Homeowners",
     "var_def": "Percentage of Households that Own their home",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_owner",
-    "ylabs": "Owners  (%)"
+    "ylabs": "Homeowners  (%)"
   },
   {
     "metric_name": "Renters",
@@ -127,75 +127,75 @@
   },
   {
     "metric_name": "White",
-    "var_label": "White",
+    "var_label": "Race and Ethnicity: non-Hispanic White",
     "var_def": "Percentage of residents who are White, Non-hispanic",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_white",
-    "ylabs": "White  (%)"
+    "ylabs": "Race and Ethnicity: non-Hispanic White  (%)"
   },
   {
     "metric_name": "Black",
-    "var_label": "Black",
+    "var_label": "Race and Ethnicity: Black",
     "var_def": "Percentage of residents who are Black",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_black",
-    "ylabs": "Black  (%)"
+    "ylabs": "Race and Ethnicity: Black  (%)"
   },
   {
     "metric_name": "Native American",
-    "var_label": "Native American",
+    "var_label": "Race and Ethnicity: Native American",
     "var_def": "Percentage of residents who are Native Indian/Alaska Native",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_native",
-    "ylabs": "Native American  (%)"
+    "ylabs": "Race and Ethnicity: Native American  (%)"
   },
   {
     "metric_name": "Asian",
-    "var_label": "Asian",
+    "var_label": "Race and Ethnicity: Asian",
     "var_def": "Percentage of residents who are Asian",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_asian",
-    "ylabs": "Asian  (%)"
+    "ylabs": "Race and Ethnicity: Asian  (%)"
   },
   {
     "metric_name": "Pacific Islander",
-    "var_label": "Pacific Islander",
+    "var_label": "Race and Ethnicity: Pacific Islander",
     "var_def": "Percentage of residents who are Pacific Islander/Native Hawaiian",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_pi",
-    "ylabs": "Pacific Islander  (%)"
+    "ylabs": "Race and Ethnicity: Pacific Islander  (%)"
   },
   {
     "metric_name": "Other Race",
-    "var_label": "Other Race",
+    "var_label": "Race and Ethnicity: Some other Race alone",
     "var_def": "Percentage of residents who are other race",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_other",
-    "ylabs": "Other Race  (%)"
+    "ylabs": "Race and Ethnicity: Some other Race alone  (%)"
   },
   {
     "metric_name": "Two or More Races",
-    "var_label": "Two or More Races",
+    "var_label": "Race and Ethnicity: Two or More Races",
     "var_def": "Percentage of residents who are two or more races",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_two_more",
-    "ylabs": "Two or More Races  (%)"
+    "ylabs": "Race and Ethnicity: Two or More Races  (%)"
   },
   {
     "metric_name": "Hispanic",
-    "var_label": "Hispanic",
+    "var_label": "Race and Ethnicity: Hispanic",
     "var_def": "Percentage of residents who are Hispanic",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_hispanic",
-    "ylabs": "Hispanic  (%)"
+    "ylabs": "Race and Ethnicity: Hispanic  (%)"
   },
   {
     "metric_name": "Fatal Shootings",
@@ -217,12 +217,12 @@
   },
   {
     "metric_name": "Uninsured",
-    "var_label": "Uninsured",
-    "var_def": "Percentage of people Uninsured",
+    "var_label": "Without Health Insurance",
+    "var_def": "Percentage of people uninsured",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "percentage_uninsured",
-    "ylabs": "Uninsured  (%)"
+    "ylabs": "Without Health Insurance  (%)"
   },
   {
     "metric_name": "Tree Canopy Coverage",
