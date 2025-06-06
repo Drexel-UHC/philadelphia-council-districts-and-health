@@ -176,10 +176,6 @@ geojson_districts_simp <- sf_districts %>%
 
 Here we import the documentation specifically the `Docuemntaiton for Dashbaord` sheet from the documentation excel sheet.
 
-
-- [ ] Update with next metadata
-- [ ] Harmonize data and metadata
-
 ```{r}
 #| code-summary: "Shiny App UI"
 
@@ -313,7 +309,7 @@ df_metadata_final %>%
   write_csv(here("Data/data documentation/download_bundles/v1/codebook_v1.csv"))
 
 df_data_final = df_data %>% 
-  left_join(df_metadata_complete %>% 
+  left_join(df_metadata_final %>% 
               select(var_name, metric_name)) %>% 
   select(district, metric_name, value)
 df_data_final %>% 

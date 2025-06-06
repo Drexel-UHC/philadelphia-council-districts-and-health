@@ -1,5 +1,6 @@
 [
   {
+    "metric_name": "Median Age",
     "var_label": "Median Age",
     "var_def": "Median age of residents",
     "source": "ACS 5-year",
@@ -8,6 +9,7 @@
     "ylabs": "Age"
   },
   {
+    "metric_name": "Active Business Licenses No Rentals",
     "var_label": "Active Business Licenses No Rentals",
     "var_def": "Count of Licenses",
     "source": "Open Data Philly",
@@ -16,6 +18,7 @@
     "ylabs": "Count of Licenses"
   },
   {
+    "metric_name": "Active Business Licenses Rentals Only",
     "var_label": "Active Business Licenses Rentals Only",
     "var_def": "Count of Licenses",
     "source": "Open Data Philly",
@@ -24,6 +27,7 @@
     "ylabs": "Count of Licenses"
   },
   {
+    "metric_name": "Fatal Crashes",
     "var_label": "Fatal Crashes",
     "var_def": "Count of crashes",
     "source": "Open Data Philly",
@@ -32,6 +36,7 @@
     "ylabs": "Count of crashes"
   },
   {
+    "metric_name": "Less Than High School",
     "var_label": "Less Than High School",
     "var_def": "Percentage of residents over the age of 25 with less than High school for highest educational attainment",
     "source": "ACS 5-year",
@@ -40,6 +45,7 @@
     "ylabs": "Less Than High School  (%)"
   },
   {
+    "metric_name": "High School Graduate",
     "var_label": "High School Graduate",
     "var_def": "Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment",
     "source": "ACS 5-year",
@@ -48,6 +54,7 @@
     "ylabs": "High School Graduate  (%)"
   },
   {
+    "metric_name": "Some College",
     "var_label": "Some College",
     "var_def": "Percentage of residents over the age of 25 with some college for highest educational attainment",
     "source": "ACS 5-year",
@@ -56,6 +63,7 @@
     "ylabs": "Some College  (%)"
   },
   {
+    "metric_name": "College Graduate",
     "var_label": "College Graduate",
     "var_def": "Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment",
     "source": "ACS 5-year",
@@ -64,6 +72,7 @@
     "ylabs": "College Graduate  (%)"
   },
   {
+    "metric_name": "Code Violations",
     "var_label": "Code Violations",
     "var_def": "Percentage of buildings with an open housing code violation",
     "source": "Open Data Philly",
@@ -72,6 +81,7 @@
     "ylabs": "Code Violations  (%)"
   },
   {
+    "metric_name": "Lack Complete Kitchen",
     "var_label": "Lack Complete Kitchen",
     "var_def": "Percentage of homes that lack a complete kitchen",
     "source": "ACS 5-year",
@@ -80,6 +90,7 @@
     "ylabs": "Lack Complete Kitchen  (%)"
   },
   {
+    "metric_name": "Lack Complete Plumbing",
     "var_label": "Lack Complete Plumbing",
     "var_def": "Percentage of homes that lack complete plumbing",
     "source": "ACS 5-year",
@@ -88,6 +99,7 @@
     "ylabs": "Lack Complete Plumbing  (%)"
   },
   {
+    "metric_name": "Median Household Income",
     "var_label": "Median Household Income",
     "var_def": "Median Household Income",
     "source": "ACS 5-year",
@@ -96,6 +108,7 @@
     "ylabs": "Median Household Income ($)"
   },
   {
+    "metric_name": "Owners",
     "var_label": "Owners",
     "var_def": "Percentage of Households that Own their home",
     "source": "ACS 5-year",
@@ -104,6 +117,7 @@
     "ylabs": "Owners  (%)"
   },
   {
+    "metric_name": "Renters",
     "var_label": "Renters",
     "var_def": "Percentage of Households that Rent their home",
     "source": "ACS 5-year",
@@ -112,6 +126,7 @@
     "ylabs": "Renters  (%)"
   },
   {
+    "metric_name": "White",
     "var_label": "White",
     "var_def": "Percentage of residents who are White, Non-hispanic",
     "source": "ACS 5-year",
@@ -120,54 +135,61 @@
     "ylabs": "White  (%)"
   },
   {
+    "metric_name": "Black",
     "var_label": "Black",
-    "var_def": "Percentage of residents who are Black, Non-hispanic",
+    "var_def": "Percentage of residents who are Black",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_black",
     "ylabs": "Black  (%)"
   },
   {
+    "metric_name": "Native American",
     "var_label": "Native American",
-    "var_def": "Percentage of residents who are Native Indian/Alaska Native, non-hispanic",
+    "var_def": "Percentage of residents who are Native Indian/Alaska Native",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_native",
     "ylabs": "Native American  (%)"
   },
   {
+    "metric_name": "Asian",
     "var_label": "Asian",
-    "var_def": "Percentage of residents who are Asian, Non-hispanic",
+    "var_def": "Percentage of residents who are Asian",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_asian",
     "ylabs": "Asian  (%)"
   },
   {
+    "metric_name": "Pacific Islander",
     "var_label": "Pacific Islander",
-    "var_def": "Percentage of residents who are Pacific Islander/Native Hawaiian, Non-hispanic",
+    "var_def": "Percentage of residents who are Pacific Islander/Native Hawaiian",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_pi",
     "ylabs": "Pacific Islander  (%)"
   },
   {
+    "metric_name": "Other Race",
     "var_label": "Other Race",
-    "var_def": "Percentage of residents who are other race, Non-hispanic",
+    "var_def": "Percentage of residents who are other race",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_other",
     "ylabs": "Other Race  (%)"
   },
   {
+    "metric_name": "Two or More Races",
     "var_label": "Two or More Races",
-    "var_def": "Percentage of residents who are two or more races, Non-hispanic",
+    "var_def": "Percentage of residents who are two or more races",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_two_more",
     "ylabs": "Two or More Races  (%)"
   },
   {
+    "metric_name": "Hispanic",
     "var_label": "Hispanic",
     "var_def": "Percentage of residents who are Hispanic",
     "source": "ACS 5-year",
@@ -176,6 +198,7 @@
     "ylabs": "Hispanic  (%)"
   },
   {
+    "metric_name": "Fatal Shootings",
     "var_label": "Fatal Shootings",
     "var_def": "Total Number of Fatal Shootings per Council District",
     "source": "Open Data Philly",
@@ -184,6 +207,7 @@
     "ylabs": "# of Fatal Shootings"
   },
   {
+    "metric_name": "Nonfatal Shootings",
     "var_label": "Nonfatal Shootings",
     "var_def": "Total Number of Nonfatal Shootings per Council District",
     "source": "Open Data Philly",
@@ -192,6 +216,7 @@
     "ylabs": "# of Nonfatal Shootings"
   },
   {
+    "metric_name": "Uninsured",
     "var_label": "Uninsured",
     "var_def": "Percentage of people Uninsured",
     "source": "ACS 5-year",
@@ -200,6 +225,7 @@
     "ylabs": "Uninsured  (%)"
   },
   {
+    "metric_name": "Tree Canopy Coverage",
     "var_label": "Tree Canopy Coverage",
     "var_def": "Percentage of Council district covered by greenspace",
     "source": "UHC",
@@ -208,6 +234,7 @@
     "ylabs": "Tree Canopy Coverage  (%)"
   },
   {
+    "metric_name": "Heat Vulnerabillity Index",
     "var_label": "Heat Vulnerabillity Index",
     "var_def": "Heat Vulnerability Index",
     "source": "Open Data Philly",
@@ -216,6 +243,7 @@
     "ylabs": "Heat Vulnerability Index"
   },
   {
+    "metric_name": "Poverty",
     "var_label": "Poverty",
     "var_def": "Percentage of Residents who are below the poverty level",
     "source": "ACS 5-year",
