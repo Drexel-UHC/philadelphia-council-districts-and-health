@@ -13,8 +13,8 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "Philadelphia Council District Health Dashboard | Drexel Urban Health Collaborative",
-  description: "Interactive dashboard exploring health outcomes and social determinants of health across Philadelphia's 10 City Council Districts. Analyze data on income, education, housing, healthcare access, and demographics to understand health disparities and inform equitable policy decisions.",
+  title: "Philadelphia Council Health Dashboard | Drexel UHC",
+  description: "Interactive dashboard exploring health outcomes across Philadelphia's 10 City Council Districts. Analyze demographics, housing, healthcare access, and more.",
   keywords: [
     "Philadelphia", 
     "city council districts", 
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   creator: "Drexel Urban Health Collaborative",
   publisher: "Drexel University Dornsife School of Public Health",
   openGraph: {
-    title: "Philadelphia Council District Health Dashboard",
-    description: "Interactive data visualization showing health outcomes, demographics, and social determinants of health across Philadelphia's 10 City Council Districts. Empowering equitable policy decisions through actionable district-level health insights.",
+    title: "Philadelphia Council Health Dashboard | Drexel UHC",
+    description: "Interactive dashboard exploring health outcomes across Philadelphia's 10 City Council Districts. Analyze demographics, housing, healthcare access, and more.",
     url: "https://drexel-uhc.github.io/philadelphia-council-districts-and-health",
     siteName: "Philadelphia Council District Health Dashboard",
     images: [
@@ -59,8 +59,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Philadelphia Council District Health Dashboard",
-    description: "Explore health disparities across Philadelphia's City Council Districts. Interactive maps and charts showing social determinants of health, demographics, and policy-relevant health data.",
+    title: "Philadelphia Council Health Dashboard | Drexel UHC", 
+    description: "Interactive dashboard exploring health outcomes across Philadelphia's 10 City Council Districts. Analyze demographics, housing, healthcare access, and more.",
     images: ["https://drexel-uhc.github.io/philadelphia-council-districts-and-health/logo.png"],
   },
   robots: {
@@ -73,6 +73,9 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  alternates: {
+    canonical: "https://drexel-uhc.github.io/philadelphia-council-districts-and-health",
   },
 };
 

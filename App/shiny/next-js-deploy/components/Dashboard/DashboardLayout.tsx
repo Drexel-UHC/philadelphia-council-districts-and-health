@@ -229,6 +229,7 @@ function DashboardContent() {
       <AnchorHeading
         id="dashboard-intro"
         className="text-3xl font-bold mb-4 pb-2 border-b border-gray-300"
+        as="h2"
       >
         How to Use:
       </AnchorHeading>

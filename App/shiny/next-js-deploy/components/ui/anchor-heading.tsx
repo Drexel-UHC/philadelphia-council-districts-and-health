@@ -11,14 +11,19 @@ interface AnchorHeadingProps {
   children: React.ReactNode;
   className?: string;
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 }
 
 export const AnchorHeading = ({ 
   id, 
   children, 
   className,
-  as: Component = 'h1'
+  as,
+  level
 }: AnchorHeadingProps) => {
+  // Use level if provided, otherwise fall back to as, then default to h1
+  const Component = level || as || 'h1';
+
   // Generate the slug from the ID
   const slug = id.toLowerCase().replace(/\s+/g, '-');
 

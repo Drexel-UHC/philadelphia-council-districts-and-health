@@ -7,6 +7,7 @@ export default function Outro() {
       <div className="section mb-8">
         <AnchorHeading 
           id="about-the-data" 
+          level="h2"
           className="text-xl font-bold mb-3 pb-2 border-b border-gray-300"
         >
           About the Data
@@ -25,8 +26,7 @@ export default function Outro() {
           </a>.
         </p>
         <p className="text-lg text-gray-700 mb-6">
-
-          This dashboard is a work in progress. The last update took place on June 6, 2025.
+          This dashboard is a work in progress. The last update took place on January 27, 2025.
         </p>
       </div>
       
@@ -34,6 +34,7 @@ export default function Outro() {
       <div className="section mb-8">
         <AnchorHeading 
           id="acknowledgements" 
+          level="h2"
           className="text-xl font-bold mb-3 pb-2 border-b border-gray-300"
         >
           Acknowledgements
