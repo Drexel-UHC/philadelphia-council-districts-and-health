@@ -3,6 +3,29 @@ import { AnchorHeading } from "@/components/ui/anchor-heading";
 export default function Outro() {
   return (
     <section id="about" className="mb-12 pt-10">
+      {/* About the Data section */}
+      <div className="section mb-8">
+        <AnchorHeading 
+          id="about-the-data" 
+          className="text-xl font-bold mb-3 pb-2 border-b border-gray-300"
+        >
+          About the Data
+        </AnchorHeading>
+        <p className="text-lg text-gray-700 mb-6">
+          
+          For full details on data sources and metric definitions and to download the data, see our
+          {" "}
+          <a
+            href="https://zenodo.org/records/15609792"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline font-semibold"
+          >
+            data archive and documentation page
+          </a>.
+        </p>
+      </div>
+      
       {/* Acknowledgements section */}
       <div className="section mb-8">
         <AnchorHeading 
@@ -104,7 +127,7 @@ export default function Outro() {
           Citation
         </h4>
         <div className="bg-gray-100 p-4 rounded font-mono text-sm">
-          Urban Health Collaborative, <em>Philadelphia Council District Health Dashboard Dashboard</em>, 2025
+          Amber, B., Tamara, R., Ran, L., Stephanie, H., & Alina, S.-M. (2025). <em>Philadelphia Council District Health Dashboard (Dataset)</em> [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.15609792" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://doi.org/10.5281/zenodo.15609792</a>
         </div>
       </div>
       
