@@ -31,6 +31,31 @@ export const Chart: React.FC<ChartProps> = ({
   // highlightedDistrict = null,
   registerHighlightFunction
 }) => {
+  // Mobile state detection
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Variables to disable data labels on all devices
+  const alwaysDisableDataLabels: string[] = [
+    "district_lack_kitch_pct",    // Lack Complete Kitchen
+    "district_lack_plumb_pct",    // Lack Complete Plumbing
+    "district_median_age_total"   // Median Age
+  ];
+  
+  // Variables to disable data labels on mobile only
+  const mobileDisableDataLabels: string[] = [
+    "pct_violations",             // Code Violations
+    "college_grad_pct",           // Education: College Graduate
+    "some_college_pct",           // Education: Some College
+    "pct_owner",                  // Homeowners
+    "district_lack_kitch_pct",    // Lack Complete Kitchen (also in desktop list)
+    "district_lack_plumb_pct",    // Lack Complete Plumbing (also in desktop list)
+    "district_median_age_total",  // Median Age (also in desktop list)
+    "median_hh_income_district",  // Median Household Income
+    "pct_native",                 // Race and Ethnicity: Native American
+    "pct_pi",                     // Race and Ethnicity: Pacific Islander
+    "pct_renter"                  // Renters
+  ];
+
   // Use a key value to force complete re-render when data changes
   const [key, setKey] = useState<number>(0);
   
@@ -42,6 +67,18 @@ export const Chart: React.FC<ChartProps> = ({
 
   // Create a ref to store the onHover callback
   const onHoverRef = React.useRef(onHover);
+  
+  // Mobile detection effect
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Update the ref when onHover changes, without causing re-renders
   React.useEffect(() => {
@@ -197,16 +234,18 @@ export const Chart: React.FC<ChartProps> = ({
               text: `City Average: ${cityAvg.toFixed(1)}`,
               align: "right",
               style: {
-                color: "#707070"
-              }
+                color: "#707070", 
+              }, 
             },
-            zIndex: 5
+            zIndex: 25
           }]
         },
         plotOptions: {
           column: {
             dataLabels: {
-              enabled: true,
+              enabled: !alwaysDisableDataLabels.includes(varName) && 
+                      !(isMobile && mobileDisableDataLabels.includes(varName)),
+              allowOverlap: true,  // Enable collision detection
               format: "{point.valueFormatted}"
             },
             borderWidth: 0,
