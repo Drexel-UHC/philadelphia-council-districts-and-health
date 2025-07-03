@@ -197,16 +197,17 @@ export const Chart: React.FC<ChartProps> = ({
               text: `City Average: ${cityAvg.toFixed(1)}`,
               align: "right",
               style: {
-                color: "#707070"
-              }
+                color: "#707070", 
+              }, 
             },
-            zIndex: 5
+            zIndex: 25
           }]
         },
         plotOptions: {
           column: {
             dataLabels: {
-              enabled: true,
+              enabled: !["district_median_age_total", "another_var_name", "yet_another_var"].includes(varName),
+              allowOverlap: true,  // Enable collision detection
               format: "{point.valueFormatted}"
             },
             borderWidth: 0,
