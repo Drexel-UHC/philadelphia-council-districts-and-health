@@ -149,7 +149,11 @@ export const Chart: React.FC<ChartProps> = ({
           height: 400,
           style: {
             transition: 'none'
-          }
+          },
+          // Add responsive options
+          spacingBottom: 60, // Extra space for rotated labels
+          spacingLeft: 10,
+          spacingRight: 10
         },
         title: {
           text: varLabel
@@ -161,7 +165,19 @@ export const Chart: React.FC<ChartProps> = ({
           categories: categories,
           title: {
             text: "Council District"
-          }
+          },
+          // Force all labels to show and rotate them for mobile
+          labels: {
+            style: {
+              fontSize: '10px'
+            },
+            // Force all labels to show, don't skip any
+            step: 1
+          },
+          // Ensure all ticks are shown
+          tickInterval: 1,
+          // Prevent automatic label optimization that hides labels
+          allowDecimals: false
         },
         yAxis: {
           title: {
