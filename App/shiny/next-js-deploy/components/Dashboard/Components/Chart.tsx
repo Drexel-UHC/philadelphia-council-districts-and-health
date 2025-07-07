@@ -44,7 +44,11 @@ export const Chart: React.FC<ChartProps> = ({
   
   // Variables to disable data labels on mobile only
   const mobileDisableDataLabels: string[] = [
+    "total_active_licenses_norentals", // Total Active Licenses (No Rentals)
+    "total_active_licenses_rentalsonly", // Total Active Licenses (Rentals Only)
     "pct_violations",             // Code Violations
+    "less_than_hs_pct",          // Education: Less than High School
+    "hs_grad_pct",              // Education: High School Graduate
     "college_grad_pct",           // Education: College Graduate
     "some_college_pct",           // Education: Some College
     "pct_owner",                  // Homeowners
