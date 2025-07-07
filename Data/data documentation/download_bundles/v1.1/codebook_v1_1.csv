@@ -37,7 +37,7 @@ hs_grad_pct,High School Graduate,Education: High School Graduate,Percentage of r
 #""B15003_001"" = total pop over 25,
 #""B15003_017"" HS grad, 
 #""B15003_018"" = GED or equivalent",Source: ACS 5-year (2022)
-less_than_hs_pct,Less Than High School,Less Than High School,Percentage of residents over the age of 25 with less than High school for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+less_than_hs_pct,Less Than High School,Education: Less than High School Education,Percentage of residents over the age of 25 with less than High school for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
 #""B15003_001"" = total pop over 25
 #""B15003_002"" = No schooling
 #""B15003_003"" = Nursery School 
@@ -54,7 +54,7 @@ less_than_hs_pct,Less Than High School,Less Than High School,Percentage of resid
 #""B15003_014""= 10th 
 #""B15003_015"" = 11th
 #""B15003_016"" = 12th no diploma 
-",Less Than High School  (%),Percentage of residents over the age of 25 with less than High school for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+",Education: Less than High School Education  (%),Percentage of residents over the age of 25 with less than High school for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
 #""B15003_001"" = total pop over 25
 #""B15003_002"" = No schooling
 #""B15003_003"" = Nursery School 

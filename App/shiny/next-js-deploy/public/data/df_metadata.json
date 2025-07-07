@@ -81,11 +81,11 @@
   },
   {
     "var_name": "less_than_hs_pct",
-    "var_label": "Less Than High School",
+    "var_label": "Education: Less than High School Education",
     "var_def": "Percentage of residents over the age of 25 with less than High school for highest educational attainment",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Less Than High School  (%)"
+    "ylabs": "Education: Less than High School Education  (%)"
   },
   {
     "var_name": "median_hh_income_district",
