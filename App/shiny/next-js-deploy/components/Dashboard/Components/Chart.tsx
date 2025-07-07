@@ -36,6 +36,7 @@ export const Chart: React.FC<ChartProps> = ({
   
   // Variables to disable data labels on all devices
   const alwaysDisableDataLabels: string[] = [
+    "pct_pi",
     "district_lack_kitch_pct",    // Lack Complete Kitchen
     "district_lack_plumb_pct",    // Lack Complete Plumbing
     "district_median_age_total"   // Median Age
