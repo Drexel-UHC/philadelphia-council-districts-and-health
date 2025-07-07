@@ -108,7 +108,7 @@ export const Map: React.FC<MapProps> = ({
       },
       subtitle: {
         text: selectedMetric?.var_def 
-          ? `${selectedMetric.var_def} (${selectedMetric.source}, ${selectedMetric.year})` 
+          ? `${selectedMetric.var_def}` 
           : 'Health metrics across Philadelphia council districts'
       },
       credits: {
