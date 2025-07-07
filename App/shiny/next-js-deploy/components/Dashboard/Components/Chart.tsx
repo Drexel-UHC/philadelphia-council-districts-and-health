@@ -306,7 +306,7 @@ export const Chart: React.FC<ChartProps> = ({
     // Increment key to force a complete re-render of the chart component
     setKey(prevKey => prevKey + 1);
     
-  }, [data, alwaysDisableDataLabels, mobileDisableDataLabels, isMobile]); // Remove highlightedDistrict from dependencies
+  }, [data]); // Remove highlightedDistrict from dependencies
 
   // If no data or options not yet set, show placeholder
   if (data.length === 0 || Object.keys(chartOptions).length === 0) {
