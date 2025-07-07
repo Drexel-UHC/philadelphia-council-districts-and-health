@@ -25,7 +25,7 @@
   },
   {
     "var_name": "count_crashes",
-    "var_label": "Fatal Crashes",
+    "var_label": "Fatal Car Crashes",
     "var_def": "Count of crashes",
     "source": "Open Data Philly (Philadelphia Police Department)",
     "year": "2019 - Present",
@@ -49,19 +49,19 @@
   },
   {
     "var_name": "district_lack_kitch_pct",
-    "var_label": "Lack Complete Kitchen",
+    "var_label": "Housing Quality: Lacking Complete Kitchen Facilities",
     "var_def": "Percentage of homes that lack a complete kitchen. A housing unit is considered to be lacking complete kitchen facilities when it is missing one or more of the following: a sink with a faucet, a stove or range, and a refrigerator.",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Lack Complete Kitchen  (%)"
+    "ylabs": "Housing Quality: Lacking Complete Kitchen Facilities  (%)"
   },
   {
     "var_name": "district_lack_plumb_pct",
-    "var_label": "Lack Complete Plumbing",
+    "var_label": "Housing Quality: Lacking Complete Plumbing Facilities",
     "var_def": "Percentage of homes that lack complete plumbing. A housing unit is considered to be lacking complete plumbing facilities when it is missing one or more of the following: hot and cold running water and a bathtub or shower.",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Lack Complete Plumbing  (%)"
+    "ylabs": "Housing Quality: Lacking Complete Plumbing Facilities  (%)"
   },
   {
     "var_name": "district_median_age_total",
@@ -121,19 +121,19 @@
   },
   {
     "var_name": "pct_native",
-    "var_label": "Race and Ethnicity: Native American",
+    "var_label": "Race and Ethnicity: American Indian and Alaskan Native",
     "var_def": "Percentage of residents who are Native Indian/Alaska Native",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Race and Ethnicity: Native American  (%)"
+    "ylabs": "Race and Ethnicity: American Indian and Alaskan Native  (%)"
   },
   {
     "var_name": "pct_other",
-    "var_label": "Race and Ethnicity: Some other Race alone",
+    "var_label": "Race and Ethnicity: Other Race (Not Listed)",
     "var_def": "Percentage of residents who identified with a race other than the listed racial categories",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Race and Ethnicity: Some other Race alone  (%)"
+    "ylabs": "Race and Ethnicity: Other Race (Not Listed)  (%)"
   },
   {
     "var_name": "pct_owner",
@@ -145,11 +145,11 @@
   },
   {
     "var_name": "pct_pi",
-    "var_label": "Race and Ethnicity: Pacific Islander",
+    "var_label": "Race and Ethnicity: Native Hawaiian and Pacific Islander",
     "var_def": "Percentage of residents who are Pacific Islander/Native Hawaiian",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Race and Ethnicity: Pacific Islander  (%)"
+    "ylabs": "Race and Ethnicity: Native Hawaiian and Pacific Islander  (%)"
   },
   {
     "var_name": "pct_renter",
@@ -177,11 +177,11 @@
   },
   {
     "var_name": "pct_white",
-    "var_label": "Race and Ethnicity: non-Hispanic White",
+    "var_label": "Race and Ethnicity: Non-Hispanic White",
     "var_def": "Percentage of residents who are White, Non-hispanic",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Race and Ethnicity: non-Hispanic White  (%)"
+    "ylabs": "Race and Ethnicity: Non-Hispanic White  (%)"
   },
   {
     "var_name": "percentage_uninsured",
@@ -193,15 +193,15 @@
   },
   {
     "var_name": "some_college_pct",
-    "var_label": "Education: Some College",
+    "var_label": "Education: Some College Education",
     "var_def": "Percentage of residents over the age of 25 with some college for highest educational attainment",
     "source": "ACS 5-year",
     "year": "2022",
-    "ylabs": "Education: Some College  (%)"
+    "ylabs": "Education: Some College Education  (%)"
   },
   {
     "var_name": "total_active_licenses_norentals",
-    "var_label": "Active Business Licenses No Rentals",
+    "var_label": "Active Business Licenses (Excluding Rental Business Licenses)",
     "var_def": "Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services.",
     "source": "Open Data Philly (Department of Licenses and Inspections)",
     "year": "2020 - Oct 2024",
@@ -209,7 +209,7 @@
   },
   {
     "var_name": "total_active_licenses_rentalsonly",
-    "var_label": "Active Business Licenses Rentals Only",
+    "var_label": "Active Rental Business Licenses",
     "var_def": "Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories.",
     "source": "Open Data Philly (Department of Licenses and Inspections)",
     "year": "2020 - Oct 2024",
