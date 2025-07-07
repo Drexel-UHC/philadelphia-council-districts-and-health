@@ -1,254 +1,226 @@
 [
   {
-    "metric_name": "Median Age",
-    "var_label": "Median Age",
-    "var_def": "Median age of residents",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "district_median_age_total",
-    "ylabs": "Age"
-  },
-  {
-    "metric_name": "Active Business Licenses No Rentals",
-    "var_label": "Active Business Licenses No Rentals",
-    "var_def": "Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services.",
-    "source": "Open Data Philly (Department of Licenses and Inspections)",
-    "year": "2020 - Oct 2024",
-    "var_name": "total_active_licenses_norentals",
-    "ylabs": "Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services."
-  },
-  {
-    "metric_name": "Active Business Licenses Rentals Only",
-    "var_label": "Active Business Licenses Rentals Only",
-    "var_def": "Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories.",
-    "source": "Open Data Philly (Department of Licenses and Inspections)",
-    "year": "2020 - Oct 2024",
-    "var_name": "total_active_licenses_rentalsonly",
-    "ylabs": "Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories."
-  },
-  {
-    "metric_name": "Fatal Crashes",
-    "var_label": "Fatal Crashes",
-    "var_def": "Count of crashes",
-    "source": "Open Data Philly (Philadelphia Police Department)",
-    "year": "2019 - Present",
-    "var_name": "count_crashes",
-    "ylabs": "Count of crashes"
-  },
-  {
-    "metric_name": "Less Than High School",
-    "var_label": "Less Than High School",
-    "var_def": "Percentage of residents over the age of 25 with less than High school for highest educational attainment",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "less_than_hs_pct",
-    "ylabs": "Less Than High School  (%)"
-  },
-  {
-    "metric_name": "High School Graduate",
-    "var_label": "Education: High School Graduate",
-    "var_def": "Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "hs_grad_pct",
-    "ylabs": "Education: High School Graduate  (%)"
-  },
-  {
-    "metric_name": "Some College",
-    "var_label": "Education: Some College",
-    "var_def": "Percentage of residents over the age of 25 with some college for highest educational attainment",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "some_college_pct",
-    "ylabs": "Education: Some College  (%)"
-  },
-  {
-    "metric_name": "College Graduate",
-    "var_label": "Education: College Graduate",
-    "var_def": "Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "college_grad_pct",
-    "ylabs": "Education: College Graduate  (%)"
-  },
-  {
-    "metric_name": "Code Violations",
-    "var_label": "Code Violations",
-    "var_def": "Percentage of buildings with an open housing code violation",
-    "source": "Open Data Philly (Department of Licenses and Inspections)",
-    "year": "2019 - July 2024",
-    "var_name": "pct_violations",
-    "ylabs": "Code Violations  (%)"
-  },
-  {
-    "metric_name": "Lack Complete Kitchen",
-    "var_label": "Lack Complete Kitchen",
-    "var_def": "Percentage of homes that lack a complete kitchen. A housing unit is considered to be lacking complete kitchen facilities when it is missing one or more of the following: a sink with a faucet, a stove or range, and a refrigerator.",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "district_lack_kitch_pct",
-    "ylabs": "Lack Complete Kitchen  (%)"
-  },
-  {
-    "metric_name": "Lack Complete Plumbing",
-    "var_label": "Lack Complete Plumbing",
-    "var_def": "Percentage of homes that lack complete plumbing. A housing unit is considered to be lacking complete plumbing facilities when it is missing one or more of the following: hot and cold running water and a bathtub or shower.",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "district_lack_plumb_pct",
-    "ylabs": "Lack Complete Plumbing  (%)"
-  },
-  {
-    "metric_name": "Median Household Income",
-    "var_label": "Median Household Income",
-    "var_def": "Median Household Income",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "median_hh_income_district",
-    "ylabs": "Median Household Income ($)"
-  },
-  {
-    "metric_name": "Owners",
-    "var_label": "Homeowners",
-    "var_def": "Percentage of Households that Own their home",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_owner",
-    "ylabs": "Homeowners  (%)"
-  },
-  {
-    "metric_name": "Renters",
-    "var_label": "Renters",
-    "var_def": "Percentage of Households that Rent their home",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_renter",
-    "ylabs": "Renters  (%)"
-  },
-  {
-    "metric_name": "White",
-    "var_label": "Race and Ethnicity: non-Hispanic White",
-    "var_def": "Percentage of residents who are White, Non-hispanic",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_white",
-    "ylabs": "Race and Ethnicity: non-Hispanic White  (%)"
-  },
-  {
-    "metric_name": "Black",
-    "var_label": "Race and Ethnicity: Black",
-    "var_def": "Percentage of residents who are Black",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_black",
-    "ylabs": "Race and Ethnicity: Black  (%)"
-  },
-  {
-    "metric_name": "Native American",
-    "var_label": "Race and Ethnicity: Native American",
-    "var_def": "Percentage of residents who are Native Indian/Alaska Native",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_native",
-    "ylabs": "Race and Ethnicity: Native American  (%)"
-  },
-  {
-    "metric_name": "Asian",
-    "var_label": "Race and Ethnicity: Asian",
-    "var_def": "Percentage of residents who are Asian",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_asian",
-    "ylabs": "Race and Ethnicity: Asian  (%)"
-  },
-  {
-    "metric_name": "Pacific Islander",
-    "var_label": "Race and Ethnicity: Pacific Islander",
-    "var_def": "Percentage of residents who are Pacific Islander/Native Hawaiian",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_pi",
-    "ylabs": "Race and Ethnicity: Pacific Islander  (%)"
-  },
-  {
-    "metric_name": "Other Race",
-    "var_label": "Race and Ethnicity: Some other Race alone",
-    "var_def": "Percentage of residents who identified with a race other than the listed racial categories",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_other",
-    "ylabs": "Race and Ethnicity: Some other Race alone  (%)"
-  },
-  {
-    "metric_name": "Two or More Races",
-    "var_label": "Race and Ethnicity: Two or More Races",
-    "var_def": "Percentage of residents who are two or more races",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_two_more",
-    "ylabs": "Race and Ethnicity: Two or More Races  (%)"
-  },
-  {
-    "metric_name": "Hispanic",
-    "var_label": "Race and Ethnicity: Hispanic",
-    "var_def": "Percentage of residents who are Hispanic",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "pct_hispanic",
-    "ylabs": "Race and Ethnicity: Hispanic  (%)"
-  },
-  {
-    "metric_name": "Fatal Shootings",
-    "var_label": "Fatal Shootings",
-    "var_def": "Total Number of Fatal Shootings per Council District",
-    "source": "Open Data Philly (Philadelphia Police Department)",
-    "year": "2015 - Present",
-    "var_name": "count_fatal",
-    "ylabs": "# of Fatal Shootings"
-  },
-  {
-    "metric_name": "Nonfatal Shootings",
-    "var_label": "Nonfatal Shootings",
-    "var_def": "Total Number of Nonfatal Shootings per Council District",
-    "source": "Open Data Philly (Philadelphia Police Department)",
-    "year": "2015 - Present",
-    "var_name": "count_non_fatal",
-    "ylabs": "# of Nonfatal Shootings"
-  },
-  {
-    "metric_name": "Uninsured",
-    "var_label": "Without Health Insurance",
-    "var_def": "Percentage of people uninsured",
-    "source": "ACS 5-year",
-    "year": "2022",
-    "var_name": "percentage_uninsured",
-    "ylabs": "Without Health Insurance  (%)"
-  },
-  {
-    "metric_name": "Tree Canopy Coverage",
-    "var_label": "Tree Canopy Coverage",
-    "var_def": "Percentage of Council district covered by greenspace",
-    "source": "Urban Health Collaborative Data Portal",
-    "year": "2019",
-    "var_name": "cd_tree",
-    "ylabs": "Tree Canopy Coverage  (%)"
-  },
-  {
-    "metric_name": "Heat Vulnerabillity Index",
-    "var_label": "Heat Vulnerabillity Index",
-    "var_def": "Heat Vulnerability Index",
-    "source": "Open Data Philly (Department of Public Health)",
-    "year": "2018",
-    "var_name": "weighted_hvi",
-    "ylabs": "Heat Vulnerability Index"
-  },
-  {
-    "metric_name": "Poverty",
+    "var_name": "cd_pct_poverty",
     "var_label": "Poverty",
     "var_def": "Percentage of Residents who are below the poverty level",
     "source": "ACS 5-year",
     "year": "2022",
-    "var_name": "cd_pct_poverty",
     "ylabs": "Poverty  (%)"
+  },
+  {
+    "var_name": "cd_tree",
+    "var_label": "Tree Canopy Coverage",
+    "var_def": "Percentage of Council district covered by greenspace",
+    "source": "Urban Health Collaborative Data Portal",
+    "year": "2019",
+    "ylabs": "Tree Canopy Coverage  (%)"
+  },
+  {
+    "var_name": "college_grad_pct",
+    "var_label": "Education: College Graduate",
+    "var_def": "Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Education: College Graduate  (%)"
+  },
+  {
+    "var_name": "count_crashes",
+    "var_label": "Fatal Crashes",
+    "var_def": "Count of crashes",
+    "source": "Open Data Philly (Philadelphia Police Department)",
+    "year": "2019 - Present",
+    "ylabs": "Count of crashes"
+  },
+  {
+    "var_name": "count_fatal",
+    "var_label": "Fatal Shootings",
+    "var_def": "Total Number of Fatal Shootings per Council District",
+    "source": "Open Data Philly (Philadelphia Police Department)",
+    "year": "2015 - Present",
+    "ylabs": "# of Fatal Shootings"
+  },
+  {
+    "var_name": "count_non_fatal",
+    "var_label": "Nonfatal Shootings",
+    "var_def": "Total Number of Nonfatal Shootings per Council District",
+    "source": "Open Data Philly (Philadelphia Police Department)",
+    "year": "2015 - Present",
+    "ylabs": "# of Nonfatal Shootings"
+  },
+  {
+    "var_name": "district_lack_kitch_pct",
+    "var_label": "Lack Complete Kitchen",
+    "var_def": "Percentage of homes that lack a complete kitchen. A housing unit is considered to be lacking complete kitchen facilities when it is missing one or more of the following: a sink with a faucet, a stove or range, and a refrigerator.",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Lack Complete Kitchen  (%)"
+  },
+  {
+    "var_name": "district_lack_plumb_pct",
+    "var_label": "Lack Complete Plumbing",
+    "var_def": "Percentage of homes that lack complete plumbing. A housing unit is considered to be lacking complete plumbing facilities when it is missing one or more of the following: hot and cold running water and a bathtub or shower.",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Lack Complete Plumbing  (%)"
+  },
+  {
+    "var_name": "district_median_age_total",
+    "var_label": "Median Age",
+    "var_def": "Median age of residents",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Age"
+  },
+  {
+    "var_name": "hs_grad_pct",
+    "var_label": "Education: High School Graduate",
+    "var_def": "Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Education: High School Graduate  (%)"
+  },
+  {
+    "var_name": "less_than_hs_pct",
+    "var_label": "Less Than High School",
+    "var_def": "Percentage of residents over the age of 25 with less than High school for highest educational attainment",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Less Than High School  (%)"
+  },
+  {
+    "var_name": "median_hh_income_district",
+    "var_label": "Median Household Income",
+    "var_def": "Median Household Income",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Median Household Income ($)"
+  },
+  {
+    "var_name": "pct_asian",
+    "var_label": "Race and Ethnicity: Asian",
+    "var_def": "Percentage of residents who are Asian",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Asian  (%)"
+  },
+  {
+    "var_name": "pct_black",
+    "var_label": "Race and Ethnicity: Black",
+    "var_def": "Percentage of residents who are Black",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Black  (%)"
+  },
+  {
+    "var_name": "pct_hispanic",
+    "var_label": "Race and Ethnicity: Hispanic",
+    "var_def": "Percentage of residents who are Hispanic",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Hispanic  (%)"
+  },
+  {
+    "var_name": "pct_native",
+    "var_label": "Race and Ethnicity: Native American",
+    "var_def": "Percentage of residents who are Native Indian/Alaska Native",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Native American  (%)"
+  },
+  {
+    "var_name": "pct_other",
+    "var_label": "Race and Ethnicity: Some other Race alone",
+    "var_def": "Percentage of residents who identified with a race other than the listed racial categories",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Some other Race alone  (%)"
+  },
+  {
+    "var_name": "pct_owner",
+    "var_label": "Homeowners",
+    "var_def": "Percentage of Households that Own their home",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Homeowners  (%)"
+  },
+  {
+    "var_name": "pct_pi",
+    "var_label": "Race and Ethnicity: Pacific Islander",
+    "var_def": "Percentage of residents who are Pacific Islander/Native Hawaiian",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Pacific Islander  (%)"
+  },
+  {
+    "var_name": "pct_renter",
+    "var_label": "Renters",
+    "var_def": "Percentage of Households that Rent their home",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Renters  (%)"
+  },
+  {
+    "var_name": "pct_two_more",
+    "var_label": "Race and Ethnicity: Two or More Races",
+    "var_def": "Percentage of residents who are two or more races",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: Two or More Races  (%)"
+  },
+  {
+    "var_name": "pct_violations",
+    "var_label": "Code Violations",
+    "var_def": "Percentage of buildings with an open housing code violation",
+    "source": "Open Data Philly (Department of Licenses and Inspections)",
+    "year": "2019 - July 2024",
+    "ylabs": "Code Violations  (%)"
+  },
+  {
+    "var_name": "pct_white",
+    "var_label": "Race and Ethnicity: non-Hispanic White",
+    "var_def": "Percentage of residents who are White, Non-hispanic",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Race and Ethnicity: non-Hispanic White  (%)"
+  },
+  {
+    "var_name": "percentage_uninsured",
+    "var_label": "Without Health Insurance",
+    "var_def": "Percentage of people uninsured",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Without Health Insurance  (%)"
+  },
+  {
+    "var_name": "some_college_pct",
+    "var_label": "Education: Some College",
+    "var_def": "Percentage of residents over the age of 25 with some college for highest educational attainment",
+    "source": "ACS 5-year",
+    "year": "2022",
+    "ylabs": "Education: Some College  (%)"
+  },
+  {
+    "var_name": "total_active_licenses_norentals",
+    "var_label": "Active Business Licenses No Rentals",
+    "var_def": "Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services.",
+    "source": "Open Data Philly (Department of Licenses and Inspections)",
+    "year": "2020 - Oct 2024",
+    "ylabs": "# of Active Business Rentals"
+  },
+  {
+    "var_name": "total_active_licenses_rentalsonly",
+    "var_label": "Active Business Licenses Rentals Only",
+    "var_def": "Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories.",
+    "source": "Open Data Philly (Department of Licenses and Inspections)",
+    "year": "2020 - Oct 2024",
+    "ylabs": "# of Active Business Rentals"
+  },
+  {
+    "var_name": "weighted_hvi",
+    "var_label": "Heat Vulnerabillity Index",
+    "var_def": "Heat Vulnerability Index",
+    "source": "Open Data Philly (Department of Public Health)",
+    "year": "2018",
+    "ylabs": "Heat Vulnerability Index"
   }
 ]
