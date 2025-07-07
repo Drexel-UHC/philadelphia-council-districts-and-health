@@ -52,7 +52,7 @@ export default function Intro() {
           </a>
         </p>
         <p className="mb-2">
-          <strong>Learn about Philadelphia's city government works: </strong>
+          <strong>Learn about Philadelphia&apos;s city government works: </strong>
           <a 
             href="https://seventy.org/uploads/attachments/clmt8ss9401fk4wnpfzbicd6q-how-philly-works-101.pdf"
             target="_blank"

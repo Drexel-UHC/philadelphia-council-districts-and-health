@@ -120,7 +120,7 @@ function DashboardContent() {
     // Update URL with the selected metric, but use browser history API for GitHub Pages
     if (metric) {
       // Instead of using router.replace which can cause page reloads
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() || '');
       params.set('metric', metric.var_name);
       
       // Use history.pushState with the right base URL
@@ -131,7 +131,7 @@ function DashboardContent() {
       );
     } else {
       // Remove the metric parameter if no metric is selected
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString() || '');
       params.delete('metric');
       
       // Use history.pushState with the right base URL
@@ -179,7 +179,7 @@ function DashboardContent() {
     if (metadata.length === 0) return;
     
     // Get the metric from URL parameters
-    const metricParam = searchParams.get('metric');
+    const metricParam = searchParams?.get('metric');
     
     if (metricParam) {
       // Find the corresponding metric metadata from URL
@@ -204,7 +204,7 @@ function DashboardContent() {
         const baseUrl = getBaseUrl();
         
         // Update URL using history API instead of router.replace
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams?.toString() || '');
         params.set('metric', defaultMetric.var_name);
         window.history.replaceState(
           { metric: defaultMetric.var_name },
