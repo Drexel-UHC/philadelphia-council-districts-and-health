@@ -104,7 +104,12 @@ export const Map: React.FC<MapProps> = ({
         }
       },
       title: {
-        text: selectedMetric?.var_label || title
+        text: selectedMetric?.var_label || title,
+        margin: 10,
+        style: {
+          fontSize: '20px',
+          fontWeight: 'bold'
+        }   
       },
       subtitle: {
         text: selectedMetric?.var_def 
@@ -113,7 +118,10 @@ export const Map: React.FC<MapProps> = ({
       },
       credits: {
         enabled: true,
-        text: `Source: ${selectedMetric?.source || 'Simulated data'} (${selectedMetric?.year || '2025'})`
+        text: `Source: ${selectedMetric?.source || 'Simulated data'} (${selectedMetric?.year || '2025'})`,
+        style: {
+          fontSize: '9px',
+        }
       },
       mapNavigation: {
         enabled: false,

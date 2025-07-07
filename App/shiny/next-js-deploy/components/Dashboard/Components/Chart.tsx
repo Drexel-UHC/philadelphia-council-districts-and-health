@@ -191,17 +191,18 @@ export const Chart: React.FC<ChartProps> = ({
           height: 400,
           style: {
             transition: 'none'
-          },
-          // Add responsive options
-          spacingBottom: 60, // Extra space for rotated labels
-          spacingLeft: 10,
-          spacingRight: 10
+          }
         },
         title: {
-          text: varLabel
+          text: varLabel,
+          margin: 10,
+          style: {
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }  
         },
         subtitle: {
-          text: subtitle
+          text: subtitle 
         },
         xAxis: {
           categories: categories,
@@ -295,7 +296,10 @@ export const Chart: React.FC<ChartProps> = ({
         },
         credits: {
           enabled: true,
-          text: sourceYear
+          text: sourceYear,
+          style: {
+            fontSize: '9px',
+          }
         },
         series: [{
           name: varLabel,
@@ -324,6 +328,30 @@ export const Chart: React.FC<ChartProps> = ({
 
   return (
     <div className="chart-container">
+      {/* <style jsx>{`
+        :global(.chart-container .highcharts-title) {
+          word-wrap: break-word !important;
+          white-space: normal !important;
+          text-overflow: clip !important;
+          overflow: visible !important;
+        }
+        :global(.chart-container .highcharts-subtitle) {
+          word-wrap: break-word !important;
+          white-space: normal !important;
+          text-overflow: clip !important;
+          overflow: visible !important;
+        }
+        @media (max-width: 768px) {
+          :global(.chart-container .highcharts-title) {
+            font-size: 14px !important;
+            line-height: 1.3 !important;
+          }
+          :global(.chart-container .highcharts-subtitle) {
+            font-size: 11px !important;
+            line-height: 1.3 !important;
+          }
+        }
+      `}</style> */}
       <HighchartsReact
         key={key} // This is the key change - forces a full re-render
         highcharts={Highcharts}
