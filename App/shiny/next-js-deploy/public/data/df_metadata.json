@@ -11,27 +11,27 @@
   {
     "metric_name": "Active Business Licenses No Rentals",
     "var_label": "Active Business Licenses No Rentals",
-    "var_def": "Count of Licenses",
-    "source": "Open Data Philly",
-    "year": "2020-2024",
+    "var_def": "Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services.",
+    "source": "Open Data Philly (Department of Licenses and Inspections)",
+    "year": "2020 - Oct 2024",
     "var_name": "total_active_licenses_norentals",
-    "ylabs": "Count of Licenses"
+    "ylabs": "Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services."
   },
   {
     "metric_name": "Active Business Licenses Rentals Only",
     "var_label": "Active Business Licenses Rentals Only",
-    "var_def": "Count of Licenses",
-    "source": "Open Data Philly",
-    "year": "2020-2024",
+    "var_def": "Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories.",
+    "source": "Open Data Philly (Department of Licenses and Inspections)",
+    "year": "2020 - Oct 2024",
     "var_name": "total_active_licenses_rentalsonly",
-    "ylabs": "Count of Licenses"
+    "ylabs": "Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories."
   },
   {
     "metric_name": "Fatal Crashes",
     "var_label": "Fatal Crashes",
     "var_def": "Count of crashes",
-    "source": "Open Data Philly",
-    "year": "2019-2024",
+    "source": "Open Data Philly (Philadelphia Police Department)",
+    "year": "2019 - Present",
     "var_name": "count_crashes",
     "ylabs": "Count of crashes"
   },
@@ -75,15 +75,15 @@
     "metric_name": "Code Violations",
     "var_label": "Code Violations",
     "var_def": "Percentage of buildings with an open housing code violation",
-    "source": "Open Data Philly",
-    "year": "2019-2024",
+    "source": "Open Data Philly (Department of Licenses and Inspections)",
+    "year": "2019 - July 2024",
     "var_name": "pct_violations",
     "ylabs": "Code Violations  (%)"
   },
   {
     "metric_name": "Lack Complete Kitchen",
     "var_label": "Lack Complete Kitchen",
-    "var_def": "Percentage of homes that lack a complete kitchen",
+    "var_def": "Percentage of homes that lack a complete kitchen. A housing unit is considered to be lacking complete kitchen facilities when it is missing one or more of the following: a sink with a faucet, a stove or range, and a refrigerator.",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "district_lack_kitch_pct",
@@ -92,7 +92,7 @@
   {
     "metric_name": "Lack Complete Plumbing",
     "var_label": "Lack Complete Plumbing",
-    "var_def": "Percentage of homes that lack complete plumbing",
+    "var_def": "Percentage of homes that lack complete plumbing. A housing unit is considered to be lacking complete plumbing facilities when it is missing one or more of the following: hot and cold running water and a bathtub or shower.",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "district_lack_plumb_pct",
@@ -173,7 +173,7 @@
   {
     "metric_name": "Other Race",
     "var_label": "Race and Ethnicity: Some other Race alone",
-    "var_def": "Percentage of residents who are other race",
+    "var_def": "Percentage of residents who identified with a race other than the listed racial categories",
     "source": "ACS 5-year",
     "year": "2022",
     "var_name": "pct_other",
@@ -201,8 +201,8 @@
     "metric_name": "Fatal Shootings",
     "var_label": "Fatal Shootings",
     "var_def": "Total Number of Fatal Shootings per Council District",
-    "source": "Open Data Philly",
-    "year": "2015-2024",
+    "source": "Open Data Philly (Philadelphia Police Department)",
+    "year": "2015 - Present",
     "var_name": "count_fatal",
     "ylabs": "# of Fatal Shootings"
   },
@@ -210,8 +210,8 @@
     "metric_name": "Nonfatal Shootings",
     "var_label": "Nonfatal Shootings",
     "var_def": "Total Number of Nonfatal Shootings per Council District",
-    "source": "Open Data Philly",
-    "year": "2015-2024",
+    "source": "Open Data Philly (Philadelphia Police Department)",
+    "year": "2015 - Present",
     "var_name": "count_non_fatal",
     "ylabs": "# of Nonfatal Shootings"
   },
@@ -228,7 +228,7 @@
     "metric_name": "Tree Canopy Coverage",
     "var_label": "Tree Canopy Coverage",
     "var_def": "Percentage of Council district covered by greenspace",
-    "source": "UHC",
+    "source": "Urban Health Collaborative Data Portal",
     "year": "2019",
     "var_name": "cd_tree",
     "ylabs": "Tree Canopy Coverage  (%)"
@@ -237,7 +237,7 @@
     "metric_name": "Heat Vulnerabillity Index",
     "var_label": "Heat Vulnerabillity Index",
     "var_def": "Heat Vulnerability Index",
-    "source": "Open Data Philly",
+    "source": "Open Data Philly (Department of Public Health)",
     "year": "2018",
     "var_name": "weighted_hvi",
     "ylabs": "Heat Vulnerability Index"
