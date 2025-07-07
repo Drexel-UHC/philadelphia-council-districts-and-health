@@ -71,9 +71,11 @@ export const SelectMetric: React.FC<SelectMetricProps> = ({
             aria-expanded={open}
             className="w-full justify-between bg-white border-gray-200 text-left font-normal"
           >
-            {value
-              ? data.find((metric) => metric.var_name === value)?.var_label
-              : "Select health metric..."}
+            <span className="truncate pr-2 flex-1 min-w-0">
+              {value
+                ? data.find((metric) => metric.var_name === value)?.var_label
+                : "Select health metric..."}
+            </span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
