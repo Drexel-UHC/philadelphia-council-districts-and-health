@@ -144,7 +144,7 @@ export const Chart: React.FC<ChartProps> = ({
     const sourceYear = firstItem.source_year;
     const yAxisTitle = firstItem.ylabs;
     const subtitle = firstItem.var_def;
-
+    
     // Get sorted categories (districts)
     const categories = sortedData.map(item => item.district);
     
@@ -195,7 +195,7 @@ export const Chart: React.FC<ChartProps> = ({
         },
         title: {
           text: varLabel,
-          // margin: 30,
+          margin: 10,
           style: {
             fontSize: '20px',
             fontWeight: 'bold'
@@ -328,7 +328,7 @@ export const Chart: React.FC<ChartProps> = ({
 
   return (
     <div className="chart-container">
-      <style jsx>{`
+      {/* <style jsx>{`
         :global(.chart-container .highcharts-title) {
           word-wrap: break-word !important;
           white-space: normal !important;
@@ -351,7 +351,7 @@ export const Chart: React.FC<ChartProps> = ({
             line-height: 1.3 !important;
           }
         }
-      `}</style>
+      `}</style> */}
       <HighchartsReact
         key={key} // This is the key change - forces a full re-render
         highcharts={Highcharts}

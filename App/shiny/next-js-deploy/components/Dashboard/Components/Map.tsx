@@ -333,28 +333,6 @@ export const Map: React.FC<MapProps> = ({
           transition: none !important;
           animation: none !important;
         }
-        :global(.map-container .highcharts-title) {
-          word-wrap: break-word !important;
-          white-space: normal !important;
-          text-overflow: clip !important;
-          overflow: visible !important;
-        }
-        :global(.map-container .highcharts-subtitle) {
-          word-wrap: break-word !important;
-          white-space: normal !important;
-          text-overflow: clip !important;
-          overflow: visible !important;
-        }
-        @media (max-width: 768px) {
-          :global(.map-container .highcharts-title) {
-            font-size: 18px !important;
-            line-height: 1.3 !important;
-          }
-          :global(.map-container .highcharts-subtitle) {
-            font-size: 11px !important;
-            line-height: 1.3 !important;
-          }
-        }
       `}</style>
       <HighchartsReact
         highcharts={Highcharts}
