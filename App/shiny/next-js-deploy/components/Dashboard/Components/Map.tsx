@@ -336,13 +336,5 @@ export const Map: React.FC<MapProps> = ({
   );
 };
 
-// Example map component for easy usage
-export const MapExample: React.FC = () => {
-  return (
-    <div className="p-4 bg-white rounded-md shadow-md">
-      <Map title="Philadelphia Health Index by District" />
-    </div>
-  );
-};
 
 export default Map;
