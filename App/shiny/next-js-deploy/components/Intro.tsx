@@ -26,15 +26,15 @@ export default function Intro() {
         Introduction
         </AnchorHeading>
         <p className="mb-4">
-          The health of Philadelphia residents varies drastically across the city – differences that reflect broader disparities in income, opportunity, and access to essential resources. These are not just personal choices made by the city&apos;s residents – they are shaped by federal, state and local laws and policies.
+          The health of Philadelphia residents varies drastically across the city – differences that reflect broader disparities in income, opportunity, and access to essential resources. 
         </p>
         
         <p className="mb-4">
-          This project takes a closer look at those conditions by analyzing publicly available data and mapping key health indicators and social determinants of health across all 10 Philadelphia City Council Districts. By doing this, we aim to provide a clearer picture of how politics and geography intersect to shape the health of Philadelphians.
+          This project takes a closer look at these conditions by analyzing publicly available data and mapping key health indicators and social determinants of health across all 10 Philadelphia City Council Districts. In doing this, we aim to provide a clearer picture of how politics and geography intersect to shape the health of Philadelphians.
         </p>
         
         <p className="mb-4">
-          Our goal is to equip all 17 Philadelphia City Council members and the public with actionable, district-level insights that can guide and empower more equitable policy and investment into our city. By connecting this data to City Council Districts, we hope this project continues to grow and support effective policy solutions that can promote equality and better health for all Philadelphians.
+          Our goal is to equip local officials, community leaders and the public with actionable, district-level insights that can guide and empower more equitable policy and investment into our city. By connecting this data to City Council Districts, we hope this project continues to grow and support effective solutions that can promote equality and better health for all Philadelphians.
         </p>
       </div>
 
@@ -50,6 +50,31 @@ export default function Intro() {
           >
             using this Philadelphia City Council Tool
           </a>
+        </p>
+        <p className="mb-2">
+          <strong>Learn about Philadelphia&apos;s city government works: </strong>
+          <a 
+            href="https://seventy.org/uploads/attachments/clmt8ss9401fk4wnpfzbicd6q-how-philly-works-101.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            How Philly Works: A Guide to Our City Government, Committee of Seventy
+          </a> and  <a
+            href="https://seventy.org/uploads/attachments/cmcaph7j81os066npn3ufnt1c-how-philly-works-101-spanish-final.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            in Spanish
+          </a>  and  <a
+          href="https://seventy.org/uploads/attachments/cmcapsx5a1orr5fnpsx4g4oly-final-hpw-guide-zhs.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+          in Chinese.
+        </a>
         </p>
       </div>
     </section>

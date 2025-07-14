@@ -36,6 +36,7 @@ export const Chart: React.FC<ChartProps> = ({
   
   // Variables to disable data labels on all devices
   const alwaysDisableDataLabels: string[] = [
+    "pct_pi",
     "district_lack_kitch_pct",    // Lack Complete Kitchen
     "district_lack_plumb_pct",    // Lack Complete Plumbing
     "district_median_age_total"   // Median Age
@@ -43,7 +44,11 @@ export const Chart: React.FC<ChartProps> = ({
   
   // Variables to disable data labels on mobile only
   const mobileDisableDataLabels: string[] = [
+    "total_active_licenses_norentals", // Total Active Licenses (No Rentals)
+    "total_active_licenses_rentalsonly", // Total Active Licenses (Rentals Only)
     "pct_violations",             // Code Violations
+    "less_than_hs_pct",          // Education: Less than High School
+    "hs_grad_pct",              // Education: High School Graduate
     "college_grad_pct",           // Education: College Graduate
     "some_college_pct",           // Education: Some College
     "pct_owner",                  // Homeowners
@@ -186,17 +191,18 @@ export const Chart: React.FC<ChartProps> = ({
           height: 400,
           style: {
             transition: 'none'
-          },
-          // Add responsive options
-          spacingBottom: 60, // Extra space for rotated labels
-          spacingLeft: 10,
-          spacingRight: 10
+          }
         },
         title: {
-          text: varLabel
+          text: varLabel,
+          margin: 10,
+          style: {
+            fontSize: '20px',
+            fontWeight: 'bold'
+          }  
         },
         subtitle: {
-          text: subtitle
+          text: subtitle 
         },
         xAxis: {
           categories: categories,
@@ -290,7 +296,10 @@ export const Chart: React.FC<ChartProps> = ({
         },
         credits: {
           enabled: true,
-          text: sourceYear
+          text: sourceYear,
+          style: {
+            fontSize: '9px',
+          }
         },
         series: [{
           name: varLabel,
@@ -319,6 +328,30 @@ export const Chart: React.FC<ChartProps> = ({
 
   return (
     <div className="chart-container">
+      {/* <style jsx>{`
+        :global(.chart-container .highcharts-title) {
+          word-wrap: break-word !important;
+          white-space: normal !important;
+          text-overflow: clip !important;
+          overflow: visible !important;
+        }
+        :global(.chart-container .highcharts-subtitle) {
+          word-wrap: break-word !important;
+          white-space: normal !important;
+          text-overflow: clip !important;
+          overflow: visible !important;
+        }
+        @media (max-width: 768px) {
+          :global(.chart-container .highcharts-title) {
+            font-size: 14px !important;
+            line-height: 1.3 !important;
+          }
+          :global(.chart-container .highcharts-subtitle) {
+            font-size: 11px !important;
+            line-height: 1.3 !important;
+          }
+        }
+      `}</style> */}
       <HighchartsReact
         key={key} // This is the key change - forces a full re-render
         highcharts={Highcharts}

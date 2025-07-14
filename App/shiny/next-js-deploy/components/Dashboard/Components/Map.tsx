@@ -104,16 +104,24 @@ export const Map: React.FC<MapProps> = ({
         }
       },
       title: {
-        text: selectedMetric?.var_label || title
+        text: selectedMetric?.var_label || title,
+        margin: 10,
+        style: {
+          fontSize: '20px',
+          fontWeight: 'bold'
+        }   
       },
       subtitle: {
         text: selectedMetric?.var_def 
-          ? `${selectedMetric.var_def} (${selectedMetric.source}, ${selectedMetric.year})` 
+          ? `${selectedMetric.var_def}` 
           : 'Health metrics across Philadelphia council districts'
       },
       credits: {
         enabled: true,
-        text: `Source: ${selectedMetric?.source || 'Simulated data'} (${selectedMetric?.year || '2025'})`
+        text: `Source: ${selectedMetric?.source || 'Simulated data'} (${selectedMetric?.year || '2025'})`,
+        style: {
+          fontSize: '9px',
+        }
       },
       mapNavigation: {
         enabled: false,
@@ -336,13 +344,5 @@ export const Map: React.FC<MapProps> = ({
   );
 };
 
-// Example map component for easy usage
-export const MapExample: React.FC = () => {
-  return (
-    <div className="p-4 bg-white rounded-md shadow-md">
-      <Map title="Philadelphia Health Index by District" />
-    </div>
-  );
-};
 
 export default Map;
