@@ -151,18 +151,59 @@ export const ChartDot: React.FC<ChartDotProps> = ({
           style: {
             transition: 'none'
           }
-        }, 
+        },
+        startOnTick: false,
+        endOnTick: false,
+        tickPositions: (() => {
+          // Get min and max from the data
+          const values = chartData.map(d => d.y);
+          const dataMin = Math.min(...values);
+          const dataMax = Math.max(...values);
+          const range = dataMax - dataMin;
+          const padding = range * 0.01; // 15% padding
+          
+          // Create specific tick positions with padding
+          return [
+            dataMin + padding,    // Low position
+            dataMax - padding     // High position
+          ];
+        })(),
+        labels: {
+          formatter: function() {
+            const values = chartData.map(d => d.y);
+            const dataMin = Math.min(...values);
+            const dataMax = Math.max(...values);
+            const range = dataMax - dataMin;
+            const padding = range * 0.01;
+            
+            const value = typeof this.value === 'number' ? this.value : parseFloat(this.value as string);
+            
+            if (Math.abs(value - (dataMin + padding)) < 0.01) {
+              return 'Low';
+            } else if (Math.abs(value - (dataMax - padding)) < 0.01) {
+              return 'High';
+            } else {
+              return '';
+            }
+          },
+          style: {
+            fontSize: '12px'
+          }
+        },
+        tickLength: 0, // Remove tick marks
+        lineWidth: 0,  // Remove axis line
+        gridLineWidth: 0, // Remove grid lines
         plotLines: [{
           value: cityAvg,
           color: "#707070",
           dashStyle: "ShortDash",
           width: 2,
           label: {
-            text: `City Average: ${cityAvg.toFixed(2)}`,
+            text: 'City Average', // Keep just "City Average" without the number
             align: "left",
             verticalAlign: "middle",
-            rotation: 0, // Horizontal text
-            x: 5, // Offset to the right of the line
+            rotation: 0,
+            x: 5,
             style: {
               color: "#707070", 
             }, 
@@ -186,11 +227,7 @@ export const ChartDot: React.FC<ChartDotProps> = ({
             easing: 'linear'
           },
           dataLabels: {
-            enabled: true,
-            format: "{point.valueFormatted}",
-            style: {
-              fontSize: '10px'
-            }
+            enabled: false // Disable data labels completely
           },
           jitter: {
             x: 0.1 // Add slight horizontal jitter to prevent overlap
