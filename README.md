@@ -8,5 +8,10 @@
 
 ## Change Log
 
+- August 12, 2025 - released v1.1.1
+   - HVI Dot Chart added
+   - Zenodo citation typo fixed
+   - HVI variable label typoe fixed
+   - "h" -> "H" capitazation typoe fixed in Hispanic related variables
 - June 6, 2025
    - Software Release v1
