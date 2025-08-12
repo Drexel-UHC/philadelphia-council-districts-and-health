@@ -182,15 +182,15 @@ export const ChartDot: React.FC<ChartDotProps> = ({
             }
           },
           animation: {
-            duration: 0 // Disable animation for instant appearance
+            duration: 150,
+            easing: 'linear'
           },
           dataLabels: {
             enabled: true,
             format: "{point.valueFormatted}",
             style: {
               fontSize: '10px'
-            },
-            animation: false // Disable data label animation
+            }
           },
           jitter: {
             x: 0.1 // Add slight horizontal jitter to prevent overlap
