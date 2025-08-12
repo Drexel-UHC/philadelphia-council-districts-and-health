@@ -18,7 +18,7 @@ district,metric_name,value
 1,Black,7.2521534885222465
 1,Native American,0.40812181326319047
 1,Asian,12.309399402814842
-1,Pacific Islander,0.07414988080866268
+1,Pacific Islander,0.074149881
 1,Other Race,5.664407302271248
 1,Two or More Races,7.360238060924909
 1,Hispanic,13.038276892286904
@@ -26,7 +26,7 @@ district,metric_name,value
 1,Nonfatal Shootings,628
 1,Uninsured,7.378424155714422
 1,Tree Canopy Coverage,1.7580425672461861
-1,Heat Vulnerabillity Index,-3.4586845155971293
+1,Heat Vulnerability Index,-3.458684516
 10,Active Business Licenses No Rentals,862
 10,Active Business Licenses Rentals Only,4792
 10,Fatal Crashes,62
@@ -44,17 +44,17 @@ district,metric_name,value
 10,Poverty,11.749175199182405
 10,White,61.68925275109133
 10,Black,10.442929725767396
-10,Native American,0.05186721991701246
+10,Native American,0.05186722
 10,Asian,13.054699709017012
-10,Pacific Islander,0.01809321625012062
+10,Pacific Islander,0.018093216
 10,Other Race,3.904391351071744
 10,Two or More Races,4.690919309870778
 10,Hispanic,8.682666173655527
 10,Fatal Shootings,33
 10,Nonfatal Shootings,92
-10,Uninsured,6.61081777289424
-10,Tree Canopy Coverage,18.9525333522256
-10,Heat Vulnerabillity Index,-3.1226569287308195
+10,Uninsured,6.610817773
+10,Tree Canopy Coverage,18.95253335
+10,Heat Vulnerability Index,-3.122656929
 2,Active Business Licenses No Rentals,1860
 2,Active Business Licenses Rentals Only,9698
 2,Fatal Crashes,63
@@ -74,7 +74,7 @@ district,metric_name,value
 2,Black,39.85144748641504
 2,Native American,0.31360128357056816
 2,Asian,8.657743070275588
-2,Pacific Islander,0.05284648736565681
+2,Pacific Islander,0.052846487
 2,Other Race,2.0031983487760385
 2,Two or More Races,5.339503640869165
 2,Hispanic,6.017796058006068
@@ -82,7 +82,7 @@ district,metric_name,value
 2,Nonfatal Shootings,1061
 2,Uninsured,5.6540058686144485
 2,Tree Canopy Coverage,5.145401204651683
-2,Heat Vulnerabillity Index,-0.5561674397784147
+2,Heat Vulnerability Index,-0.55616744
 3,Active Business Licenses No Rentals,1545
 3,Active Business Licenses Rentals Only,9644
 3,Fatal Crashes,54
@@ -108,9 +108,9 @@ district,metric_name,value
 3,Hispanic,4.444063734219171
 3,Fatal Shootings,448
 3,Nonfatal Shootings,1735
-3,Uninsured,6.73133707237702
+3,Uninsured,6.731337072
 3,Tree Canopy Coverage,8.074413218452705
-3,Heat Vulnerabillity Index,2.422505354467938
+3,Heat Vulnerability Index,2.422505354467938
 4,Active Business Licenses No Rentals,1050
 4,Active Business Licenses Rentals Only,6673
 4,Fatal Crashes,79
@@ -138,7 +138,7 @@ district,metric_name,value
 4,Nonfatal Shootings,1153
 4,Uninsured,4.8737553986871545
 4,Tree Canopy Coverage,18.963581621808693
-4,Heat Vulnerabillity Index,-1.4775982093615267
+4,Heat Vulnerability Index,-1.477598209
 5,Active Business Licenses No Rentals,2108
 5,Active Business Licenses Rentals Only,10001
 5,Fatal Crashes,55
@@ -157,7 +157,7 @@ district,metric_name,value
 5,White,32.173266361894306
 5,Black,41.866327657496996
 5,Native American,0.43010428916587057
-5,Asian,6.03104020988345
+5,Asian,6.03104021
 5,Pacific Islander,0
 5,Other Race,4.828688770142206
 5,Two or More Races,4.949836572665744
@@ -166,12 +166,12 @@ district,metric_name,value
 5,Nonfatal Shootings,2327
 5,Uninsured,5.469730011191792
 5,Tree Canopy Coverage,4.937767573569974
-5,Heat Vulnerabillity Index,1.6893608443521695
+5,Heat Vulnerability Index,1.6893608443521695
 6,Active Business Licenses No Rentals,1062
 6,Active Business Licenses Rentals Only,10495
 6,Fatal Crashes,89
 6,Less Than High School,15.777792519875488
-6,High School Graduate,38.4650437062894
+6,High School Graduate,38.46504371
 6,Some College,23.376365004791687
 6,College Graduate,22.380798769043423
 6,Code Violations,8.546180610469714
@@ -186,7 +186,7 @@ district,metric_name,value
 6,Black,14.096124397672341
 6,Native American,0.19769317451239699
 6,Asian,9.718665911051627
-6,Pacific Islander,0.04866881770823945
+6,Pacific Islander,0.048668818
 6,Other Race,11.522782178998026
 6,Two or More Races,8.186960200138408
 6,Hispanic,21.74202828818215
@@ -194,12 +194,12 @@ district,metric_name,value
 6,Nonfatal Shootings,604
 6,Uninsured,7.356512415238835
 6,Tree Canopy Coverage,8.267190936649135
-6,Heat Vulnerabillity Index,-2.0654535471030133
+6,Heat Vulnerability Index,-2.065453547
 7,Active Business Licenses No Rentals,1612
 7,Active Business Licenses Rentals Only,8043
 7,Fatal Crashes,144
 7,Less Than High School,26.74177722620636
-7,High School Graduate,38.2330672004486
+7,High School Graduate,38.2330672
 7,Some College,20.663494172718284
 7,College Graduate,14.36166140062676
 7,Code Violations,20.803978450062164
@@ -213,16 +213,16 @@ district,metric_name,value
 7,White,14.589758896747876
 7,Black,28.12248192785811
 7,Native American,0.5824814222041081
-7,Asian,4.6554764460271
+7,Asian,4.655476446
 7,Pacific Islander,0.1195172964699713
 7,Other Race,38.20727789551561
-7,Two or More Races,9.33056174810105
+7,Two or More Races,9.330561748
 7,Hispanic,57.914612471190694
 7,Fatal Shootings,697
 7,Nonfatal Shootings,2664
 7,Uninsured,11.708731546885117
-7,Tree Canopy Coverage,5.49985003789122
-7,Heat Vulnerabillity Index,2.868650267321507
+7,Tree Canopy Coverage,5.499850038
+7,Heat Vulnerability Index,2.868650267321507
 8,Active Business Licenses No Rentals,1280
 8,Active Business Licenses Rentals Only,7071
 8,Fatal Crashes,90
@@ -231,7 +231,7 @@ district,metric_name,value
 8,Some College,25.36009916259161
 8,College Graduate,29.25575354728523
 8,Code Violations,21.954219066132424
-8,Lack Complete Kitchen,0.912633042137488
+8,Lack Complete Kitchen,0.912633042
 8,Lack Complete Plumbing,0.44235514007960397
 8,Median Age,39
 8,Median Household Income,51487
@@ -243,14 +243,14 @@ district,metric_name,value
 8,Native American,0.27019376753042895
 8,Asian,2.6507839803925712
 8,Pacific Islander,0.026376058258922825
-8,Other Race,4.1759356919099
+8,Other Race,4.175935692
 8,Two or More Races,5.047968179425686
 8,Hispanic,8.010121349171976
 8,Fatal Shootings,491
 8,Nonfatal Shootings,1794
 8,Uninsured,6.222078636369091
 8,Tree Canopy Coverage,18.00280449942548
-8,Heat Vulnerabillity Index,2.1381059961913507
+8,Heat Vulnerability Index,2.1381059961913507
 9,Active Business Licenses No Rentals,927
 9,Active Business Licenses Rentals Only,5809
 9,Fatal Crashes,56
@@ -259,18 +259,18 @@ district,metric_name,value
 9,Some College,29.151462274715517
 9,College Graduate,20.054687625475403
 9,Code Violations,10.125319055021398
-9,Lack Complete Kitchen,0.750985397322968
+9,Lack Complete Kitchen,0.750985397
 9,Lack Complete Plumbing,0.49025322143808586
 9,Median Age,36.7
 9,Median Household Income,55451
-9,Owners,65.3379018373526
+9,Owners,65.33790184
 9,Renters,37.51527230871307
 9,Poverty,22.67637852830671
 9,White,10.617837012333224
 9,Black,64.00837553115613
 9,Native American,0.3648233223054723
 9,Asian,7.822440204993436
-9,Pacific Islander,0.00612722571474088
+9,Pacific Islander,0.006127226
 9,Other Race,9.279598771248311
 9,Two or More Races,7.762068961116563
 9,Hispanic,18.61951277168177
@@ -278,4 +278,4 @@ district,metric_name,value
 9,Nonfatal Shootings,893
 9,Uninsured,10.098094080452023
 9,Tree Canopy Coverage,8.737410698143478
-9,Heat Vulnerabillity Index,2.0542585595446243
+9,Heat Vulnerability Index,2.0542585595446243
