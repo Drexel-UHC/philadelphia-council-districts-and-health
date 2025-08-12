@@ -1,0 +1,159 @@
+var_name,metric_name,var_label,var_def,source,year,aggregation_notes,cleaning_notes,ylabs,metric_description_say_whether_it_is_a_percent_rate_count_etc,denominator_if_relevant,data_source,year_s,geography_of_original_estimate_and_aggregation_technique,notes,source_year
+cd_pct_poverty,Poverty,Poverty,Percentage of Residents who are below the poverty level,ACS 5-year,2022,Census Tract aggregated up to the council district using Block population as weights,"Variables Used:
+#B17001_002 #Estimate!!Total:!!Income in the past 12 months below poverty level:
+#B17001_001 #Estimate: Total",Poverty  (%),Percentage of Residents who are below the poverty level,Total Population,ACS 5-year,2018-2022,Census Tract aggregated up to the council district using Block population as weights,"Variables Used:
+#B17001_002 #Estimate!!Total:!!Income in the past 12 months below poverty level:
+#B17001_001 #Estimate: Total",Source: ACS 5-year (2022)
+cd_tree,Tree Canopy Coverage,Tree Canopy Coverage,Percentage of Council district covered by greenspace,Urban Health Collaborative Data Portal,2019,"2010 Census tracts, converted to 2020 Blocks, then aggregated up to the council district level using 2010 Shape Area as weights",Used IPUMS crosswalk to convert 2010 Census tracts to 2020 Blocks. Before joining at the council district level,Tree Canopy Coverage  (%),Percentage of Council district covered by greenspace,Shape Area of Council District,Urban Health Collaborative Data Portal,2019,"2010 Census tracts, converted to 2020 Blocks, then aggregated up to the council district level using 2010 Shape Area as weights",Used IPUMS crosswalk to convert 2010 Census tracts to 2020 Blocks. Before joining at the council district level,Source: Urban Health Collaborative Data Portal (2019)
+college_grad_pct,College Graduate,Education: College Graduate,Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+#""B15003_001"" = total pop over 25,
+#""B15003_022""= Bachelors 
+#""B15003_023""= Masters 
+#""B15003_024""= Professional school 
+#""B15003_025"" = Doctorate",Education: College Graduate  (%),Percentage of residents over the age of 25 with a bachelor's degree or higher for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+#""B15003_001"" = total pop over 25,
+#""B15003_022""= Bachelors 
+#""B15003_023""= Masters 
+#""B15003_024""= Professional school 
+#""B15003_025"" = Doctorate",Source: ACS 5-year (2022)
+count_crashes,Fatal Crashes,Fatal Car Crashes,Count of crashes,Open Data Philly (Philadelphia Police Department),2019 - Present,Counts were summarized per council district using a spatial join,NA,Count of crashes,Count of crashes,NA,Open Data Philly (Philadelphia Police Department),2019 - Present,Counts were summarized per council district using a spatial join,NA,Source: Open Data Philly (Philadelphia Police Department) (2019 - Present)
+count_fatal,Fatal Shootings,Fatal Shootings,Total Number of Fatal Shootings per Council District,Open Data Philly (Philadelphia Police Department),2015 - Present,Counts were summarized per council district using a spatial join,NA,# of Fatal Shootings,Total Number of Fatal Shootings per Council District,NA,Open Data Philly (Philadelphia Police Department),2015 - Present,Counts were summarized per council district using a spatial join,NA,Source: Open Data Philly (Philadelphia Police Department) (2015 - Present)
+count_non_fatal,Nonfatal Shootings,Nonfatal Shootings,Total Number of Nonfatal Shootings per Council District,Open Data Philly (Philadelphia Police Department),2015 - Present,Counts were summarized per council district using a spatial join,NA,# of Nonfatal Shootings,Total Number of Nonfatal Shootings per Council District,NA,Open Data Philly (Philadelphia Police Department),2015 - Present,Counts were summarized per council district using a spatial join,NA,Source: Open Data Philly (Philadelphia Police Department) (2015 - Present)
+district_lack_kitch_pct,Lack Complete Kitchen,Housing Quality: Lacking Complete Kitchen Facilities,"Percentage of homes that lack a complete kitchen. A housing unit is considered to be lacking complete kitchen facilities when it is missing one or more of the following: a sink with a faucet, a stove or range, and a refrigerator.",ACS 5-year,2022,Census Tract aggregated up to the council district using Block population as weights,"Variables Used:
+#B25052_001 --> Total Occupied housing units tract
+#B25052_003 --> Lacking complete kitchen facilities tract",Housing Quality: Lacking Complete Kitchen Facilities  (%),"Percentage of homes that lack a complete kitchen. A housing unit is considered to be lacking complete kitchen facilities when it is missing one or more of the following: a sink with a faucet, a stove or range, and a refrigerator.",Total Number of Occupied Housing Units,ACS 5-year,2018-2022,Census Tract aggregated up to the council district using Block population as weights,"Variables Used:
+#B25052_001 --> Total Occupied housing units tract
+#B25052_003 --> Lacking complete kitchen facilities tract",Source: ACS 5-year (2022)
+district_lack_plumb_pct,Lack Complete Plumbing,Housing Quality: Lacking Complete Plumbing Facilities,Percentage of homes that lack complete plumbing. A housing unit is considered to be lacking complete plumbing facilities when it is missing one or more of the following: hot and cold running water and a bathtub or shower.,ACS 5-year,2022,Census Tract aggregated up to the council district using Block population as weights,"Variables Used:
+#B25048_001 --> Total Occupied housing units tract
+#B25048_003 --> Lacking plumbing occupied housing units tract",Housing Quality: Lacking Complete Plumbing Facilities  (%),Percentage of homes that lack complete plumbing. A housing unit is considered to be lacking complete plumbing facilities when it is missing one or more of the following: hot and cold running water and a bathtub or shower.,Total Number of Occupied Housing Units,ACS 5-year,2018-2022,Census Tract aggregated up to the council district using Block population as weights,"Variables Used:
+#B25048_001 --> Total Occupied housing units tract
+#B25048_003 --> Lacking plumbing occupied housing units tract",Source: ACS 5-year (2022)
+district_median_age_total,Median Age,Median Age,Median age of residents,ACS 5-year,2022,Census Block Group aggregated up to the council district using…?... As weights….,Variable used: B01002_001,Age,Median age of residents,NA,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using…?... As weights….,Variable used: B01002_001,Source: ACS 5-year (2022)
+hs_grad_pct,High School Graduate,Education: High School Graduate,Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#""B15003_001"" = total pop over 25,
+#""B15003_017"" HS grad, 
+#""B15003_018"" = GED or equivalent",Education: High School Graduate  (%),Percentage of residents over the age of 25 with High school Diploma or equivalent for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#""B15003_001"" = total pop over 25,
+#""B15003_017"" HS grad, 
+#""B15003_018"" = GED or equivalent",Source: ACS 5-year (2022)
+less_than_hs_pct,Less Than High School,Education: Less than High School Education,Percentage of residents over the age of 25 with less than High school for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+#""B15003_001"" = total pop over 25
+#""B15003_002"" = No schooling
+#""B15003_003"" = Nursery School 
+#""B15003_004""= Kindergarten
+#""B15003_005"" = 1st
+#""B15003_006"" = 2nd, 
+#""B15003_007"" = 3rd 
+#""B15003_008"" = 4th, 
+#""B15003_009"" = 5th, 
+#""B15003_010"" = 6th
+#""B15003_011"" = 7th 
+#""B15003_012""= 8th 
+#""B15003_013"" 9th 
+#""B15003_014""= 10th 
+#""B15003_015"" = 11th
+#""B15003_016"" = 12th no diploma 
+",Education: Less than High School Education  (%),Percentage of residents over the age of 25 with less than High school for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used: 
+#""B15003_001"" = total pop over 25
+#""B15003_002"" = No schooling
+#""B15003_003"" = Nursery School 
+#""B15003_004""= Kindergarten
+#""B15003_005"" = 1st
+#""B15003_006"" = 2nd, 
+#""B15003_007"" = 3rd 
+#""B15003_008"" = 4th, 
+#""B15003_009"" = 5th, 
+#""B15003_010"" = 6th
+#""B15003_011"" = 7th 
+#""B15003_012""= 8th 
+#""B15003_013"" 9th 
+#""B15003_014""= 10th 
+#""B15003_015"" = 11th
+#""B15003_016"" = 12th no diploma 
+",Source: ACS 5-year (2022)
+median_hh_income_district,Median Household Income,Median Household Income,Median Household Income,ACS 5-year,2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B19013_001 - Estimate!!Median household income in the past 12 months (in 2022 inflation-adjusted dollars)
+",Median Household Income ($),Median Household Income,NA,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B19013_001 - Estimate!!Median household income in the past 12 months (in 2022 inflation-adjusted dollars)
+",Source: ACS 5-year (2022)
+pct_asian,Asian,Race and Ethnicity: Asian,Percentage of residents who are Asian,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_005 Asian",Race and Ethnicity: Asian  (%),Percentage of residents who are Asian,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_005 Asian",Source: ACS 5-year (2022)
+pct_black,Black,Race and Ethnicity: Black,Percentage of residents who are Black,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_003 Black",Race and Ethnicity: Black  (%),Percentage of residents who are Black,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_003 Black",Source: ACS 5-year (2022)
+pct_hispanic,Hispanic,Race and Ethnicity: Hispanic,Percentage of residents who are Hispanic,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B03001_001 Total pop,
+#B03002_012 Hispanic/Latino",Race and Ethnicity: Hispanic  (%),Percentage of residents who are Hispanic,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B03001_001 Total pop,
+#B03002_012 Hispanic/Latino",Source: ACS 5-year (2022)
+pct_native,Native American,Race and Ethnicity: American Indian and Alaskan Native,Percentage of residents who are Native Indian/Alaska Native,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_004 American Indian/Alaska Native",Race and Ethnicity: American Indian and Alaskan Native  (%),Percentage of residents who are Native Indian/Alaska Native,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_004 American Indian/Alaska Native",Source: ACS 5-year (2022)
+pct_other,Other Race,Race and Ethnicity: Other Race (Not Listed),Percentage of residents who identified with a race other than the listed racial categories,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_007 Some other race",Race and Ethnicity: Other Race (Not Listed)  (%),Percentage of residents who identified with a race other than the listed racial categories,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_007 Some other race",Source: ACS 5-year (2022)
+pct_owner,Owners,Homeowners,Percentage of Households that Own their home,ACS 5-year,2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B25003_001 --> Estimate!!Total: block group
+#B25003_002 --> Estimate!!Total:!!Owner occupied block group",Homeowners  (%),Percentage of Households that Own their home,Total Number of Households,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B25003_001 --> Estimate!!Total: block group
+#B25003_002 --> Estimate!!Total:!!Owner occupied block group",Source: ACS 5-year (2022)
+pct_pi,Pacific Islander,Race and Ethnicity: Native Hawaiian and Pacific Islander,Percentage of residents who are Pacific Islander/Native Hawaiian,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_006 Native Hawaiian/Pacific Islander",Race and Ethnicity: Native Hawaiian and Pacific Islander  (%),Percentage of residents who are Pacific Islander/Native Hawaiian,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_006 Native Hawaiian/Pacific Islander",Source: ACS 5-year (2022)
+pct_renter,Renters,Renters,Percentage of Households that Rent their home,ACS 5-year,2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B25003_001 --> Estimate!!Total: block group
+#B25003_003 --> Estimate!!Total:!!Renter occupied block group",Renters  (%),Percentage of Households that Rent their home,Total Number of Households,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using total number of households as weights,"Variables Used:
+#B25003_001 --> Estimate!!Total: block group
+#B25003_003 --> Estimate!!Total:!!Renter occupied block group",Source: ACS 5-year (2022)
+pct_two_more,Two or More Races,Race and Ethnicity: Two or More Races,Percentage of residents who are two or more races,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_008 Two or more races",Race and Ethnicity: Two or More Races  (%),Percentage of residents who are two or more races,Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop,
+#B02001_008 Two or more races",Source: ACS 5-year (2022)
+pct_violations,Code Violations,Code Violations,Percentage of buildings with an open housing code violation,Open Data Philly (Department of Licenses and Inspections),2019 - July 2024,Code violations were set at the council district level. However land parcels had to be spatially joined to council districts.,NA,Code Violations  (%),Percentage of buildings with an open housing code violation,The number of parcels of land available per council district,Open Data Philly (Department of Licenses and Inspections),2019 - July 2024,Code violations were set at the council district level. However land parcels had to be spatially joined to council districts.,NA,Source: Open Data Philly (Department of Licenses and Inspections) (2019 - July 2024)
+pct_white,White,Race and Ethnicity: Non-Hispanic White,"Percentage of residents who are White, Non-Hispanic",ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop
+#B03002_003 White Not Hispanic or Latino",Race and Ethnicity: Non-Hispanic White  (%),"Percentage of residents who are White, Non-Hispanic",Total Population,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#B02001_001 Total pop
+#B03002_003 White Not Hispanic or Latino",Source: ACS 5-year (2022)
+percentage_uninsured,Uninsured,Without Health Insurance,Percentage of people uninsured,ACS 5-year,2022,Block Group variables were aggregated up to the council district level using Block population as the weights,"Variables Used:
+#B18135_007 -- Estimate!!Total:!!Under 19 years:!!With a disability:!!No health insurance coverage
+#B18135_012 -- Estimate!!Total:!!Under 19 years:!!No disability:!!No health insurance coverage
+
+#B18135_018 -- Estimate!!Total:!!19 to 64 years:!!With a disability:!!No health insurance coverage
+#B18135_023 -- Estimate!!Total:!!19 to 64 years:!!No disability:!!No health insurance coverage
+
+#B18135_029 -- Estimate!!Total:!!65 years and over:!!With a disability:!!No health insurance coverage
+#B18135_034 -- Estimate!!Total:!!65 years and over:!!No disability:!!No health insurance coverage",Without Health Insurance  (%),Percentage of people Uninsured,Total Number of People,ACS 5-year,2018-2022,Block Group variables were aggregated up to the council district level using Block population as the weights,"Variables Used:
+#B18135_007 -- Estimate!!Total:!!Under 19 years:!!With a disability:!!No health insurance coverage
+#B18135_012 -- Estimate!!Total:!!Under 19 years:!!No disability:!!No health insurance coverage
+
+#B18135_018 -- Estimate!!Total:!!19 to 64 years:!!With a disability:!!No health insurance coverage
+#B18135_023 -- Estimate!!Total:!!19 to 64 years:!!No disability:!!No health insurance coverage
+
+#B18135_029 -- Estimate!!Total:!!65 years and over:!!With a disability:!!No health insurance coverage
+#B18135_034 -- Estimate!!Total:!!65 years and over:!!No disability:!!No health insurance coverage",Source: ACS 5-year (2022)
+some_college_pct,Some College,Education: Some College Education,Percentage of residents over the age of 25 with some college for highest educational attainment,ACS 5-year,2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#""B15003_001"" = total pop over 25,
+#""B15003_019"" = some college less than 1 yr
+#""B15003_020""= some college 1 yr or more no degree
+#""B15003_021""= Associates",Education: Some College Education  (%),Percentage of residents over the age of 25 with some college for highest educational attainment,Total Population over the Age of 25,ACS 5-year,2018-2022,Census Block Group aggregated up to the council district using Block population as weights,"Variables Used:
+#""B15003_001"" = total pop over 25,
+#""B15003_019"" = some college less than 1 yr
+#""B15003_020""= some college 1 yr or more no degree
+#""B15003_021""= Associates",Source: ACS 5-year (2022)
+total_active_licenses_norentals,Active Business Licenses No Rentals,Active Business Licenses (Excluding Rental Business Licenses),"Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services.",Open Data Philly (Department of Licenses and Inspections),2020 - Oct 2024,Counts already at the council district level,NA,# of Active Business Rentals,"Count of Licenses. Non-rental Business Licenses are for business that do not involve leasing property such as restaurants, retail stores, street vendors, contractors, and other professional services.",NA,Open Data Philly (Department of Licenses and Inspections),2020 - Oct 2024,Counts already at the council district level,NA,Source: Open Data Philly (Department of Licenses and Inspections) (2020 - Oct 2024)
+total_active_licenses_rentalsonly,Active Business Licenses Rentals Only,Active Rental Business Licenses,"Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories.",Open Data Philly (Department of Licenses and Inspections),2020 - Oct 2024,Counts already at the council district level,NA,# of Active Business Rentals,"Count of Licenses. Rental business licenses are required for business that involves leasing property (both residential and commercial) including landlord properties, assisted living facilities, hotels, and dormitories.",NA,Open Data Philly (Department of Licenses and Inspections),2020 - Oct 2024,Counts already at the council district level,NA,Source: Open Data Philly (Department of Licenses and Inspections) (2020 - Oct 2024)
+weighted_hvi,Heat Vulnerability Index,Heat Vulnerability Index,"The Heat Vulnerability Index (HVI) is a composite measure that summarizes key indicators associated with negative health outcomes due to extreme heat exposure. The HVI scale ranges from negative to positive values, which represent areas of very low to very high vulnerability.",Open Data Philly (Department of Public Health),2018,"2010 Census tracts, converted to 2020 Blocks, then aggregated up to the council district level using 2010 Shape Area as weights",Used IPUMS crosswalk to convert 2010 Census tracts to 2020 Blocks. Before joining at the council district level,Heat Vulnerability Index,"The Heat Vulnerability Index (HVI) is a composite measure that summarizes key indicators associated with negative health outcomes due to extreme heat exposure. The HVI scale ranges from negative to positive values, which represent areas of very low to very high vulnerability.",NA,Open Data Philly (Department of Public Health),2018,"2010 Census tracts, converted to 2020 Blocks, then aggregated up to the council district level using 2010 Shape Area as weights",Used IPUMS crosswalk to convert 2010 Census tracts to 2020 Blocks. Before joining at the council district level,Source: Open Data Philly (Department of Public Health) (2018)
