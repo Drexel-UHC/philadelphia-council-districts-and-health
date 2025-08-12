@@ -132,7 +132,7 @@ export default function Outro() {
           Citation
         </h4>
         <div className="bg-gray-100 p-4 rounded font-mono text-sm">
-          Amber, B., Tamara, R., Ran, L., Stephanie, H., & Alina, S.-M. (2025). <em>Philadelphia Council District Health Dashboard (Dataset)</em> [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.15830411" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://doi.org/10.5281/zenodo.15830411</a>
+          Bolli, A., Rushovich, T., Li, R., Hernandez, S., & Schnake-Mahl, A. (2025). <em>Philadelphia Council District Health Dashboard (Dataset)</em> [Data set]. Zenodo. <a href="https://doi.org/10.5281/zenodo.15830411" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://doi.org/10.5281/zenodo.15830411</a>
         </div>
       </div>
       

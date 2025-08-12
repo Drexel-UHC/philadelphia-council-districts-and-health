@@ -263,11 +263,12 @@ df_metadata = df_metadata_raw %>%
       "Nonfatal Shootings" = "count_non_fatal",
       "Uninsured" = "percentage_uninsured",
       "Tree Canopy Coverage" = "cd_tree",
-      "Heat Vulnerabillity Index" = "weighted_hvi",
+      "Heat Vulnerability Index" = "weighted_hvi",
       "Poverty" = "cd_pct_poverty"
     ),
     ylabs = case_when(
       str_detect(var_def, "Percentage") ~ paste(var_label, " (%)"),
+      var_label %in% c('Heat Vulnerability Index') ~ "Heat Vulnerability Index",
       var_label %in% c('Median Age') ~ "Age",
       var_name %in% c('total_active_licenses_rentalsonly',
                       'total_active_licenses_norentals') ~ "# of Active Business Rentals",   
@@ -319,7 +320,7 @@ df_data_cube = df_data %>%
                      'Total Number of Nonfatal Shootings per Council District',
                      'Count of crashes',
                      'Count of Licenses') ~ format(round(value, digits = 0), nsmall = 0) ,
-      var_def %in% c('Heat Vulnerability Index') ~ format(round(value, digits = 2), nsmall = 2) ,
+      metric_name %in% c('Heat Vulnerability Index') ~ format(round(value, digits = 2), nsmall = 2) ,
       var_label %in% c('Median Household Income') ~  scales::dollar(value, accuracy = 1),
       var_name %in% c('total_active_licenses_rentalsonly',
                       'total_active_licenses_norentals') ~ format(round(value, digits = 0), nsmall = 0),
@@ -328,7 +329,7 @@ df_data_cube = df_data %>%
     ) %>% str_trim()
   ) %>%   
   ## Standardize
-  arrange(var_name, district_int, year_s) %>%
+  arrange(var_name, district_int, year_s) %>% 
   ## Unit testing
   verify(!str_detect(value_clean, "!!"))
 ```

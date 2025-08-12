@@ -178,7 +178,7 @@
   {
     "var_name": "pct_white",
     "var_label": "Race and Ethnicity: Non-Hispanic White",
-    "var_def": "Percentage of residents who are White, Non-hispanic",
+    "var_def": "Percentage of residents who are White, Non-Hispanic",
     "source": "ACS 5-year",
     "year": "2022",
     "ylabs": "Race and Ethnicity: Non-Hispanic White  (%)"
@@ -217,8 +217,8 @@
   },
   {
     "var_name": "weighted_hvi",
-    "var_label": "Heat Vulnerabillity Index",
-    "var_def": "Heat Vulnerability Index",
+    "var_label": "Heat Vulnerability Index",
+    "var_def": "The Heat Vulnerability Index (HVI) is a composite measure that summarizes key indicators associated with negative health outcomes due to extreme heat exposure. The HVI scale ranges from negative to positive values, which represent areas of very low to very high vulnerability.",
     "source": "Open Data Philly (Department of Public Health)",
     "year": "2018",
     "ylabs": "Heat Vulnerability Index"
