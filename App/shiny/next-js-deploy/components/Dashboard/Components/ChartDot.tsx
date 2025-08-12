@@ -160,7 +160,7 @@ export const ChartDot: React.FC<ChartDotProps> = ({
           const dataMin = Math.min(...values);
           const dataMax = Math.max(...values);
           const range = dataMax - dataMin;
-          const padding = range * 0.01; // 15% padding
+          const padding = range * 0.01; // 1% padding
           
           // Create specific tick positions with padding
           return [
