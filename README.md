@@ -8,7 +8,7 @@
 
 ## Change Log
 
-- August 12, 2025 - released v1.1.1
+- August 12, 2025 - released v1.1.2
    - HVI Dot Chart added
    - Zenodo citation typo fixed
    - HVI variable label typoe fixed
