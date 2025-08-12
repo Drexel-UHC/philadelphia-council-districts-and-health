@@ -7,8 +7,8 @@ import { MetricData } from '@/components/Dashboard/types/dashboard_types';
 
 // Enhanced interface for scatter chart data points
 interface ScatterDataPoint {
-  x: number; // HVI value
-  y: number; // District position (0-9, sorted by value)
+  x: number; // District position (0-9, sorted by value)
+  y: number; // HVI value
   valueFormatted: string;
   district: string;
   color?: string;
@@ -93,14 +93,14 @@ export const ChartDot: React.FC<ChartDotProps> = ({
     const xAxisTitle = firstItem.ylabs; // HVI values will be on X-axis
     const subtitle = firstItem.var_def;
     
-    // Create categories for Y-axis (districts sorted by value)
+    // Create categories for X-axis (districts sorted by value)
     const categories = sortedData.map(item => `District ${item.district}`);
     
     // Transform data into scatter plot format
-    // X-axis will be the HVI value, Y-axis will be district position (0-9)
+    // X-axis will be district position (0-9), Y-axis will be the HVI value
     const chartData: ScatterDataPoint[] = sortedData.map((item, index) => ({
-      x: item.value, // HVI value as X coordinate
-      y: index, // Position in sorted order as Y coordinate (0 = highest value)
+      x: index, // Position in sorted order as X coordinate (0 = highest value)
+      y: item.value, // HVI value as Y coordinate
       valueFormatted: item.value_clean,
       district: item.district,
       // Use a default color (not based on highlighted district)
@@ -130,43 +130,12 @@ export const ChartDot: React.FC<ChartDotProps> = ({
       },
       xAxis: {
         title: {
-          text: xAxisTitle
-        },
-        labels: {
-          style: {
-            fontSize: '10px'
-          }
-        },
-        plotLines: [{
-          value: cityAvg,
-          color: "#707070",
-          dashStyle: "ShortDash",
-          width: 2,
-          label: {
-            text: `City Average: ${cityAvg.toFixed(2)}`,
-            align: "left",
-            verticalAlign: "top",
-            rotation: 0, // Horizontal text
-            x: 5, // Offset to the right of the line
-            style: {
-              color: "#707070", 
-            }, 
-          },
-          zIndex: 25
-        }]
-      },
-      yAxis: {
-        title: {
-          text: "Council District",
-          style: {
-            transition: 'none'
-          }
+          text: "Council District"
         },
         categories: categories,
         min: 0,
         max: categories.length - 1,
         tickInterval: 1,
-        reversed: false, // Highest values at top
         labels: {
           style: {
             fontSize: '10px'
@@ -175,6 +144,31 @@ export const ChartDot: React.FC<ChartDotProps> = ({
         startOnTick: true,
         endOnTick: true,
         tickPositions: Array.from({length: categories.length}, (_, i) => i)
+      },
+      yAxis: {
+        title: {
+          text: xAxisTitle,
+          style: {
+            transition: 'none'
+          }
+        }, 
+        plotLines: [{
+          value: cityAvg,
+          color: "#707070",
+          dashStyle: "ShortDash",
+          width: 2,
+          label: {
+            text: `City Average: ${cityAvg.toFixed(2)}`,
+            align: "left",
+            verticalAlign: "middle",
+            rotation: 0, // Horizontal text
+            x: 5, // Offset to the right of the line
+            style: {
+              color: "#707070", 
+            }, 
+          },
+          zIndex: 25
+        }]
       },
       plotOptions: {
         scatter: {
@@ -187,15 +181,19 @@ export const ChartDot: React.FC<ChartDotProps> = ({
               }
             }
           },
+          animation: {
+            duration: 0 // Disable animation for instant appearance
+          },
           dataLabels: {
             enabled: true,
             format: "{point.valueFormatted}",
             style: {
               fontSize: '10px'
-            }
+            },
+            animation: false // Disable data label animation
           },
           jitter: {
-            y: 0.1 // Add slight vertical jitter to prevent overlap
+            x: 0.1 // Add slight horizontal jitter to prevent overlap
           },
           // Add point events for hover tracking
           point: {
