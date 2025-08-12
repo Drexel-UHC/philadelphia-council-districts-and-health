@@ -263,7 +263,7 @@ df_metadata = df_metadata_raw %>%
       "Nonfatal Shootings" = "count_non_fatal",
       "Uninsured" = "percentage_uninsured",
       "Tree Canopy Coverage" = "cd_tree",
-      "Heat Vulnerabillity Index" = "weighted_hvi",
+      "Heat Vulnerability Index" = "weighted_hvi",
       "Poverty" = "cd_pct_poverty"
     ),
     ylabs = case_when(
