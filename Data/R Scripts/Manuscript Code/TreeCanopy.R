@@ -88,7 +88,8 @@ ggplot() +
   geom_sf(data = weighted_CD_tree, fill = NA, color = "white", size = 3) +  # Second layer (outline or overlay)
   scale_fill_viridis_c(option = "mako", na.value = "grey",
                        limits=c(0,77),direction = -1) +
-  theme_void()
+  theme_void()+ labs(fill='% Tree Canopy Coverage')
+  
 
 
 ggplot() +
@@ -101,7 +102,7 @@ ggplot() +
             aes(x = st_coordinates(geometry)[,1], 
                 y = st_coordinates(geometry)[,2], 
                 label = DISTRICT), 
-            size = 4, color = "grey30") 
+            size = 4, color = "grey30") + labs(fill='% Tree Canopy Coverage')
 
 
 
