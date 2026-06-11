@@ -11,18 +11,10 @@
 #B18135_029 -- Estimate!!Total:!!65 years and over:!!With a disability:!!No health insurance coverage
 #B18135_034 -- Estimate!!Total:!!65 years and over:!!No disability:!!No health insurance coverage
 
+pacman::p_load(tidycensus, tigris, sf, readxl, stringr, ggplot2, here, writexl, Hmisc)
 
-library(tidycensus)
-library(tigris)
-library(sf)
-library(mapview)
-library(dplyr)
-library(readxl)
-library(stringr)
-library(ggplot2)
-library(here)
-library(writexl)
-library(Hmisc)
+# library(mapview)
+
 
 
 setwd(here("Data"))
@@ -50,15 +42,27 @@ pop_PA <- get_acs(
   state = "PA",
   county = "Philadelphia",
   year = 2022,
-  survey = "acs5") %>% select(GEOID, estimate) %>% rename(pop = estimate)
+  survey = "acs5") %>% select(GEOID, estimate,moe) %>% rename(pop = estimate,pop_moe = moe)
 
 #Now add all variables together by census tract
-uninsured_PA_total <- uninsured_PA %>% 
-  group_by(GEOID) %>% 
-  dplyr::summarize(total_uninsured = sum(estimate, na.rm = TRUE)) %>% 
-  ungroup() %>% 
-  left_join(pop_PA, by='GEOID') %>% 
-  mutate(pct_uninsured = total_uninsured/pop)
+uninsured_PA_total <- uninsured_PA %>%
+  group_by(GEOID) %>%
+  dplyr::summarize(
+    total_uninsured     = sum(estimate, na.rm = TRUE),
+    total_uninsured_moe = moe_sum(moe = moe, estimate = estimate)  # <-- tidycensus
+  ) %>%
+  ungroup() %>%
+  left_join(pop_PA, by = 'GEOID') %>%
+  mutate(
+    pct_uninsured = total_uninsured / pop,
+    # moe_prop handles the Census Bureau ratio formula + negative radicand fallback
+    pct_uninsured_moe = moe_prop(
+      num     = total_uninsured,
+      denom   = pop,
+      moe_num = total_uninsured_moe,
+      moe_den = pop_moe
+    )
+  )
 
 
 
@@ -83,8 +87,8 @@ data <- total_join %>%
   mutate(Weight = value/sum(value), 
          Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block#
   ungroup() %>% 
-  mutate(pct_uninsured = case_when(pop==0 ~ 0,
-                                   TRUE~ pct_uninsured*100))
+  mutate(pct_uninsured = case_when(pop==0 ~ 0,TRUE~ pct_uninsured*100),
+         pct_uninsured_moe = case_when(pop == 0 ~ 0, TRUE ~ pct_uninsured_moe * 100))
 
 
 
@@ -92,22 +96,33 @@ data <- total_join %>%
 #Council District Insurance value
 data2 <- data %>%
   group_by(DISTRICT) %>%
-  dplyr::summarize(CD_uninsurance = sum(total_uninsured*Weight, na.rm = TRUE), 
-            CD_pop = sum(value, na.rm = TRUE),
-            within_sd = round(sqrt(wtd.var(x = pct_uninsured, weights = Weight)),1)) %>% 
+  dplyr::summarize(
+    CD_uninsurance = sum(total_uninsured*Weight, na.rm = TRUE), 
+    CD_uninsurance_moe = moe_sum(
+      moe      = total_uninsured_moe * Weight,
+      estimate = total_uninsured * Weight),
+    CD_pop = sum(value, na.rm = TRUE),
+    within_sd = round(sqrt(wtd.var(x = pct_uninsured, weights = Weight)),1)) %>% 
   ungroup() %>% 
   mutate(percentage_uninsured = round(((CD_uninsurance/CD_pop)*100),1),
+         percentage_uninsured_moe = round(moe_prop(
+           num     = CD_uninsurance,
+           denom   = CD_pop,
+           moe_num = CD_uninsurance_moe,
+           moe_den = 0  # block pop from Census 2020 has no MOE; set NA or 0
+         ) * 100, 1),
          between_sd = round(sd(percentage_uninsured),1),
-         CD_uninsurance = round(CD_uninsurance))
+         CD_uninsurance = round(CD_uninsurance),
+         CD_uninsurance_moe = round(CD_uninsurance_moe))
 
 
 ##########################################
 #         save clean dataset
 ##########################################
 uninsured_CCdistrict<-data2 %>% 
-  select(DISTRICT, CD_uninsurance,CD_pop,percentage_uninsured,within_sd,between_sd)
-write_xlsx(uninsured_CCdistrict, "/Users/tr842/Library/CloudStorage/OneDrive-DrexelUniversity/Github_repositories/philadelphia-council-districts-and-health/Data/mansucript/output/uninsured_CCdistrict.xlsx")
+  select(DISTRICT, CD_uninsurance,CD_uninsurance_moe,CD_pop,percentage_uninsured,percentage_uninsured_moe, within_sd,between_sd)
 
+write.csv(uninsured_CCdistrict, "manuscript/uninsured_CCdistrict.csv")
 
 ##########################################
 #         plot 
