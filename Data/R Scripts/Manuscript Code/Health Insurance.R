@@ -42,18 +42,18 @@ pop_PA <- get_acs(
   state = "PA",
   county = "Philadelphia",
   year = 2022,
-  survey = "acs5") %>% select(GEOID, estimate,moe) %>% rename(pop = estimate,pop_moe = moe)
+  survey = "acs5") %>% dplyr::select(GEOID, estimate,moe) %>% dplyr::rename(pop = estimate,pop_moe = moe)
 
 #Now add all variables together by census tract
 uninsured_PA_total <- uninsured_PA %>%
-  group_by(GEOID) %>%
+  dplyr::group_by(GEOID) %>%
   dplyr::summarize(
     total_uninsured     = sum(estimate, na.rm = TRUE),
     total_uninsured_moe = moe_sum(moe = moe, estimate = estimate)  # <-- tidycensus
   ) %>%
-  ungroup() %>%
-  left_join(pop_PA, by = 'GEOID') %>%
-  mutate(
+  dplyr::ungroup() %>%
+  dplyr::left_join(pop_PA, by = 'GEOID') %>%
+  dplyr::mutate(
     pct_uninsured = total_uninsured / pop,
     # moe_prop handles the Census Bureau ratio formula + negative radicand fallback
     pct_uninsured_moe = moe_prop(
@@ -72,30 +72,30 @@ uninsured_PA_total <- uninsured_PA %>%
 #Need to recreate GEOID minus 4 for the block to join. 
 
 total_population_blocks <- population_census_blocks %>%
-  mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
+  dplyr::mutate(GEOIDTRACT = str_sub(GEOID, 1, 11))
 
 #I need to do a join where the values repeat?
 
 total_join <- total_population_blocks %>%
-  left_join (uninsured_PA_total, by = c("GEOIDTRACT"="GEOID"))
+  dplyr::left_join (uninsured_PA_total, by = c("GEOIDTRACT"="GEOID"))
 
 
 #Weight = Blocks / Total block in same tract
 
 data <- total_join %>%
-  group_by(GEOIDTRACT) %>%
-  mutate(Weight = value/sum(value), 
-         Weight = case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block#
-  ungroup() %>% 
-  mutate(pct_uninsured = case_when(pop==0 ~ 0,TRUE~ pct_uninsured*100),
-         pct_uninsured_moe = case_when(pop == 0 ~ 0, TRUE ~ pct_uninsured_moe * 100))
+  dplyr::group_by(GEOIDTRACT) %>%
+  dplyr::mutate(Weight = value/sum(value), 
+         Weight = dplyr::case_when(is.nan(Weight)~0, TRUE~ Weight)) %>% #value is pop per block#
+  dplyr::ungroup() %>% 
+  dplyr::mutate(pct_uninsured = dplyr::case_when(pop==0 ~ 0,TRUE~ pct_uninsured*100),
+         pct_uninsured_moe = dplyr::case_when(pop == 0 ~ 0, TRUE ~ pct_uninsured_moe * 100))
 
 
 
 
 #Council District Insurance value
 data2 <- data %>%
-  group_by(DISTRICT) %>%
+  dplyr:: group_by(DISTRICT) %>%
   dplyr::summarize(
     CD_uninsurance = sum(total_uninsured*Weight, na.rm = TRUE), 
     CD_uninsurance_moe = moe_sum(
@@ -103,8 +103,8 @@ data2 <- data %>%
       estimate = total_uninsured * Weight),
     CD_pop = sum(value, na.rm = TRUE),
     within_sd = round(sqrt(wtd.var(x = pct_uninsured, weights = Weight)),1)) %>% 
-  ungroup() %>% 
-  mutate(percentage_uninsured = round(((CD_uninsurance/CD_pop)*100),1),
+  dplyr::ungroup() %>% 
+  dplyr::mutate(percentage_uninsured = round(((CD_uninsurance/CD_pop)*100),1),
          percentage_uninsured_moe = round(moe_prop(
            num     = CD_uninsurance,
            denom   = CD_pop,
@@ -115,14 +115,40 @@ data2 <- data %>%
          CD_uninsurance = round(CD_uninsurance),
          CD_uninsurance_moe = round(CD_uninsurance_moe))
 
+#get citywide total:"
+city_total <- data %>%
+  dplyr::summarize(
+    DISTRICT              = "City",
+    CD_uninsurance        = sum(total_uninsured * Weight, na.rm = TRUE),
+    CD_uninsurance_moe_90 = moe_sum(
+      moe      = total_uninsured_moe * Weight,
+      estimate = total_uninsured * Weight
+    ),
+    CD_pop    = sum(value, na.rm = TRUE),
+    within_sd = round(sqrt(wtd.var(x = pct_uninsured, weights = Weight)), 1)
+  ) %>%
+  dplyr:: mutate(
+    percentage_uninsured  = round((CD_uninsurance / CD_pop) * 100, 1),
+    CD_pct_moe_90         = round(moe_prop(
+      num     = CD_uninsurance,
+      denom   = CD_pop,
+      moe_num = CD_uninsurance_moe_90,
+      moe_den = 0
+    ) * 100, 1),
+    CI_lower_90           = round(percentage_uninsured - CD_pct_moe_90, 1),
+    CI_upper_90           = round(percentage_uninsured + CD_pct_moe_90, 1),
+    between_sd            = NA_real_,
+    CD_uninsurance        = round(CD_uninsurance),
+    CD_uninsurance_moe_90 = round(CD_uninsurance_moe_90)
+  )
 
 ##########################################
 #         save clean dataset
 ##########################################
 uninsured_CCdistrict<-data2 %>% 
-  select(DISTRICT, CD_uninsurance,CD_uninsurance_moe,CD_pop,percentage_uninsured,percentage_uninsured_moe, within_sd,between_sd)
+  dplyr::select(DISTRICT, CD_uninsurance,CD_uninsurance_moe,CD_pop,percentage_uninsured,percentage_uninsured_moe, within_sd,between_sd)
 
-write.csv(uninsured_CCdistrict, "manuscript/uninsured_CCdistrict.csv")
+write_xlsx(uninsured_CCdistrict, "manuscript_output_moe/uninsured_CCdistrict.xlsx")
 
 ##########################################
 #         plot 
