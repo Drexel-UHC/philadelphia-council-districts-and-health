@@ -304,7 +304,7 @@ p4 <- p4 + ggtitle("d")
 combined <- arrangeGrob(p1, p2, p3, p4, ncol = 2)
 
 # Save as EPS
-ggsave("/Users/tr842/Library/CloudStorage/OneDrive-DrexelUniversity/Github_repositories/philadelphia-council-districts-and-health/Data/mansucript/fig_1.eps",
+ggsave("/Users/tamararushovich/Library/CloudStorage/OneDrive-DrexelUniversity/Github_repositories/ACTIVE_Council District Project Repository 05.2026/philadelphia-council-districts-and-health/Data/mansucript/fig_1.eps",
        plot = combined,
        device = "eps",
        width = 10, height = 8)
@@ -315,7 +315,7 @@ ggsave("/Users/tr842/Library/CloudStorage/OneDrive-DrexelUniversity/Github_repos
 #              top = "")
 # 
 # 
-# pdf("/Users/tr842/Library/CloudStorage/OneDrive-DrexelUniversity/Github_repositories/philadelphia-council-districts-and-health/Data/mansucript/fig_1.pdf", 
-#     width = 10, height = 8)
-# grid.arrange(p1, p2, p3, p4, ncol = 2)
-# dev.off()
+pdf("/Users/tamararushovich/Library/CloudStorage/OneDrive-DrexelUniversity/Github_repositories/ACTIVE_Council District Project Repository 05.2026/philadelphia-council-districts-and-health/Data/mansucript/fig_1.pdf",
+    width = 10, height = 8)
+grid.arrange(p1, p2, p3, p4, ncol = 2)
+dev.off()
